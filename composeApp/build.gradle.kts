@@ -35,6 +35,8 @@ kotlin {
             implementation(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
+            api(libs.compose.webview.multiplatform)
+
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)

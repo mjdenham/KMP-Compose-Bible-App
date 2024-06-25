@@ -22,6 +22,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import bibleapp.composeapp.generated.resources.Res
 import bibleapp.composeapp.generated.resources.compose_multiplatform
 import com.martin.bibleapp.search.SearchScreen
+import com.multiplatform.webview.web.WebView
+import com.multiplatform.webview.web.rememberWebViewNavigator
+import com.multiplatform.webview.web.rememberWebViewStateWithHTMLData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,6 +32,13 @@ import com.martin.bibleapp.search.SearchScreen
 fun App() {
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
+        val html = "<html><body><h1>Hello World</h1></body></html>"
+        val html2 = "<html><body><h1>Bye Bye XML</h1></body></html>"
+        val webViewState = rememberWebViewStateWithHTMLData(
+            data = html
+        )
+        val webViewNavigator = rememberWebViewNavigator()
+
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -48,7 +58,12 @@ fun App() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 SearchScreen("Kotlin KMP")
-                Button(onClick = { showContent = !showContent }) {
+                Button(onClick = {
+                    showContent = !showContent
+                    webViewNavigator.loadHtml(
+                        html = if (showContent) html2 else html
+                    )
+                }) {
                     Text("Click me!")
                 }
                 AnimatedVisibility(showContent) {
@@ -61,6 +76,12 @@ fun App() {
                         Text("Compose: $greeting")
                     }
                 }
+
+                WebView(
+                    state = webViewState,
+                    navigator = webViewNavigator,
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
     }
