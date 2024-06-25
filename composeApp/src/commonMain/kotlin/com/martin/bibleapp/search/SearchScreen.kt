@@ -1,4 +1,4 @@
-package com.martin.bibleapp
+package com.martin.bibleapp.search
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -1,3 +1,6 @@
+package com.martin.bibleapp
+
+import getPlatform
 import kotlin.random.Random
 
 class Greeting {
