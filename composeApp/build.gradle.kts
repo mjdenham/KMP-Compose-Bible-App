@@ -37,6 +37,7 @@ kotlin {
         commonMain.dependencies {
             api(libs.compose.webview.multiplatform)
 
+            implementation(libs.lifecycle.viewmodel.compose)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)

@@ -12,16 +12,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.martin.bibleapp.ui.document.DocumentState
+import com.martin.bibleapp.ui.document.DocumentViewModel
 import com.martin.bibleapp.ui.document.showDocument
-import com.multiplatform.webview.web.WebView
-import com.multiplatform.webview.web.rememberWebViewNavigator
-import com.multiplatform.webview.web.rememberWebViewStateWithHTMLData
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,9 +30,9 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Preview
 fun App() {
     MaterialTheme {
+        val viewModel: DocumentViewModel = viewModel()
+        val documentState by viewModel.documentState.collectAsState()
         var showContent by remember { mutableStateOf(false) }
-        val html = "<html><body><h1>Hello World</h1></body></html>"
-        val html2 = "<html><body><h1>Bye Bye XML</h1></body></html>"
 
         Scaffold(
             topBar = {
@@ -52,12 +53,20 @@ fun App() {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(onClick = {
-                    showContent = !showContent
+                    viewModel.changeContent()
                 }) {
                     Text("Click me!")
                 }
 
-                showDocument(if (showContent) html2 else html)
+                documentState.let { state ->
+                    val html: String = when(state) {
+                        DocumentState.Loading -> "Loading..."
+                        DocumentState.Error -> "Error"
+                        is DocumentState.Success -> state.data.htmlText
+                    }
+                    showDocument(html)
+                }
+
             }
         }
     }
