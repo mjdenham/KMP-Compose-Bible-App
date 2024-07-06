@@ -1,8 +1,11 @@
 package com.martin.bibleapp.ui.document
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.martin.bibleapp.data.BibleData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class DocumentViewModel: ViewModel() {
     private val _documentState = MutableStateFlow<DocumentState>(DocumentState.Loading)
@@ -13,8 +16,10 @@ class DocumentViewModel: ViewModel() {
     }
 
     private fun loadDocument() {
-//        Log.d(TAG, "Loading document")
-        _documentState.value = DocumentState.Success(DocumentModel("<html><body>In the beginning was the Word, and the Word was with God, and the Word was God.</body></html>"))
+        viewModelScope.launch {
+            val page = BibleData().readPage()
+            _documentState.value = DocumentState.Success(DocumentModel("<html><body>$page</body></html>"))
+        }
     }
 
     fun changeContent() {
