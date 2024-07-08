@@ -6,8 +6,8 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 class UsfmFileReader {
     @OptIn(ExperimentalResourceApi::class)
-    suspend fun readFile(): String {
-        return Res.readBytes("files/bsb/usfm/GEN.usfm")
+    suspend fun readFile(book: String): String {
+        return Res.readBytes("files/bsb/usfm/$book.usfm")
             .decodeToString()
             .split("\n")
             .map { toHtml(it) }

@@ -19,13 +19,13 @@ class DocumentViewModel: ViewModel() {
 
     private fun showPassage(book: String = "GEN") {
         viewModelScope.launch {
-            val page = if (book == "GEN") BibleData().readPage() else "For God so loved the world."
-            _documentState.value = DocumentState.Success(DocumentModel("<html><body>$page</body></html>"))
+            val page = BibleData().readPage(book)
+            _documentState.value = DocumentState.Success(DocumentModel(book, "<html><body>$page</body></html>"))
         }
     }
 
     fun changeContent() {
         showGenesis = !showGenesis
-        showPassage(if (showGenesis) "GEN" else "EX")
+        showPassage(if (showGenesis) "GEN" else "EXO")
     }
 }
