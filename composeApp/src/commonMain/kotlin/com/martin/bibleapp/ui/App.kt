@@ -40,7 +40,7 @@ fun App() {
                     title = {
                         ElevatedButton(onClick = { viewModel.changeContent() }) {
                             (documentState as? DocumentState.Success)?.data?.let {
-                                Text(it.reference)
+                                Text(it.reference.name)
                             }
                         }
                     },

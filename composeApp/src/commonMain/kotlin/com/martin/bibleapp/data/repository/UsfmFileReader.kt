@@ -1,13 +1,14 @@
-package com.martin.bibleapp.data.usfm
+package com.martin.bibleapp.data.repository
 
 import androidx.annotation.VisibleForTesting
 import bibleapp.composeapp.generated.resources.Res
+import com.martin.bibleapp.domain.reference.BibleBook
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 class UsfmFileReader {
     @OptIn(ExperimentalResourceApi::class)
-    suspend fun readFile(book: String): String {
-        return Res.readBytes("files/bsb/usfm/$book.usfm")
+    suspend fun readFile(book: BibleBook): String {
+        return Res.readBytes("files/bsb/usfm/${book.usfmCode}.usfm")
             .decodeToString()
             .split("\n")
             .map { toHtml(it) }

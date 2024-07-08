@@ -1,5 +1,6 @@
 package com.martin.bibleapp.data.usfm
 
+import com.martin.bibleapp.data.repository.UsfmFileReader
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals

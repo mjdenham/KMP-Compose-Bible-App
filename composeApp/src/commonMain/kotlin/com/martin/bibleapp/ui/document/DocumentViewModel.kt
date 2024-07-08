@@ -2,7 +2,8 @@ package com.martin.bibleapp.ui.document
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.martin.bibleapp.data.BibleData
+import com.martin.bibleapp.data.repository.BibleData
+import com.martin.bibleapp.domain.reference.BibleBook
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -14,10 +15,10 @@ class DocumentViewModel: ViewModel() {
     private var showGenesis = true
 
     init {
-        showPassage()
+        showPassage(BibleBook.GEN)
     }
 
-    private fun showPassage(book: String = "GEN") {
+    private fun showPassage(book: BibleBook) {
         viewModelScope.launch {
             val page = BibleData().readPage(book)
             _documentState.value = DocumentState.Success(DocumentModel(book, "<html><body>$page</body></html>"))
@@ -26,6 +27,6 @@ class DocumentViewModel: ViewModel() {
 
     fun changeContent() {
         showGenesis = !showGenesis
-        showPassage(if (showGenesis) "GEN" else "EXO")
+        showPassage(if (showGenesis) BibleBook.GEN else BibleBook.EXOD)
     }
 }
