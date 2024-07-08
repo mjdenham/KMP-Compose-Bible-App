@@ -11,18 +11,21 @@ class DocumentViewModel: ViewModel() {
     private val _documentState = MutableStateFlow<DocumentState>(DocumentState.Loading)
     val documentState: StateFlow<DocumentState> = _documentState
 
+    private var showGenesis = true
+
     init {
-        loadDocument()
+        showPassage()
     }
 
-    private fun loadDocument() {
+    private fun showPassage(book: String = "GEN") {
         viewModelScope.launch {
-            val page = BibleData().readPage()
+            val page = if (book == "GEN") BibleData().readPage() else "For God so loved the world."
             _documentState.value = DocumentState.Success(DocumentModel("<html><body>$page</body></html>"))
         }
     }
 
     fun changeContent() {
-        _documentState.value = DocumentState.Success(DocumentModel("<html><body>In the beginning God created the heavens and the earth.</body></html>"))
+        showGenesis = !showGenesis
+        showPassage(if (showGenesis) "GEN" else "EX")
     }
 }
