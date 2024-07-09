@@ -8,7 +8,19 @@ import com.multiplatform.webview.web.rememberWebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewStateWithHTMLData
 
 @Composable
-fun showDocument(html: String) {
+fun showDocument(documentState: DocumentState) {
+    documentState.let { state ->
+        val html: String = when (state) {
+            DocumentState.Loading -> "Loading..."
+            DocumentState.Error -> "Error"
+            is DocumentState.Success -> state.data.htmlText
+        }
+        showHtml(html)
+    }
+}
+
+@Composable
+fun showHtml(html: String) {
     val webViewState = rememberWebViewStateWithHTMLData(
         data = html
     )
