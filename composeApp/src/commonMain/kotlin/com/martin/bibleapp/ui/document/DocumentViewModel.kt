@@ -12,8 +12,6 @@ class DocumentViewModel: ViewModel() {
     private val _documentState = MutableStateFlow<DocumentState>(DocumentState.Loading)
     val documentState: StateFlow<DocumentState> = _documentState
 
-    private var showGenesis = true
-
     init {
         showPassage(BibleBook.GEN)
     }
@@ -25,8 +23,7 @@ class DocumentViewModel: ViewModel() {
         }
     }
 
-    fun changeContent() {
-        showGenesis = !showGenesis
-        showPassage(if (showGenesis) BibleBook.GEN else BibleBook.EXOD)
+    fun selectBook(book: BibleBook) {
+        showPassage(book)
     }
 }

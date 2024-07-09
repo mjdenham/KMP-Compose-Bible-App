@@ -1,12 +1,9 @@
 package com.martin.bibleapp.ui
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Place
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,7 +15,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.intl.Locale
@@ -30,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.martin.bibleapp.ui.document.DocumentState
 import com.martin.bibleapp.ui.document.DocumentViewModel
 import com.martin.bibleapp.ui.document.showDocument
+import com.martin.bibleapp.ui.selector.showBookSelector
 import kotlinx.serialization.Serializable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -86,16 +83,9 @@ fun App(
                     showDocument(documentState)
                 }
                 composable<BibleBookPicker> {
-                    Column(
-                        modifier = Modifier.padding(innerPadding).fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        ElevatedButton(onClick = {
-                            viewModel.changeContent()
-                            navController.popBackStack()
-                        }) {
-                            Text("Change Content")
-                        }
+                    showBookSelector { book ->
+                        viewModel.selectBook(book)
+                        navController.popBackStack()
                     }
                 }
             }
