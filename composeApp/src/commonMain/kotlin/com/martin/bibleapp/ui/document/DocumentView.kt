@@ -11,8 +11,8 @@ import com.multiplatform.webview.web.rememberWebViewStateWithHTMLData
 fun showDocument(documentState: DocumentState) {
     documentState.let { state ->
         val html: String = when (state) {
-            DocumentState.Loading -> "Loading..."
-            DocumentState.Error -> "Error"
+            is DocumentState.Loading -> "Loading..."
+            is DocumentState.Error -> "Error"
             is DocumentState.Success -> state.data.htmlText
         }
         showHtml(html)

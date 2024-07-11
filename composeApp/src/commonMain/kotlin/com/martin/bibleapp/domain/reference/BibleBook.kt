@@ -1,5 +1,8 @@
 package com.martin.bibleapp.domain.reference
 
+import androidx.compose.ui.text.capitalize
+import androidx.compose.ui.text.intl.Locale
+
 enum class BibleBook(val usfmCode: String) {
     GEN("GEN"),
     EXOD("EXO"),
@@ -66,5 +69,7 @@ enum class BibleBook(val usfmCode: String) {
     JOHN2("2JN"),
     JOHN3("3JN"),
     JUDE("JUDE"),
-    REV("REV"),
+    REV("REV"),;
+
+    fun shortLabel(): String = name.lowercase().capitalize(Locale.current)
 }
