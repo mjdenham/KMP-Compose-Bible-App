@@ -20,12 +20,30 @@ class UsfmFileReader : BibleReader {
     @VisibleForTesting
     fun toHtml(line: String): String {
         if (line.isEmpty()) return ""
-        val cleanLine = line.replace("\\\\f.*\\\\f\\*".toRegex(), "")
-        val tag = cleanLine.substringBefore(" ")
+
+        val (tag, remainder) = takeFirstValue(line)
+        val cleanLine = removeFootnotes(remainder)
         return when (tag) {
-            "\\v" -> cleanLine.drop(3)
+            "\\v" -> {
+                val (no, text) = takeFirstValue(cleanLine)
+                "<small>$no</small> $text"
+            }
+            "\\h" -> "<h2>$cleanLine</h2>"
+            "\\s1", "\\s2", "\\s3" -> "<p><i>$cleanLine</i></p>"
+            "\\c" -> "<h3>Chapter $cleanLine</h3>"
+            "\\q1" -> "<p>$cleanLine</p>"
+            "\\q2" -> "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$cleanLine</p>"
             "\\b" -> "<br />"
             else -> ""
         }
     }
+
+    private fun takeFirstValue(line: String): Pair<String, String> {
+        val parts = line.split("[\\n\\r\\s]+".toRegex(), 2)
+        val tag = parts.getOrNull(0).orEmpty()
+        val remainder = parts.getOrNull(1).orEmpty()
+        return Pair(tag, remainder)
+    }
+
+    private fun removeFootnotes(line: String) = line.replace("\\\\f.*\\\\f\\*".toRegex(), "")
 }

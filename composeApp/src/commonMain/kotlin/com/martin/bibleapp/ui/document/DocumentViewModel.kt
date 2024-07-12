@@ -19,11 +19,15 @@ class DocumentViewModel: ViewModel() {
     private fun showPassage(book: BibleBook) {
         viewModelScope.launch {
             val page = Bible().readPage(book)
-            _documentState.value = DocumentState.Success(DocumentModel(book, "<html><body>$page</body></html>"))
+            _documentState.value = DocumentState.Success(DocumentModel(book, "<html>$HEAD_STYLE<body>$page</body></html>"))
         }
     }
 
     fun selectBook(book: BibleBook) {
         showPassage(book)
+    }
+
+    companion object {
+        private const val HEAD_STYLE = "<head><style>p { margin: 0; }</style></head>"
     }
 }
