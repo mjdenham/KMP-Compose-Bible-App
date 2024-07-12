@@ -36,7 +36,7 @@ object BibleBookPicker
 @Composable
 @Preview
 fun App(
-    viewModel: DocumentViewModel = viewModel(),
+    viewModel: DocumentViewModel = viewModel { DocumentViewModel() },
     navController: NavHostController = rememberNavController()
 ) {
     MaterialTheme {
@@ -50,7 +50,7 @@ fun App(
                         titleContentColor = MaterialTheme.colorScheme.primary,
                     ),
                     title = {
-                        ElevatedButton(onClick = { navController.navigate(BibleBookPicker) }) {
+                        ElevatedButton(onClick = { navController.navigate(BibleBookPicker.toString()) }) {
                             Text(
                                 text = documentState.title,
                                 style = MaterialTheme.typography.headlineSmall
@@ -63,15 +63,15 @@ fun App(
         ) { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = BibleView,
+                startDestination = BibleView.toString(),
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                composable<BibleView> {
+                composable(BibleView.toString()) {
                     showDocument(documentState)
                 }
-                composable<BibleBookPicker> {
+                composable(BibleBookPicker.toString()) {
                     showBookSelector { book ->
                         viewModel.selectBook(book)
                         navController.popBackStack()
