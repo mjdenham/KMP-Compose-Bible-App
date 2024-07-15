@@ -18,6 +18,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.martin.bibleapp.ui.document.DocumentState
 import com.martin.bibleapp.ui.document.DocumentViewModel
 import com.martin.bibleapp.ui.document.showDocument
 import com.martin.bibleapp.ui.selector.showBookSelector
@@ -43,20 +44,7 @@ fun App(
 
         Scaffold(
             topBar = {
-                TopAppBar(
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        titleContentColor = MaterialTheme.colorScheme.primary,
-                    ),
-                    title = {
-                        ElevatedButton(onClick = { navController.navigate(BibleScreen.BibleBookPicker.name) }) {
-                            Text(
-                                text = documentState.title,
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                        }
-                    },
-                )
+                BibleTopNavBar(navController, documentState)
             },
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
@@ -79,5 +67,27 @@ fun App(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun BibleTopNavBar(
+    navController: NavHostController,
+    documentState: DocumentState
+) {
+    TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            titleContentColor = MaterialTheme.colorScheme.primary,
+        ),
+        title = {
+            ElevatedButton(onClick = { navController.navigate(BibleScreen.BibleBookPicker.name) }) {
+                Text(
+                    text = documentState.title,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            }
+        },
+    )
 }
 
