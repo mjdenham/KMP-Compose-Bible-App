@@ -21,16 +21,15 @@ import androidx.navigation.compose.rememberNavController
 import com.martin.bibleapp.ui.document.DocumentViewModel
 import com.martin.bibleapp.ui.document.showDocument
 import com.martin.bibleapp.ui.selector.showBookSelector
-import kotlinx.serialization.Serializable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
  * Values that represent the screens in the app
  */
-@Serializable
-object BibleView
-@Serializable
-object BibleBookPicker
+enum class BibleScreen {
+    BibleView,
+    BibleBookPicker
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,10 +49,10 @@ fun App(
                         titleContentColor = MaterialTheme.colorScheme.primary,
                     ),
                     title = {
-                        ElevatedButton(onClick = { navController.navigate(BibleBookPicker.toString()) }) {
+                        ElevatedButton(onClick = { navController.navigate(BibleScreen.BibleBookPicker.name) }) {
                             Text(
                                 text = documentState.title,
-                                style = MaterialTheme.typography.headlineSmall
+                                style = MaterialTheme.typography.titleMedium
                             )
                         }
                     },
@@ -63,15 +62,15 @@ fun App(
         ) { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = BibleView.toString(),
+                startDestination = BibleScreen.BibleView.name,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                composable(BibleView.toString()) {
+                composable(BibleScreen.BibleView.name) {
                     showDocument(documentState)
                 }
-                composable(BibleBookPicker.toString()) {
+                composable(BibleScreen.BibleBookPicker.name) {
                     showBookSelector { book ->
                         viewModel.selectBook(book)
                         navController.popBackStack()
