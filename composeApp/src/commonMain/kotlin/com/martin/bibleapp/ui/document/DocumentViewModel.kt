@@ -28,6 +28,6 @@ class DocumentViewModel: ViewModel() {
     }
 
     companion object {
-        private const val HEAD_STYLE = "<head><style>p { margin: 0; }</style></head>"
+        private const val HEAD_STYLE = "<head><style>p { padding:0px; margin:0px; }</style></head>"
     }
 }
