@@ -9,16 +9,17 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 class UsfmFileReader : BibleReader {
     @OptIn(ExperimentalResourceApi::class)
     override suspend fun read(book: BibleBook): String {
+        val ref = CurrentReference()
         return Res.readBytes("files/bsb/usfm/${book.usfmCode}.usfm")
             .decodeToString()
             .split("\n")
-            .map { toHtml(it) }
+            .map { toHtml(it, ref) }
             .filter { it.isNotEmpty() }
             .joinToString("")
     }
 
     @VisibleForTesting
-    fun toHtml(line: String): String {
+    fun toHtml(line: String, ref: CurrentReference): String {
         if (line.isEmpty()) return ""
 
         val (tag, remainder) = takeFirstValue(line)
@@ -26,11 +27,15 @@ class UsfmFileReader : BibleReader {
         return when (tag) {
             "\\v" -> {
                 val (no, text) = takeFirstValue(cleanLine)
-                "<small>$no</small> $text"
+                ref.verse = no.toIntOrNull() ?: (ref.verse + 1)
+                "<a id='${ref.getReference()}' /><small>$no</small> $text"
             }
             "\\h" -> "<h2>$cleanLine</h2>"
             "\\s1", "\\s2", "\\s3" -> "<p><br /><i>$cleanLine</i></p>"
-            "\\c" -> "<h3>Chapter $cleanLine</h3>"
+            "\\c" -> {
+                ref.chapter = cleanLine.toIntOrNull() ?: (ref.chapter + 1)
+                "<h3>Chapter $cleanLine</h3>"
+            }
             "\\q1" -> "<p>$cleanLine</p>"
             "\\q2" -> "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$cleanLine</p>"
             "\\b" -> "<br />"
@@ -46,4 +51,8 @@ class UsfmFileReader : BibleReader {
     }
 
     private fun removeFootnotes(line: String) = line.replace("\\\\f.*\\\\f\\*".toRegex(), "")
+
+    data class CurrentReference(var chapter: Int = 1, var verse: Int = 1) {
+        fun getReference() = "$chapter.$verse"
+    }
 }
