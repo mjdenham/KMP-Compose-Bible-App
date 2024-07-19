@@ -7,16 +7,22 @@ import com.martin.bibleapp.domain.reference.BibleBook
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 class UsfmFileReader : BibleReader {
-    @OptIn(ExperimentalResourceApi::class)
     override suspend fun read(book: BibleBook): String {
         val ref = CurrentReference()
-        return Res.readBytes("files/bsb/usfm/${book.usfmCode}.usfm")
-            .decodeToString()
-            .split("\n")
+        return readLines(book)
             .map { toHtml(it, ref) }
             .filter { it.isNotEmpty() }
             .joinToString("")
     }
+
+    override suspend fun countChapters(book: BibleBook): Int =
+        readLines(book).count { it.startsWith("\\c") }
+
+    @OptIn(ExperimentalResourceApi::class)
+    private suspend fun readLines(book: BibleBook) =
+        Res.readBytes("files/bsb/usfm/${book.usfmCode}.usfm")
+            .decodeToString()
+            .split("\n")
 
     @VisibleForTesting
     fun toHtml(line: String, ref: CurrentReference): String {

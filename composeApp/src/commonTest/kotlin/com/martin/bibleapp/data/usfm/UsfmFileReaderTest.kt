@@ -1,6 +1,8 @@
 package com.martin.bibleapp.data.usfm
 
 import com.martin.bibleapp.data.repository.usfm.UsfmFileReader
+import com.martin.bibleapp.domain.reference.BibleBook
+import kotlinx.coroutines.runBlocking
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertContains
@@ -69,4 +71,13 @@ class UsfmFileReaderTest {
         val html = UsfmFileReader().toHtml("\\b", reference)
         assertEquals(expected, html)
     }
+
+    @Test
+    fun countChaptersShouldCountCLines() {
+        runBlocking {
+            val count = UsfmFileReader().countChapters(BibleBook.GEN)
+            assertEquals(50, count)
+        }
+    }
+
 }

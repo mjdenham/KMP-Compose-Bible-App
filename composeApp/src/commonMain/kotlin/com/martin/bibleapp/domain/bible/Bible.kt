@@ -7,4 +7,8 @@ class Bible(private val reader: BibleReader = UsfmFileReader()) {
     suspend fun readPage(book: BibleBook): String {
         return reader.read(book)
     }
+
+    suspend fun getNumChapters(book: BibleBook): Int {
+        return reader.countChapters(book)
+    }
 }
