@@ -10,12 +10,24 @@ import com.multiplatform.webview.web.rememberWebViewStateWithHTMLData
 @Composable
 fun showDocument(documentState: DocumentState) {
     documentState.let { state ->
-        val html: String = when (state) {
-            is DocumentState.Loading -> "Loading..."
-            is DocumentState.Error -> "Error"
-            is DocumentState.Success -> state.data.htmlText
+        val html: String
+        val jumpTo: String
+        when (state) {
+            is DocumentState.Loading -> {
+                html = "Loading..."
+                jumpTo = ""
+            }
+            is DocumentState.Error -> {
+                html = "Error"
+                jumpTo = ""
+            }
+            is DocumentState.Success -> {
+                html = state.data.htmlText
+                jumpTo = state.data.reference.referenceCode()
+            }
         }
-        showHtml(html)
+
+        showHtml(html, jumpTo)
     }
 }
 

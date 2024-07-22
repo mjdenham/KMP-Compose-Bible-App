@@ -21,7 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.martin.bibleapp.ui.document.DocumentState
 import com.martin.bibleapp.ui.document.DocumentViewModel
 import com.martin.bibleapp.ui.document.showDocument
-import com.martin.bibleapp.ui.selector.showBookSelector
+import com.martin.bibleapp.ui.selector.showSelector
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
@@ -59,8 +59,8 @@ fun App(
                     showDocument(documentState)
                 }
                 composable(BibleScreen.BibleBookPicker.name) {
-                    showBookSelector { book ->
-                        viewModel.selectBook(book)
+                    showSelector { selectedReference ->
+                        viewModel.selectReference(selectedReference)
                         navController.popBackStack()
                     }
                 }
