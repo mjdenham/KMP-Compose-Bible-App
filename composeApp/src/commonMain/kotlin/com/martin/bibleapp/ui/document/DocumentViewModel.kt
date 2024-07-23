@@ -3,7 +3,6 @@ package com.martin.bibleapp.ui.document
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.martin.bibleapp.domain.bible.Bible
-import com.martin.bibleapp.domain.reference.BibleBook
 import com.martin.bibleapp.domain.reference.Reference
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,9 +12,9 @@ class DocumentViewModel: ViewModel() {
     private val _documentState = MutableStateFlow<DocumentState>(DocumentState.Loading())
     val documentState: StateFlow<DocumentState> = _documentState
 
-    init {
-        showPassage(Reference(BibleBook.JOHN, 3))
-    }
+//    init {
+//        showPassage(Reference(BibleBook.JOHN, 3))
+//    }
 
     private fun showPassage(reference: Reference) {
         viewModelScope.launch {

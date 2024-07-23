@@ -10,16 +10,16 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.martin.bibleapp.ui.document.DocumentState
-import com.martin.bibleapp.ui.document.DocumentViewModel
+import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.ui.document.showDocument
 import com.martin.bibleapp.ui.selector.showSelector
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -36,15 +36,14 @@ enum class BibleScreen {
 @Composable
 @Preview
 fun App(
-    viewModel: DocumentViewModel = viewModel { DocumentViewModel() },
     navController: NavHostController = rememberNavController()
 ) {
     MaterialTheme {
-        val documentState by viewModel.documentState.collectAsState()
+        var gotoReference by remember { mutableStateOf(Reference.DEFAULT) }
 
         Scaffold(
             topBar = {
-                BibleTopNavBar(navController, documentState)
+                BibleTopNavBar(navController, gotoReference.shortLabel())
             },
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
@@ -56,11 +55,11 @@ fun App(
                     .padding(innerPadding)
             ) {
                 composable(BibleScreen.BibleView.name) {
-                    showDocument(documentState)
+                    showDocument(gotoReference)
                 }
                 composable(BibleScreen.BibleBookPicker.name) {
                     showSelector { selectedReference ->
-                        viewModel.selectReference(selectedReference)
+                        gotoReference = selectedReference
                         navController.popBackStack()
                     }
                 }
@@ -73,7 +72,7 @@ fun App(
 @Composable
 private fun BibleTopNavBar(
     navController: NavHostController,
-    documentState: DocumentState
+    title: String
 ) {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -83,7 +82,7 @@ private fun BibleTopNavBar(
         title = {
             ElevatedButton(onClick = { navController.navigate(BibleScreen.BibleBookPicker.name) }) {
                 Text(
-                    text = documentState.title,
+                    text = title,
                     style = MaterialTheme.typography.titleMedium
                 )
             }

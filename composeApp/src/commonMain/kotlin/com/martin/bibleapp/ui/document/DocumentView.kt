@@ -2,13 +2,22 @@ package com.martin.bibleapp.ui.document
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.martin.bibleapp.domain.reference.Reference
 import com.multiplatform.webview.web.WebView
 import com.multiplatform.webview.web.rememberWebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewStateWithHTMLData
 
 @Composable
-fun showDocument(documentState: DocumentState) {
+fun showDocument(
+    gotoReference: Reference,
+    viewModel: DocumentViewModel = viewModel { DocumentViewModel() }
+) {
+    viewModel.selectReference(gotoReference)
+    val documentState by viewModel.documentState.collectAsState()
     documentState.let { state ->
         val html: String
         val jumpTo: String
