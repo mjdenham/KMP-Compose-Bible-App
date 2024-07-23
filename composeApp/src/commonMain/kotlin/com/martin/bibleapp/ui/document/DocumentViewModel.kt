@@ -12,10 +12,6 @@ class DocumentViewModel: ViewModel() {
     private val _documentState = MutableStateFlow<DocumentState>(DocumentState.Loading())
     val documentState: StateFlow<DocumentState> = _documentState
 
-//    init {
-//        showPassage(Reference(BibleBook.JOHN, 3))
-//    }
-
     private fun showPassage(reference: Reference) {
         viewModelScope.launch {
             val page = Bible().readPage(reference.book)
