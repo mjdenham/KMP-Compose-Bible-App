@@ -10,11 +10,11 @@ import kotlin.test.assertEquals
 
 class UsfmFileReaderTest {
 
-    private var reference = UsfmFileReader.CurrentReference()
+    private var reference = UsfmFileReader.CurrentReference(BibleBook.GEN)
 
     @BeforeTest
     fun setup() {
-        reference = UsfmFileReader.CurrentReference()
+        reference = UsfmFileReader.CurrentReference(BibleBook.GEN)
     }
 
     @Test
@@ -29,7 +29,7 @@ class UsfmFileReaderTest {
 
     @Test
     fun handleVerse() {
-        val expected = "<a id='1.3' /><small>3</small> And God said, “Let there be light,”  and there was light. "
+        val expected = "<a id='GEN.1.3' /><small>3</small> And God said, “Let there be light,”  and there was light. "
         val html = UsfmFileReader().toHtml(
             "\\v 3 And God said, “Let there be light,” \\f + \\fr 1:3 \\ft Cited in 2 Corinthians 4:6\\f* and there was light. ",
             reference

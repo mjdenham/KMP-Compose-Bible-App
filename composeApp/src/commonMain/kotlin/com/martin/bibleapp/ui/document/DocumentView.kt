@@ -32,7 +32,7 @@ fun showDocument(documentState: DocumentState) {
 }
 
 @Composable
-fun showHtml(html: String, reference: String = "1.1") {
+private fun showHtml(html: String, reference: String) {
     val webViewState = rememberWebViewStateWithHTMLData(
         data = html,
         baseUrl = "http://bible#$reference"

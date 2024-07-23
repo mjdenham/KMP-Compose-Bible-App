@@ -27,7 +27,9 @@ fun showSelector(
     if (book == null) {
         bookSelectionScreen({ viewModel.selectBook(it) }, modifier)
     } else {
-        chapterSelectionScreen(documentState.numChapters!!, modifier, { chap -> onSelected(Reference(book, chap)) })
+        chapterSelectionScreen(documentState.numChapters!!, modifier) { chap ->
+            onSelected(Reference(book, chap))
+        }
     }
 }
 

@@ -4,11 +4,12 @@ import androidx.annotation.VisibleForTesting
 import bibleapp.composeapp.generated.resources.Res
 import com.martin.bibleapp.domain.bible.BibleReader
 import com.martin.bibleapp.domain.reference.BibleBook
+import com.martin.bibleapp.domain.reference.Reference
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 class UsfmFileReader : BibleReader {
     override suspend fun read(book: BibleBook): String {
-        val ref = CurrentReference()
+        val ref = CurrentReference(book)
         return readLines(book)
             .map { toHtml(it, ref) }
             .filter { it.isNotEmpty() }
@@ -58,7 +59,7 @@ class UsfmFileReader : BibleReader {
 
     private fun removeFootnotes(line: String) = line.replace("\\\\f.*\\\\f\\*".toRegex(), "")
 
-    data class CurrentReference(var chapter: Int = 1, var verse: Int = 1) {
-        fun getReference() = "$chapter.$verse"
+    data class CurrentReference(val book: BibleBook, var chapter: Int = 1, var verse: Int = 1) {
+        fun getReference() = Reference.toCode(book, chapter, verse)
     }
 }
