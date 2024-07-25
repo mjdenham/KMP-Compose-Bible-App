@@ -41,7 +41,7 @@ class UsfmFileReader : BibleReader {
             "\\s1", "\\s2", "\\s3" -> "<p><br /><i>$cleanLine</i></p>"
             "\\c" -> {
                 ref.chapter = cleanLine.toIntOrNull() ?: (ref.chapter + 1)
-                "<h3>Chapter $cleanLine</h3>"
+                "<a id='${ref.getChapterReference()}' /><h3>Chapter $cleanLine</h3>"
             }
             "\\q1" -> "<p>$cleanLine</p>"
             "\\q2" -> "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$cleanLine</p>"
@@ -61,5 +61,6 @@ class UsfmFileReader : BibleReader {
 
     data class CurrentReference(val book: BibleBook, var chapter: Int = 1, var verse: Int = 1) {
         fun getReference() = Reference.toCode(book, chapter, verse)
+        fun getChapterReference() = Reference.toCode(book, chapter)
     }
 }

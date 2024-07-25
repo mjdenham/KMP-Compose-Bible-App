@@ -46,7 +46,7 @@ class UsfmFileReaderTest {
 
     @Test
     fun handleChapter() {
-        val expected = "<h3>Chapter 1</h3>"
+        val expected = "<a id='GEN.1' /><h3>Chapter 1</h3>"
         val html = UsfmFileReader().toHtml("\\c 1", reference)
         assertEquals(expected, html)
     }

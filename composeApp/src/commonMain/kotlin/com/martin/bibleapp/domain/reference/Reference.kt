@@ -7,6 +7,7 @@ data class Reference(val book: BibleBook, val chapter: Int = 1) {
     companion object {
         val DEFAULT = Reference(BibleBook.JOHN, 3)
 
-        fun toCode(book: BibleBook, chapter: Int, verse: Int = 1): String = "${book.usfmCode}.$chapter.$verse"
+        fun toCode(book: BibleBook, chapter: Int, verse: Int): String = "${book.usfmCode}.$chapter.$verse"
+        fun toCode(book: BibleBook, chapter: Int): String = "${book.usfmCode}.$chapter"
     }
 }
