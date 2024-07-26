@@ -42,7 +42,7 @@ class UsfmFileReader : BibleReader {
                 "<a id='${ref.getReference()}' /><small>$no</small> $text"
             }
             "\\h" -> "<h2>$cleanLine</h2>"
-            "\\s1", "\\s2", "\\s3" -> "<p><br /><i>$cleanLine</i></p>"
+            "\\s1", "\\s2", "\\s3" -> "<p><i>$cleanLine</i></p>"
             "\\c" -> {
                 ref.chapter = cleanLine.toIntOrNull() ?: (ref.chapter + 1)
                 "<a id='${ref.getChapterReference()}' /><h3>Chapter $cleanLine</h3>"
