@@ -26,6 +26,8 @@ class UsfmFileReader : BibleReader {
         Res.readBytes("files/bsb/usfm/${book.usfmCode}.usfm")
             .decodeToString()
             .split("\n")
+            .asSequence()
+
 
     @VisibleForTesting
     fun toHtml(line: String, ref: CurrentReference): String {
