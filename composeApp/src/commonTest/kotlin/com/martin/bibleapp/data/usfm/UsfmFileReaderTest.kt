@@ -2,11 +2,13 @@ package com.martin.bibleapp.data.usfm
 
 import com.martin.bibleapp.data.repository.usfm.UsfmFileReader
 import com.martin.bibleapp.domain.reference.BibleBook
+import com.martin.bibleapp.domain.reference.Reference
 import kotlinx.coroutines.runBlocking
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 
 class UsfmFileReaderTest {
 
@@ -15,6 +17,16 @@ class UsfmFileReaderTest {
     @BeforeTest
     fun setup() {
         reference = UsfmFileReader.CurrentReference(BibleBook.GEN)
+    }
+
+    @Test
+    fun shouldFetchWholeChapter() {
+        runBlocking {
+            val text = UsfmFileReader().read(Reference(BibleBook.PS, 117))
+            assertContains(text, "Chapter 117")
+            assertFalse(text.contains("Chapter 116"))
+            assertFalse(text.contains("Chapter 118"))
+        }
     }
 
     @Test

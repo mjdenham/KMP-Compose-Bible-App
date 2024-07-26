@@ -14,7 +14,7 @@ class DocumentViewModel: ViewModel() {
 
     private fun showPassage(reference: Reference) {
         viewModelScope.launch {
-            val page = Bible().readPage(reference.book)
+            val page = Bible().readPage(reference)
             _documentState.value = DocumentState.Success(DocumentModel(reference, "<html>$HEAD_STYLE<body>$page</body></html>"))
         }
     }

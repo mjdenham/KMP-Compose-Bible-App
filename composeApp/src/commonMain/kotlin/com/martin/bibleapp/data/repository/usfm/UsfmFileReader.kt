@@ -8,9 +8,11 @@ import com.martin.bibleapp.domain.reference.Reference
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 class UsfmFileReader : BibleReader {
-    override suspend fun read(book: BibleBook): String {
-        val ref = CurrentReference(book)
-        return readLines(book)
+    override suspend fun read(reference: Reference): String {
+        val ref = CurrentReference(reference.book)
+        return readLines(reference.book)
+            .dropWhile { it != "\\c ${reference.chapter}" }
+            .takeWhile { it != "\\c ${reference.chapter + 1}" }
             .map { toHtml(it, ref) }
             .filter { it.isNotEmpty() }
             .joinToString("")
