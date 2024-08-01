@@ -12,7 +12,7 @@ import com.multiplatform.webview.web.rememberWebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewStateWithHTMLData
 
 @Composable
-fun showDocument(
+fun ShowDocument(
     gotoReference: Reference,
     viewModel: DocumentViewModel = viewModel { DocumentViewModel() }
 ) {
@@ -36,12 +36,12 @@ fun showDocument(
             }
         }
 
-        showHtml(html, jumpTo)
+        ShowHtml(html, jumpTo)
     }
 }
 
 @Composable
-private fun showHtml(html: String, reference: String) {
+private fun ShowHtml(html: String, reference: String) {
     val webViewState = rememberWebViewStateWithHTMLData(
         data = html,
         baseUrl = "http://bible#$reference"

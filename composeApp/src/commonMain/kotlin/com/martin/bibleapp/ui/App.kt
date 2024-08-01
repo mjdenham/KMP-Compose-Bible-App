@@ -20,8 +20,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.martin.bibleapp.domain.reference.Reference
-import com.martin.bibleapp.ui.document.showDocument
-import com.martin.bibleapp.ui.selector.showSelector
+import com.martin.bibleapp.ui.document.ShowDocument
+import com.martin.bibleapp.ui.selector.ShowSelector
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
@@ -55,10 +55,10 @@ fun App(
                     .padding(innerPadding)
             ) {
                 composable(BibleScreen.BibleView.name) {
-                    showDocument(gotoReference)
+                    ShowDocument(gotoReference)
                 }
                 composable(BibleScreen.BibleBookPicker.name) {
-                    showSelector { selectedReference ->
+                    ShowSelector { selectedReference ->
                         gotoReference = selectedReference
                         navController.popBackStack()
                     }

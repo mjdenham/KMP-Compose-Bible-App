@@ -18,25 +18,25 @@ import com.martin.bibleapp.domain.reference.BibleBook
 import com.martin.bibleapp.domain.reference.Reference
 
 @Composable
-fun showSelector(
+fun ShowSelector(
     viewModel: SelectorViewModel = viewModel { SelectorViewModel() },
     modifier: Modifier = Modifier,
     onSelected: (Reference) -> Unit) {
     val documentState by viewModel.selectorState.collectAsState()
     val book = documentState.book
     if (book == null) {
-        bookSelectionScreen({ viewModel.selectBook(it) }, modifier)
+        BookSelectionScreen({ viewModel.selectBook(it) }, modifier)
     } else {
-        chapterSelectionScreen(documentState.numChapters!!, modifier) { chap ->
+        ChapterSelectionScreen(documentState.numChapters!!, modifier) { chap ->
             onSelected(Reference(book, chap))
         }
     }
 }
 
 @Composable
-private fun bookSelectionScreen(
+private fun BookSelectionScreen(
     onSelected: (BibleBook) -> Unit,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(columns = GridCells.Fixed(4)) {
         items(BibleBook.entries) {
@@ -56,7 +56,7 @@ private fun bookSelectionScreen(
 }
 
 @Composable
-fun chapterSelectionScreen(
+fun ChapterSelectionScreen(
     numChapters: Int,
     modifier: Modifier = Modifier,
     onSelected: (Int) -> Unit
