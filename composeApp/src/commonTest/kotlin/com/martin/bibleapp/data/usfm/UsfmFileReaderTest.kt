@@ -78,6 +78,13 @@ class UsfmFileReaderTest {
     }
 
     @Test
+    fun handleAcrostic() {
+        val expected = "<p>ALEPH</p>"
+        val html = UsfmFileReader().toHtml("\\qa ALEPH", reference)
+        assertEquals(expected, html)
+    }
+
+    @Test
     fun shouldHandleBTagAsBlankLine() {
         val expected = "<br />"
         val html = UsfmFileReader().toHtml("\\b", reference)
