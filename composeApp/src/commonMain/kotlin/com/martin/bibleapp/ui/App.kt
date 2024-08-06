@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.ui.document.ShowDocument
 import com.martin.bibleapp.ui.selector.ShowSelector
+import com.martin.bibleapp.ui.theme.BibleTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
@@ -32,13 +33,12 @@ enum class BibleScreen {
     BibleBookPicker
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun App(
     navController: NavHostController = rememberNavController()
 ) {
-    MaterialTheme {
+    BibleTheme {
         var gotoReference by remember { mutableStateOf(Reference.DEFAULT) }
 
         Scaffold(
