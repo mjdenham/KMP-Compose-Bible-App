@@ -99,4 +99,13 @@ class UsfmFileReaderTest {
         }
     }
 
+    @Test
+    fun getVersesPlainText() {
+        runBlocking {
+            val result = UsfmFileReader().getVersesPlainText(BibleBook.GEN)
+            result.forEach {
+                println("${it.reference}  ${it.text}")
+            }
+        }
+    }
 }

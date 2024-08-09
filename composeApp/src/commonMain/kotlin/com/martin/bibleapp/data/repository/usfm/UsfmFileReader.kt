@@ -5,6 +5,7 @@ import bibleapp.composeapp.generated.resources.Res
 import com.martin.bibleapp.domain.bible.BibleReader
 import com.martin.bibleapp.domain.reference.BibleBook
 import com.martin.bibleapp.domain.reference.Reference
+import com.martin.bibleapp.domain.reference.VerseText
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 class UsfmFileReader : BibleReader {
@@ -20,6 +21,17 @@ class UsfmFileReader : BibleReader {
 
     override suspend fun countChapters(book: BibleBook): Int =
         readLines(book).count { it.startsWith("\\c") }
+
+    override suspend fun getVersesPlainText(book: BibleBook): List<VerseText> {
+        val ref = CurrentReference(book)
+        return readLines(book)
+            .map { toVerseText(it, ref) }
+            .filter { it.text.isNotEmpty() }
+            .groupingBy { it.reference }
+            .reduce { reference, accumulator, element -> VerseText( reference, accumulator.text + element.text) }
+            .map { it.value }
+            .toList()
+    }
 
     @OptIn(ExperimentalResourceApi::class)
     private suspend fun readLines(book: BibleBook) =
@@ -39,7 +51,7 @@ class UsfmFileReader : BibleReader {
             "\\v" -> {
                 val (no, text) = takeFirstValue(cleanLine)
                 ref.verse = no.toIntOrNull() ?: (ref.verse + 1)
-                "<a id='${ref.getReference()}' /><small>$no</small> $text"
+                "<a id='${ref.getReferenceCode()}' /><small>$no</small> $text"
             }
             "\\h" -> "<h2>$cleanLine</h2>"
             "\\s1", "\\s2", "\\s3" -> "<p><i>$cleanLine</i></p>"
@@ -55,6 +67,30 @@ class UsfmFileReader : BibleReader {
         }
     }
 
+    private fun toVerseText(line: String, ref: CurrentReference): VerseText {
+        if (line.isEmpty()) return VerseText(ref.getReference(), "")
+
+        val (tag, remainder) = takeFirstValue(line)
+        val cleanLine = removeFootnotes(remainder)
+        val text =  when (tag) {
+            "\\v" -> {
+                val (no, text) = takeFirstValue(cleanLine)
+                ref.verse = no.toIntOrNull() ?: (ref.verse + 1)
+                text
+            }
+            "\\c" -> {
+                ref.chapter = cleanLine.toIntOrNull() ?: (ref.chapter + 1)
+                ""
+            }
+            "\\qa" -> cleanLine // acrostic e.g. ALEPH
+            "\\q1" -> cleanLine
+            "\\q2" -> cleanLine
+            else -> ""
+        }
+
+        return VerseText(ref.getReference(), text)
+    }
+
     private fun takeFirstValue(line: String): Pair<String, String> {
         val parts = line.split("[\\n\\r\\s]+".toRegex(), 2)
         val tag = parts.getOrNull(0).orEmpty()
@@ -65,7 +101,8 @@ class UsfmFileReader : BibleReader {
     private fun removeFootnotes(line: String) = line.replace("\\\\f.*\\\\f\\*".toRegex(), "")
 
     data class CurrentReference(val book: BibleBook, var chapter: Int = 1, var verse: Int = 1) {
-        fun getReference() = Reference.toCode(book, chapter, verse)
+        fun getReference() = Reference(book, chapter, verse)
+        fun getReferenceCode() = Reference.toCode(book, chapter, verse)
         fun getChapterReference() = Reference.toCode(book, chapter)
     }
 }
