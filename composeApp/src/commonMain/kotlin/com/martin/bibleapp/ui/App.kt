@@ -2,8 +2,12 @@ package com.martin.bibleapp.ui
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,6 +25,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.ui.document.ShowDocument
+import com.martin.bibleapp.ui.search.ShowSearch
 import com.martin.bibleapp.ui.selector.ShowSelector
 import com.martin.bibleapp.ui.theme.BibleTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -30,7 +35,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
  */
 enum class BibleScreen {
     BibleView,
-    BibleBookPicker
+    BibleBookPicker,
+    Search
 }
 
 @Composable
@@ -63,6 +69,9 @@ fun App(
                         navController.popBackStack()
                     }
                 }
+                composable(BibleScreen.Search.name) {
+                    ShowSearch()
+                }
             }
         }
     }
@@ -87,6 +96,14 @@ private fun BibleTopNavBar(
                 )
             }
         },
+        actions = {
+            IconButton(onClick = { navController.navigate(BibleScreen.Search.name) }) {
+                Icon(
+                    imageVector = Icons.Filled.Search,
+                    contentDescription = "Search"
+                )
+            }
+        }
     )
 }
 
