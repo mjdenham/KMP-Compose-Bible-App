@@ -18,26 +18,19 @@ class Bible(private val reader: BibleReader = UsfmFileReader()) {
         return reader.countChapters(book)
     }
 
-    suspend fun search(searchText:String): List<VerseText> = withContext(Dispatchers.Default) {
+    suspend fun search(searchText: String): List<VerseText> = withContext(Dispatchers.Default) {
         val searchWords = searchText.split(" ")
         BibleBook.entries.map { bibleBook ->
             async {
-                BookResults(
-                    bibleBook,
-                    reader.getVersesPlainText(bibleBook)
-                        .filter { verseText ->
-                            searchWords.all {
-                                verseText.text.contains(it,true)
-                            }
+                reader.getVersesPlainText(bibleBook)
+                    .filter { verseText ->
+                        searchWords.all {
+                            verseText.text.contains(it, true)
                         }
-                )
+                    }
             }
         }
             .awaitAll()
-            .sortedBy { it.book }
-            .map { it.results }
             .flatten()
     }
-
-    data class BookResults(val book: BibleBook, val results: List<VerseText>)
 }
