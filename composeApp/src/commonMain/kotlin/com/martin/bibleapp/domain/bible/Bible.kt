@@ -19,13 +19,13 @@ class Bible(private val reader: BibleReader = UsfmFileReader()) {
     }
 
     suspend fun search(searchText: String): List<VerseText> = withContext(Dispatchers.Default) {
-        val searchWords = searchText.split(" ")
+        val searchWords = searchText.split(" ").map { "\\b$it\\b".toRegex(RegexOption.IGNORE_CASE) }
         BibleBook.entries.map { bibleBook ->
             async {
                 reader.getVersesPlainText(bibleBook)
                     .filter { verseText ->
                         searchWords.all {
-                            verseText.text.contains(it, true)
+                            verseText.text.contains(it)
                         }
                     }
             }
