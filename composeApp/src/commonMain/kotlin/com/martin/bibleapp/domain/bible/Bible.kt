@@ -4,6 +4,10 @@ import com.martin.bibleapp.data.repository.usfm.UsfmFileReader
 import com.martin.bibleapp.domain.reference.BibleBook
 import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.domain.reference.VerseText
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.withContext
 
 class Bible(private val reader: BibleReader = UsfmFileReader()) {
     suspend fun readPage(reference: Reference): String {
@@ -14,9 +18,26 @@ class Bible(private val reader: BibleReader = UsfmFileReader()) {
         return reader.countChapters(book)
     }
 
-    suspend fun search(searchText:String): List<VerseText> {
+    suspend fun search(searchText:String): List<VerseText> = withContext(Dispatchers.Default) {
         val searchWords = searchText.split(" ")
-        return reader.getVersesPlainText(BibleBook.GEN)
-            .filter { verseText -> searchWords.any { verseText.text.contains(it, true) } }
+        BibleBook.entries.map { bibleBook ->
+            async {
+                BookResults(
+                    bibleBook,
+                    reader.getVersesPlainText(bibleBook)
+                        .filter { verseText ->
+                            searchWords.all {
+                                verseText.text.contains(it,true)
+                            }
+                        }
+                )
+            }
+        }
+            .awaitAll()
+            .sortedBy { it.book }
+            .map { it.results }
+            .flatten()
     }
+
+    data class BookResults(val book: BibleBook, val results: List<VerseText>)
 }

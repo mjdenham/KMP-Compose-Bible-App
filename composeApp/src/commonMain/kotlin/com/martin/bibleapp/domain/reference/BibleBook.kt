@@ -11,7 +11,7 @@ enum class BibleBook(val usfmCode: String) {
     DEUT("DEU"),
     JOSH("JOS"),
     JUDG("JDG"),
-    RUTH("RTH"),
+    RUTH("RUT"),
     SAM1("1SA"),
     SAM2("2SA"),
     KGS1("1KI"),
@@ -68,7 +68,7 @@ enum class BibleBook(val usfmCode: String) {
     JOHN1("1JN"),
     JOHN2("2JN"),
     JOHN3("3JN"),
-    JUDE("JUDE"),
+    JUDE("JUD"),
     REV("REV"),;
 
     fun shortLabel(): String = name.lowercase().capitalize(Locale.current)
