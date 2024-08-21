@@ -6,11 +6,12 @@ import com.martin.bibleapp.domain.bible.Bible
 import com.martin.bibleapp.domain.reference.VerseText
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class SearchViewModel: ViewModel() {
     private val _searchResultsState = MutableStateFlow<List<VerseText>>(emptyList())
-    val searchResultsState: StateFlow<List<VerseText>> = _searchResultsState
+    val searchResultsState: StateFlow<List<VerseText>> = _searchResultsState.asStateFlow()
 
     fun search(searchText: String) {
         viewModelScope.launch {

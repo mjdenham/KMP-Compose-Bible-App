@@ -6,11 +6,12 @@ import com.martin.bibleapp.domain.bible.Bible
 import com.martin.bibleapp.domain.reference.BibleBook
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class SelectorViewModel: ViewModel() {
     private val _selectorState = MutableStateFlow<SelectionModel>(SelectionModel())
-    val selectorState: StateFlow<SelectionModel> = _selectorState
+    val selectorState: StateFlow<SelectionModel> = _selectorState.asStateFlow()
 
     fun selectBook(book: BibleBook) {
         viewModelScope.launch {
