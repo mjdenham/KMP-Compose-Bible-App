@@ -8,6 +8,7 @@ androidx-appcompat = "1.7.0"
 androidx-core-ktx = "1.13.1"
 androidx-espresso-core = "3.6.1"
 androidx-test-junit = "1.2.1"
+banes-window-size = "0.5.0"
 compose-plugin = "1.6.11"
 composeWebviewMultiplatform = "1.9.20"
 junit = "4.13.2"
@@ -29,6 +30,7 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+banes-window-size = { module = "dev.chrisbanes.material3:material3-window-size-class-multiplatform", version.ref="banes-window-size" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
