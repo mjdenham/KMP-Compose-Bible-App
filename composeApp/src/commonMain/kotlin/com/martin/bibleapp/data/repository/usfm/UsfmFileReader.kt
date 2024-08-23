@@ -1,11 +1,11 @@
 package com.martin.bibleapp.data.repository.usfm
 
 import androidx.annotation.VisibleForTesting
-import bibleapp.composeapp.generated.resources.Res
 import com.martin.bibleapp.domain.bible.BibleReader
 import com.martin.bibleapp.domain.reference.BibleBook
 import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.domain.reference.VerseText
+import com.martin.bibleapp.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 class UsfmFileReader : BibleReader {

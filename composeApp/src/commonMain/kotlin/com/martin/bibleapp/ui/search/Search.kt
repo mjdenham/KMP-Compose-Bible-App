@@ -28,7 +28,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.isTraversalGroup
@@ -36,6 +35,10 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.martin.bibleapp.domain.reference.VerseText
+import com.martin.bibleapp.ui.util.ErrorMessage
+import com.martin.bibleapp.ui.util.LoadingIndicator
+import com.martin.bibleapp.ui.util.ResultIs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,12 +46,12 @@ fun ShowSearch(
     viewModel: SearchViewModel = viewModel { SearchViewModel() },
     modifier: Modifier = Modifier) {
     var text by rememberSaveable { mutableStateOf("") }
-    var expanded by rememberSaveable { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(true) }
     val searchResults by viewModel.searchResultsState.collectAsState()
 
     Box(Modifier.fillMaxSize().semantics { isTraversalGroup = true }) {
         SearchBar(
-            modifier = modifier.align(Alignment.TopCenter).semantics { traversalIndex = 0f },
+            modifier = modifier.fillMaxWidth().semantics { traversalIndex = 0f },
             query = text,
             onQueryChange = { text = it },
             onSearch = {
@@ -81,20 +84,39 @@ fun ShowSearch(
             }
         }
 
-        LazyColumn(
-            contentPadding = PaddingValues(start = 16.dp, top = 72.dp, end = 16.dp, bottom = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = modifier.semantics { traversalIndex = 1f },
-        ) {
-            items(searchResults) {
-                Column {
-                    Text(
-                        text = it.reference.shortLabel(),
-                    )
-                    Text(
-                        text = it.text,
-                    )
-                }
+        when (val result = searchResults) {
+            is ResultIs.Success -> ShowSearchResults(modifier, result.data)
+            is ResultIs.Loading -> LoadingIndicator()
+            is ResultIs.Error -> ErrorMessage()
+        }
+    }
+}
+
+@Composable
+private fun ShowSearchResults(
+    modifier: Modifier,
+    results: List<VerseText>
+) {
+    LazyColumn(
+        contentPadding = PaddingValues(
+            start = 16.dp,
+            top = 72.dp,
+            end = 16.dp,
+            bottom = 16.dp
+        ),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier.semantics { traversalIndex = 1f },
+    ) {
+
+        items(results) {
+            Column {
+                Text(
+                    text = it.reference.shortLabel(),
+                )
+                Text(
+                    text = it.text,
+                )
             }
         }
-    }}
+    }
+}

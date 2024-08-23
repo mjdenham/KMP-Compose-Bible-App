@@ -95,3 +95,8 @@ android {
     }
 }
 
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "com.martin.bibleapp.resources"
+    generateResClass = always
+}

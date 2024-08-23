@@ -1,12 +1,20 @@
 package com.martin.bibleapp.ui.document
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.martin.bibleapp.domain.reference.Reference
+import com.martin.bibleapp.ui.util.ErrorMessage
+import com.martin.bibleapp.ui.util.LoadingIndicator
+import com.martin.bibleapp.ui.util.ResultIs
 import com.multiplatform.webview.web.WebView
 import com.multiplatform.webview.web.rememberWebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewStateWithHTMLData
@@ -19,24 +27,11 @@ fun ShowDocument(
     viewModel.selectReference(gotoReference)
     val documentState by viewModel.documentState.collectAsState()
     documentState.let { state ->
-        val html: String
-        val jumpTo: String
         when (state) {
-            is DocumentState.Loading -> {
-                html = "Loading..."
-                jumpTo = ""
-            }
-            is DocumentState.Error -> {
-                html = "Error"
-                jumpTo = ""
-            }
-            is DocumentState.Success -> {
-                html = state.data.htmlText
-                jumpTo = state.data.reference.referenceCode()
-            }
+            is ResultIs.Loading -> LoadingIndicator()
+            is ResultIs.Error -> ErrorMessage()
+            is ResultIs.Success -> ShowHtml(state.data.htmlText, state.data.reference.referenceCode())
         }
-
-        ShowHtml(html, jumpTo)
     }
 }
 

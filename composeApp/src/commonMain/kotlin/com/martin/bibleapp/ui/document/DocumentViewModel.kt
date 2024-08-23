@@ -4,18 +4,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.martin.bibleapp.domain.bible.Bible
 import com.martin.bibleapp.domain.reference.Reference
+import com.martin.bibleapp.ui.util.ResultIs
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class DocumentViewModel: ViewModel() {
-    private val _documentState = MutableStateFlow<DocumentState>(DocumentState.Loading())
-    val documentState: StateFlow<DocumentState> = _documentState
+    private val _documentState = MutableStateFlow<ResultIs<DocumentModel>>(ResultIs.Loading)
+    val documentState = _documentState.asStateFlow()
 
     private fun showPassage(reference: Reference) {
         viewModelScope.launch {
             val page = Bible().readPage(reference)
-            _documentState.value = DocumentState.Success(DocumentModel(reference, "<html>$HEAD_STYLE<body>$page</body></html>"))
+            _documentState.value = ResultIs.Success(DocumentModel(reference, "<html>$HEAD_STYLE<body>$page</body></html>"))
         }
     }
 
