@@ -12,8 +12,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,31 +20,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.martin.bibleapp.domain.reference.BibleBook
-import com.martin.bibleapp.domain.reference.Reference
+import com.martin.bibleapp.ui.util.OrientationProvider
+import com.martin.bibleapp.ui.util.OrientationProviderImpl
 
 @Composable
-fun ShowSelector(
-    viewModel: SelectorViewModel = viewModel { SelectorViewModel() },
+fun BookSelectionScreen(
     modifier: Modifier = Modifier,
-    onSelected: (Reference) -> Unit) {
-    val documentState by viewModel.selectorState.collectAsState()
-    val book = documentState.book
-    if (book == null) {
-        BookSelectionScreen({ viewModel.selectBook(it) }, modifier)
-    } else {
-        ChapterSelectionScreen(documentState.numChapters!!, modifier) { chap ->
-            onSelected(Reference(book, chap))
-        }
-    }
-}
-
-@Composable
-private fun BookSelectionScreen(
-    onSelected: (BibleBook) -> Unit,
-    modifier: Modifier = Modifier
+    orientation: OrientationProvider.Orientation = OrientationProviderImpl().getOrientation(),
+    onSelected: (BibleBook) -> Unit
 ) {
     LazyVerticalGrid(
-        columns = GridCells.Fixed(getColumnCount()),
+        columns = GridCells.Fixed(getColumnCount(orientation)),
     ) {
         items(BibleBook.entries) {
             SelectionButton(it.shortLabel(), modifier) {
@@ -58,14 +42,20 @@ private fun BookSelectionScreen(
 
 @Composable
 fun ChapterSelectionScreen(
-    numChapters: Int,
+    book: BibleBook,
     modifier: Modifier = Modifier,
+    viewModel: ChapterSelectorViewModel = viewModel { ChapterSelectorViewModel(book) },
+    orientation: OrientationProvider.Orientation = OrientationProviderImpl().getOrientation(),
     onSelected: (Int) -> Unit
 ) {
-    LazyVerticalGrid(columns = GridCells.Fixed(getColumnCount())) {
-        items(( 1..numChapters).toList()) {
-            SelectionButton(it.toString(), modifier) {
-                onSelected(it)
+    val documentState: SelectionModel by viewModel.selectorState.collectAsState()
+
+    documentState.numChapters?.let { chaps ->
+        LazyVerticalGrid(columns = GridCells.Fixed(getColumnCount(orientation))) {
+            items((1..chaps).toList()) {
+                SelectionButton(it.toString(), modifier) {
+                    onSelected(it)
+                }
             }
         }
     }
@@ -94,9 +84,12 @@ private fun SelectionButton(
 }
 
 @Composable
-private fun getColumnCount(): Int =
-    if (calculateWindowSizeClass().widthSizeClass == WindowWidthSizeClass.Expanded) {
-        13
+private fun getColumnCount(orientation: OrientationProvider.Orientation): Int =
+    if (orientation == OrientationProvider.Orientation.Landscape) {
+        ColumnsLandscape
     } else {
-        6
+        ColumnsPortrait
     }
+
+private const val ColumnsLandscape = 13
+private const val ColumnsPortrait = 6

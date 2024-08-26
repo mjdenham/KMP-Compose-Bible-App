@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class SelectorViewModel: ViewModel() {
+class ChapterSelectorViewModel(book: BibleBook): ViewModel() {
     private val _selectorState = MutableStateFlow<SelectionModel>(SelectionModel())
     val selectorState: StateFlow<SelectionModel> = _selectorState.asStateFlow()
 
-    fun selectBook(book: BibleBook) {
+    init {
         viewModelScope.launch {
             val numChapters = Bible().getNumChapters(book)
             _selectorState.value = selectorState.value.copy(book = book, numChapters = numChapters)

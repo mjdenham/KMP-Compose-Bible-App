@@ -23,10 +23,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.martin.bibleapp.domain.reference.BibleBook
 import com.martin.bibleapp.domain.reference.Reference
-import com.martin.bibleapp.ui.document.ShowDocument
-import com.martin.bibleapp.ui.search.ShowSearch
-import com.martin.bibleapp.ui.selector.ShowSelector
+import com.martin.bibleapp.ui.document.Document
+import com.martin.bibleapp.ui.search.SearchScreen
+import com.martin.bibleapp.ui.selector.BookSelectionScreen
+import com.martin.bibleapp.ui.selector.ChapterSelectionScreen
 import com.martin.bibleapp.ui.theme.BibleTheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
@@ -36,6 +38,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 enum class BibleScreen {
     BibleView,
     BibleBookPicker,
+    BibleChapterPicker,
     Search
 }
 
@@ -46,6 +49,8 @@ fun App(
 ) {
     BibleTheme {
         var gotoReference by remember { mutableStateOf(Reference.DEFAULT) }
+        //TODO pass as navigation parameter to chapter selection when type safe nav works
+        var selectedBook by remember { mutableStateOf(BibleBook.JOHN) }
 
         Scaffold(
             topBar = {
@@ -61,16 +66,23 @@ fun App(
                     .padding(innerPadding)
             ) {
                 composable(BibleScreen.BibleView.name) {
-                    ShowDocument(gotoReference)
+                    Document(gotoReference)
                 }
                 composable(BibleScreen.BibleBookPicker.name) {
-                    ShowSelector { selectedReference ->
-                        gotoReference = selectedReference
-                        navController.popBackStack()
-                    }
+                    BookSelectionScreen(onSelected = { book ->
+                        //TODO pass book as param when upgraded to Type-Safe Navigation
+                        selectedBook = book
+                        navController.navigate(BibleScreen.BibleChapterPicker.name)
+                    })
+                }
+                composable(BibleScreen.BibleChapterPicker.name) {
+                    ChapterSelectionScreen(selectedBook, onSelected = { selectedChapter ->
+                        gotoReference = Reference(selectedBook, selectedChapter)
+                        navController.popBackStack(BibleScreen.BibleView.name, false)
+                    })
                 }
                 composable(BibleScreen.Search.name) {
-                    ShowSearch()
+                    SearchScreen()
                 }
             }
         }

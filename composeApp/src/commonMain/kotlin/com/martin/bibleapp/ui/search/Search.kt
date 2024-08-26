@@ -42,9 +42,10 @@ import com.martin.bibleapp.ui.util.ResultIs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShowSearch(
-    viewModel: SearchViewModel = viewModel { SearchViewModel() },
-    modifier: Modifier = Modifier) {
+fun SearchScreen(
+    modifier: Modifier = Modifier,
+    viewModel: SearchViewModel = viewModel { SearchViewModel() }
+) {
     var text by rememberSaveable { mutableStateOf("") }
     var expanded by rememberSaveable { mutableStateOf(true) }
     val searchResults by viewModel.searchResultsState.collectAsState()
@@ -85,7 +86,7 @@ fun ShowSearch(
         }
 
         when (val result = searchResults) {
-            is ResultIs.Success -> ShowSearchResults(modifier, result.data)
+            is ResultIs.Success -> SearchResults(modifier, result.data)
             is ResultIs.Loading -> LoadingIndicator()
             is ResultIs.Error -> ErrorMessage()
         }
@@ -93,7 +94,7 @@ fun ShowSearch(
 }
 
 @Composable
-private fun ShowSearchResults(
+private fun SearchResults(
     modifier: Modifier,
     results: List<VerseText>
 ) {

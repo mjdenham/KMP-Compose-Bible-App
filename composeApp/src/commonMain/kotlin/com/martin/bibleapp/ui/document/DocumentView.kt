@@ -1,15 +1,10 @@
 package com.martin.bibleapp.ui.document
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.ui.util.ErrorMessage
@@ -20,7 +15,7 @@ import com.multiplatform.webview.web.rememberWebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewStateWithHTMLData
 
 @Composable
-fun ShowDocument(
+fun Document(
     gotoReference: Reference,
     viewModel: DocumentViewModel = viewModel { DocumentViewModel() }
 ) {
