@@ -2,7 +2,6 @@ package com.martin.bibleapp.ui.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,16 +9,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,11 +47,14 @@ fun SearchScreen(
 ) {
     var text by rememberSaveable { mutableStateOf("") }
     var expanded by rememberSaveable { mutableStateOf(true) }
+    val suggestions by viewModel.suggestions.collectAsState()
     val searchResults by viewModel.searchResultsState.collectAsState()
 
-    Box(Modifier.fillMaxSize().semantics { isTraversalGroup = true }) {
+    Column(Modifier.fillMaxSize().semantics { isTraversalGroup = true }) {
         SearchBar(
-            modifier = modifier.fillMaxWidth().semantics { traversalIndex = 0f },
+            modifier = modifier
+                .fillMaxWidth()
+                .semantics { traversalIndex = 0f },
             query = text,
             onQueryChange = { text = it },
             onSearch = {
@@ -65,30 +67,30 @@ fun SearchScreen(
             active = expanded,
             onActiveChange = { expanded = it },
         ) {
-            Column(Modifier.verticalScroll(rememberScrollState())) {
-                repeat(4) { idx ->
-                    val resultText = "Suggestion $idx"
+            LazyColumn {
+                items(suggestions) {
                     ListItem(
-                        headlineContent = { Text(resultText) },
-                        supportingContent = { Text("Additional info") },
-                        leadingContent = { Icon(Icons.Filled.Star, contentDescription = null) },
+                        headlineContent = { Text(it) },
+                        leadingContent = { Icon(Icons.Default.Refresh, contentDescription = null) },
                         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                        modifier =
-                        modifier.clickable {
-                            text = resultText
-                            expanded = false
-                        }
-                            .fillMaxWidth()
+                        modifier = modifier.fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 4.dp)
+                            .clickable {
+                                text = it
+                                expanded = false
+                                viewModel.search(text)
+                            }
                     )
                 }
             }
         }
 
-        when (val result = searchResults) {
-            is ResultIs.Success -> SearchResults(modifier, result.data)
-            is ResultIs.Loading -> LoadingIndicator()
-            is ResultIs.Error -> ErrorMessage()
+        if (!expanded) {
+            when (val result = searchResults) {
+                is ResultIs.Success -> SearchResults(modifier, result.data)
+                is ResultIs.Loading -> LoadingIndicator()
+                is ResultIs.Error -> ErrorMessage()
+            }
         }
     }
 }
@@ -99,25 +101,38 @@ private fun SearchResults(
     results: List<VerseText>
 ) {
     LazyColumn(
-        contentPadding = PaddingValues(
-            start = 16.dp,
-            top = 72.dp,
-            end = 16.dp,
-            bottom = 16.dp
-        ),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier.semantics { traversalIndex = 1f },
     ) {
 
         items(results) {
-            Column {
-                Text(
-                    text = it.reference.shortLabel(),
-                )
-                Text(
-                    text = it.text,
-                )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                ItemCard(it)
             }
+        }
+    }
+}
+
+@Composable
+private fun ItemCard(it: VerseText) {
+    Card(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(3.dp),
+            modifier = Modifier.padding(10.dp),
+        ) {
+            Text(
+                text = it.reference.shortLabel(),
+                style = MaterialTheme.typography.titleSmall,
+            )
+            Text(
+                text = it.text,
+                style = MaterialTheme.typography.bodyMedium,
+            )
         }
     }
 }
