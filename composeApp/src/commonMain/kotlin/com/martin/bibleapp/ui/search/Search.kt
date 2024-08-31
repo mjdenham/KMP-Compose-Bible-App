@@ -33,17 +33,17 @@ import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.martin.bibleapp.domain.reference.VerseText
 import com.martin.bibleapp.ui.util.ErrorMessage
 import com.martin.bibleapp.ui.util.LoadingIndicator
 import com.martin.bibleapp.ui.util.ResultIs
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
-    viewModel: SearchViewModel = viewModel { SearchViewModel() }
+    viewModel: SearchViewModel = koinViewModel()
 ) {
     var text by rememberSaveable { mutableStateOf("") }
     var expanded by rememberSaveable { mutableStateOf(true) }

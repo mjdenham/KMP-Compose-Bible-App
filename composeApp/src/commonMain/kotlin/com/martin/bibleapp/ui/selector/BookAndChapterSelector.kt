@@ -18,10 +18,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.martin.bibleapp.domain.reference.BibleBook
 import com.martin.bibleapp.ui.util.OrientationProvider
 import com.martin.bibleapp.ui.util.OrientationProviderImpl
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun BookSelectionScreen(
@@ -42,9 +42,8 @@ fun BookSelectionScreen(
 
 @Composable
 fun ChapterSelectionScreen(
-    book: BibleBook,
     modifier: Modifier = Modifier,
-    viewModel: ChapterSelectorViewModel = viewModel { ChapterSelectorViewModel(book) },
+    viewModel: ChapterSelectorViewModel = koinViewModel(),
     orientation: OrientationProvider.Orientation = OrientationProviderImpl().getOrientation(),
     onSelected: (Int) -> Unit
 ) {

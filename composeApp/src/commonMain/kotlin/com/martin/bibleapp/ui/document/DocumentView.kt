@@ -5,7 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.ui.util.ErrorMessage
 import com.martin.bibleapp.ui.util.LoadingIndicator
@@ -13,11 +12,12 @@ import com.martin.bibleapp.ui.util.ResultIs
 import com.multiplatform.webview.web.WebView
 import com.multiplatform.webview.web.rememberWebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewStateWithHTMLData
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun Document(
     gotoReference: Reference,
-    viewModel: DocumentViewModel = viewModel { DocumentViewModel() }
+    viewModel: DocumentViewModel = koinViewModel()
 ) {
     viewModel.selectReference(gotoReference)
     val documentState by viewModel.documentState.collectAsState()

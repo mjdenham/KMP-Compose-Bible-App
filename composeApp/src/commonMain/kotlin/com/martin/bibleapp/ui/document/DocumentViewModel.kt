@@ -9,13 +9,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class DocumentViewModel: ViewModel() {
+class DocumentViewModel(val bible: Bible): ViewModel() {
     private val _documentState = MutableStateFlow<ResultIs<DocumentModel>>(ResultIs.Loading)
     val documentState = _documentState.asStateFlow()
 
     private fun showPassage(reference: Reference) {
         viewModelScope.launch {
-            val page = Bible().readPage(reference)
+            val page = bible.readPage(reference)
             _documentState.value = ResultIs.Success(DocumentModel(reference, "<html>$HEAD_STYLE<body>$page</body></html>"))
         }
     }

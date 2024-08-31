@@ -23,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.martin.bibleapp.domain.reference.BibleBook
 import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.ui.document.Document
@@ -30,16 +31,22 @@ import com.martin.bibleapp.ui.search.SearchScreen
 import com.martin.bibleapp.ui.selector.BookSelectionScreen
 import com.martin.bibleapp.ui.selector.ChapterSelectionScreen
 import com.martin.bibleapp.ui.theme.BibleTheme
+import kotlinx.serialization.Serializable
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.KoinContext
 
 /**
  * Values that represent the screens in the app
  */
-enum class BibleScreen {
-    BibleView,
-    BibleBookPicker,
-    BibleChapterPicker,
-    Search
+sealed class BibleScreen {
+    @Serializable
+    object BibleView: BibleScreen()
+    @Serializable
+    object BibleBookPicker: BibleScreen()
+    @Serializable
+    data class BibleChapterPicker(val bookName: String): BibleScreen()
+    @Serializable
+    object Search: BibleScreen()
 }
 
 @Composable
@@ -48,41 +55,41 @@ fun App(
     navController: NavHostController = rememberNavController()
 ) {
     BibleTheme {
-        var gotoReference by remember { mutableStateOf(Reference.DEFAULT) }
-        //TODO pass as navigation parameter to chapter selection when type safe nav works
-        var selectedBook by remember { mutableStateOf(BibleBook.JOHN) }
+        KoinContext {
+            var gotoReference by remember { mutableStateOf(Reference.DEFAULT) }
 
-        Scaffold(
-            topBar = {
-                BibleTopNavBar(navController, gotoReference.shortLabel())
-            },
-            modifier = Modifier.fillMaxSize()
-        ) { innerPadding ->
-            NavHost(
-                navController = navController,
-                startDestination = BibleScreen.BibleView.name,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-            ) {
-                composable(BibleScreen.BibleView.name) {
-                    Document(gotoReference)
-                }
-                composable(BibleScreen.BibleBookPicker.name) {
-                    BookSelectionScreen(onSelected = { book ->
-                        //TODO pass book as param when upgraded to Type-Safe Navigation
-                        selectedBook = book
-                        navController.navigate(BibleScreen.BibleChapterPicker.name)
-                    })
-                }
-                composable(BibleScreen.BibleChapterPicker.name) {
-                    ChapterSelectionScreen(selectedBook, onSelected = { selectedChapter ->
-                        gotoReference = Reference(selectedBook, selectedChapter)
-                        navController.popBackStack(BibleScreen.BibleView.name, false)
-                    })
-                }
-                composable(BibleScreen.Search.name) {
-                    SearchScreen()
+            Scaffold(
+                topBar = {
+                    BibleTopNavBar(navController, gotoReference.shortLabel())
+                },
+                modifier = Modifier.fillMaxSize()
+            ) { innerPadding ->
+                NavHost(
+                    navController = navController,
+                    startDestination = BibleScreen.BibleView,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                ) {
+                    composable<BibleScreen.BibleView> {
+                        Document(gotoReference)
+                    }
+                    composable<BibleScreen.BibleBookPicker> {
+                        BookSelectionScreen(onSelected = { book ->
+                            navController.navigate(BibleScreen.BibleChapterPicker(book.name))
+                        })
+                    }
+                    composable<BibleScreen.BibleChapterPicker> {
+                        val bookName = it.toRoute<BibleScreen.BibleChapterPicker>().bookName
+                        val book = BibleBook.valueOf(bookName)
+                        ChapterSelectionScreen(onSelected = { selectedChapter ->
+                            gotoReference = Reference(book, selectedChapter)
+                            navController.popBackStack(BibleScreen.BibleView, false)
+                        })
+                    }
+                    composable<BibleScreen.Search> {
+                        SearchScreen()
+                    }
                 }
             }
         }
@@ -101,7 +108,7 @@ private fun BibleTopNavBar(
             titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         title = {
-            ElevatedButton(onClick = { navController.navigate(BibleScreen.BibleBookPicker.name) }) {
+            ElevatedButton(onClick = { navController.navigate(BibleScreen.BibleBookPicker) }) {
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleMedium
@@ -109,7 +116,7 @@ private fun BibleTopNavBar(
             }
         },
         actions = {
-            IconButton(onClick = { navController.navigate(BibleScreen.Search.name) }) {
+            IconButton(onClick = { navController.navigate(BibleScreen.Search) }) {
                 Icon(
                     imageVector = Icons.Filled.Search,
                     contentDescription = "Search"

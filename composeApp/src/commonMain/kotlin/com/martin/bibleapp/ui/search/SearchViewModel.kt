@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SearchViewModel: ViewModel() {
+class SearchViewModel(val bible: Bible): ViewModel() {
     private val _suggestions = MutableStateFlow<List<String>>(emptyList())
     val suggestions = _suggestions.asStateFlow()
 
@@ -20,7 +20,7 @@ class SearchViewModel: ViewModel() {
     fun search(searchText: String) {
         _searchResultsState.value = ResultIs.Loading
         viewModelScope.launch {
-            val searchResults = Bible().search(searchText)
+            val searchResults = bible.search(searchText)
             _searchResultsState.update {
                 ResultIs.Success(searchResults)
             }

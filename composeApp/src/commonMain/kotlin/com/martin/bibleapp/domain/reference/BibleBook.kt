@@ -69,7 +69,7 @@ enum class BibleBook(val usfmCode: String) {
     JOHN2("2JN"),
     JOHN3("3JN"),
     JUDE("JUD"),
-    REV("REV"),;
+    REV("REV");
 
     fun shortLabel(): String = name.lowercase().capitalize(Locale.current)
 }
