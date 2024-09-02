@@ -70,11 +70,12 @@ class UsfmFileReaderTest {
         assertEquals(expected, html)
 
         val expected2 = "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;who does not walk in the counsel of the wicked,</p>"
-        val html2 = UsfmFileReader().toHtml(
-            "\\q2 who does not walk in the counsel of the wicked,",
-            reference
-        )
+        val html2 = UsfmFileReader().toHtml("\\q2 who does not walk in the counsel of the wicked,", reference)
         assertEquals(expected2, html2)
+
+        val expected3 = "<p style='text-align:right'>His loving devotion endures forever.</p>"
+        val html3 = UsfmFileReader().toHtml("\\qr His loving devotion endures forever.", reference)
+        assertEquals(expected3, html3)
     }
 
     @Test

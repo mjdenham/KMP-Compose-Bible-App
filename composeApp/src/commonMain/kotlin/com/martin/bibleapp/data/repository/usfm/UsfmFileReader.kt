@@ -62,6 +62,7 @@ class UsfmFileReader : BibleReader {
             "\\qa" -> "<p>$cleanLine</p>" // acrostic e.g. ALEPH
             "\\q1" -> "<p>$cleanLine</p>"
             "\\q2" -> "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$cleanLine</p>"
+            "\\qr" -> "<p style='text-align:right'>$cleanLine</p>"
             "\\b" -> "<br />"
             else -> ""
         }

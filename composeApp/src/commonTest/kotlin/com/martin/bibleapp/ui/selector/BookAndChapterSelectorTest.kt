@@ -5,6 +5,10 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
+import androidx.core.bundle.Bundle
+import androidx.lifecycle.SavedStateHandle
+import com.martin.bibleapp.data.repository.usfm.UsfmFileReader
+import com.martin.bibleapp.domain.bible.Bible
 import com.martin.bibleapp.domain.reference.BibleBook
 import com.martin.bibleapp.ui.util.OrientationProvider
 import kotlin.test.Test
@@ -35,11 +39,20 @@ class BookAndChapterSelectorTest {
     fun testChapterSelection() = runComposeUiTest {
         var clickedChapter: Int? = null
         setContent {
+            val viewModel = ChapterSelectorViewModel(
+                Bible(UsfmFileReader()),
+                SavedStateHandle.createHandle(
+                    Bundle().apply {
+                        putString("bookName", "PS")
+                    },
+                    null
+                )
+            )
+
             ChapterSelectionScreen(
-                BibleBook.PS,
                 Modifier,
-                ChapterSelectorViewModel(BibleBook.PS),
-                OrientationProvider.Orientation.Portrait
+                viewModel,
+                OrientationProvider.Orientation.Portrait,
             ) { ref ->
                 clickedChapter = ref
             }

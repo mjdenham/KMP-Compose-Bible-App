@@ -1,5 +1,6 @@
 package com.martin.bibleapp.domain.bible
 
+import com.martin.bibleapp.data.repository.usfm.UsfmFileReader
 import kotlinx.coroutines.runBlocking
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -8,11 +9,11 @@ import kotlin.test.assertTrue
 
 class BibleTest {
 
-    private var bible = Bible()
+    private lateinit var bible: Bible
 
     @BeforeTest
     fun setup() {
-        bible = Bible()
+        bible = Bible(UsfmFileReader())
     }
 
     @Test
