@@ -56,11 +56,11 @@ fun App(
 ) {
     BibleTheme {
         KoinContext {
-            var gotoReference by remember { mutableStateOf(Reference.DEFAULT) }
+            var currentReference by remember { mutableStateOf(Reference.DEFAULT) }
 
             Scaffold(
                 topBar = {
-                    BibleTopNavBar(navController, gotoReference.shortLabel())
+                    BibleTopNavBar(navController, currentReference.shortLabel())
                 },
                 modifier = Modifier.fillMaxSize()
             ) { innerPadding ->
@@ -72,7 +72,7 @@ fun App(
                         .padding(innerPadding),
                 ) {
                     composable<BibleScreen.BibleView> {
-                        Document(gotoReference)
+                        Document(currentReference)
                     }
                     composable<BibleScreen.BibleBookPicker> {
                         BookSelectionScreen(onSelected = { book ->
@@ -82,10 +82,10 @@ fun App(
                     composable<BibleScreen.BibleChapterPicker> {
                         val bookName = it.toRoute<BibleScreen.BibleChapterPicker>().bookName
                         val book = BibleBook.valueOf(bookName)
-                        ChapterSelectionScreen(onSelected = { selectedChapter ->
-                            gotoReference = Reference(book, selectedChapter)
+                        ChapterSelectionScreen(book) { selectedChapter ->
+                            currentReference = Reference(book, selectedChapter)
                             navController.popBackStack(BibleScreen.BibleView, false)
-                        })
+                        }
                     }
                     composable<BibleScreen.Search> {
                         SearchScreen()

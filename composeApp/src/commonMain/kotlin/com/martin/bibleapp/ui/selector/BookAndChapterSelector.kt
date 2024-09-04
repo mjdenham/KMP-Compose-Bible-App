@@ -22,6 +22,7 @@ import com.martin.bibleapp.domain.reference.BibleBook
 import com.martin.bibleapp.ui.util.OrientationProvider
 import com.martin.bibleapp.ui.util.OrientationProviderImpl
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun BookSelectionScreen(
@@ -42,8 +43,9 @@ fun BookSelectionScreen(
 
 @Composable
 fun ChapterSelectionScreen(
+    book: BibleBook,
     modifier: Modifier = Modifier,
-    viewModel: ChapterSelectorViewModel = koinViewModel(),
+    viewModel: ChapterSelectorViewModel = koinViewModel{ parametersOf(book) },
     orientation: OrientationProvider.Orientation = OrientationProviderImpl().getOrientation(),
     onSelected: (Int) -> Unit
 ) {
