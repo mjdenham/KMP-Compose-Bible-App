@@ -8,6 +8,7 @@ import com.martin.bibleapp.ui.search.SearchViewModel
 import com.martin.bibleapp.ui.selector.ChapterSelectorViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.viewModel
+import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
 val appModule = module {
@@ -18,8 +19,9 @@ val appModule = module {
     viewModel { SearchViewModel(get()) }
 }
 
-fun initializeKoin() {
+fun initializeKoin(appDeclaration: KoinAppDeclaration = {}) {
     startKoin {
         modules(appModule)
+        appDeclaration()
     }
 }
