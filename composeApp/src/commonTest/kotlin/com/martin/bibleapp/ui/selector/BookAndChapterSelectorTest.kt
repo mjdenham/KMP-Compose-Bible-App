@@ -40,16 +40,12 @@ class BookAndChapterSelectorTest {
         var clickedChapter: Int? = null
         setContent {
             val viewModel = ChapterSelectorViewModel(
+                BibleBook.PS,
                 Bible(UsfmFileReader()),
-                SavedStateHandle.createHandle(
-                    Bundle().apply {
-                        putString("bookName", "PS")
-                    },
-                    null
-                )
             )
 
             ChapterSelectionScreen(
+                BibleBook.PS,
                 Modifier,
                 viewModel,
                 OrientationProvider.Orientation.Portrait,
