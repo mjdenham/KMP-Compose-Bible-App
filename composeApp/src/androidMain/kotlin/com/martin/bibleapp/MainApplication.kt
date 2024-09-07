@@ -1,6 +1,7 @@
 package com.martin.bibleapp
 
 import android.app.Application
+import com.martin.bibleapp.di.androidAppModule
 import com.martin.bibleapp.di.initializeKoin
 import org.koin.android.ext.koin.androidContext
 
@@ -10,6 +11,7 @@ class MainApplication: Application() {
 
         initializeKoin() {
             androidContext(this@MainApplication)
+            modules(androidAppModule)
         }
     }
 }
