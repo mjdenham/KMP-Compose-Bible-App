@@ -1,5 +1,6 @@
 package com.martin.bibleapp.domain.bible
 
+import com.martin.bibleapp.data.reference.CurrentReferenceRepository
 import com.martin.bibleapp.domain.reference.BibleBook
 import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.domain.reference.VerseText
@@ -8,8 +9,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 
-class Bible(private val reader: BibleReader) {
+class Bible(private val reader: BibleReader, val currentReferenceRepository: CurrentReferenceRepository) {
+
     suspend fun readPage(reference: Reference): String {
+        currentReferenceRepository.updateCurrentReference(reference)
+
         return reader.read(reference)
     }
 

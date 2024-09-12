@@ -9,6 +9,9 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.ksp)
+    // TODO add plugin back in when this is supported again
+    //alias(libs.plugins.room)
 }
 
 kotlin {
@@ -36,6 +39,7 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
+            implementation(libs.room.runtime.android)
         }
         commonMain.dependencies {
             api(libs.compose.webview.multiplatform)
@@ -54,6 +58,8 @@ kotlin {
             implementation(libs.lifecycle.viewmodel.compose)
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.room.runtime)
+            implementation(libs.sqlite.bundled)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -97,6 +103,28 @@ android {
     }
     dependencies {
         debugImplementation(compose.uiTooling)
+    }
+}
+
+// TODO uncomment when Room compiler fixed and remove following ksp and dependencies blocks
+//room {
+//    schemaDirectory("$projectDir/schemas")
+//}
+// not sure if this dependency is required
+//dependencies {
+//    ksp(libs.room.compiler)
+//}
+ksp {
+    arg("room.schemaLocation", "${projectDir}/schemas")
+}
+dependencies {
+    listOf(
+        "kspAndroid",
+        "kspIosSimulatorArm64",
+        "kspIosX64",
+        "kspIosArm64"
+    ).forEach {
+        add(it, libs.room.compiler)
     }
 }
 

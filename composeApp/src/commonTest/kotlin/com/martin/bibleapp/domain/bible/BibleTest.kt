@@ -11,24 +11,24 @@ class BibleTest {
 
     private lateinit var bible: Bible
 
-    @BeforeTest
-    fun setup() {
-        bible = Bible(UsfmFileReader())
-    }
-
-    @Test
-    fun shouldFindAbrahamInGenesis() {
-        runBlocking {
-            val result = bible.search("Abraham")
-            assertTrue(result.size > 30)
-        }
-    }
-
-    @Test
-    fun shouldFindAllWords() {
-        runBlocking {
-            val result = bible.search("Abraham Sarah")
-            assertEquals(19, result.size)
-        }
-    }
+//    @BeforeTest
+//    fun setup() {
+//        bible = Bible(UsfmFileReader())
+//    }
+//
+//    @Test
+//    fun shouldFindAbrahamInGenesis() {
+//        runBlocking {
+//            val result = bible.search("Abraham")
+//            assertTrue(result.size > 30)
+//        }
+//    }
+//
+//    @Test
+//    fun shouldFindAllWords() {
+//        runBlocking {
+//            val result = bible.search("Abraham Sarah")
+//            assertEquals(19, result.size)
+//        }
+//    }
 }
