@@ -13,6 +13,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
@@ -50,7 +51,8 @@ fun ChapterSelectionScreen(
     orientation: OrientationProvider.Orientation = OrientationProviderImpl().getOrientation(),
     onSelected: (Int) -> Unit
 ) {
-    val documentState: SelectionModel by viewModel.selectorState.collectAsStateWithLifecycle()
+    //TODO after lifecycle library upgrade add withLifecycle - currently tests fail withLifecycle
+    val documentState: SelectionModel by viewModel.selectorState.collectAsState()
 
     documentState.numChapters?.let { chaps ->
         LazyVerticalGrid(columns = GridCells.Fixed(getColumnCount(orientation))) {

@@ -5,11 +5,10 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import androidx.core.bundle.Bundle
-import androidx.lifecycle.SavedStateHandle
 import com.martin.bibleapp.data.repository.usfm.UsfmFileReader
-import com.martin.bibleapp.domain.bible.Bible
+import com.martin.bibleapp.domain.bible.ReferenceSelectionUseCase
 import com.martin.bibleapp.domain.reference.BibleBook
+import com.martin.bibleapp.fakes.FakeCurrentReferenceRepository
 import com.martin.bibleapp.ui.util.OrientationProvider
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -41,7 +40,7 @@ class BookAndChapterSelectorTest {
         setContent {
             val viewModel = ChapterSelectorViewModel(
                 BibleBook.PS,
-                Bible(UsfmFileReader()),
+                ReferenceSelectionUseCase(UsfmFileReader(), FakeCurrentReferenceRepository()),
             )
 
             ChapterSelectionScreen(

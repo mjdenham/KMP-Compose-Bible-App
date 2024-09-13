@@ -1,7 +1,7 @@
 package com.martin.bibleapp.domain.bible
 
-import com.martin.bibleapp.data.reference.CurrentReferenceRepository
 import com.martin.bibleapp.domain.reference.BibleBook
+import com.martin.bibleapp.domain.reference.CurrentReferenceRepository
 import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.domain.reference.VerseText
 import kotlinx.coroutines.Dispatchers
