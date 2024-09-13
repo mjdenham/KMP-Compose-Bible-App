@@ -10,9 +10,9 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
-class Bible(private val reader: BibleReader, val currentReferenceRepository: CurrentReferenceRepository) {
+class Bible(private val reader: BibleReader, private val currentReferenceRepository: CurrentReferenceRepository) {
 
-    suspend fun getCurrentReferenceFlow(): Flow<Reference> = currentReferenceRepository.getCurrentReferenceFlow()
+    fun getCurrentReferenceFlow(): Flow<Reference> = currentReferenceRepository.getCurrentReferenceFlow()
 
     suspend fun readPage(reference: Reference): String {
         return reader.read(reference)
