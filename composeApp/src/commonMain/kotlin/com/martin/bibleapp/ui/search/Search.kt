@@ -22,7 +22,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,6 +32,7 @@ import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.martin.bibleapp.domain.reference.VerseText
 import com.martin.bibleapp.ui.util.ErrorMessage
 import com.martin.bibleapp.ui.util.LoadingIndicator
@@ -47,8 +47,8 @@ fun SearchScreen(
 ) {
     var text by rememberSaveable { mutableStateOf("") }
     var expanded by rememberSaveable { mutableStateOf(true) }
-    val suggestions by viewModel.suggestions.collectAsState()
-    val searchResults by viewModel.searchResultsState.collectAsState()
+    val suggestions by viewModel.suggestions.collectAsStateWithLifecycle()
+    val searchResults by viewModel.searchResultsState.collectAsStateWithLifecycle()
 
     Column(Modifier.fillMaxSize().semantics { isTraversalGroup = true }) {
         SearchBar(

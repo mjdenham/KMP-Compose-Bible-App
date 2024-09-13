@@ -7,18 +7,15 @@ import com.martin.bibleapp.domain.reference.VerseText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class Bible(private val reader: BibleReader, val currentReferenceRepository: CurrentReferenceRepository) {
 
+    suspend fun getCurrentReferenceFlow(): Flow<Reference> = currentReferenceRepository.getCurrentReferenceFlow()
+
     suspend fun readPage(reference: Reference): String {
-        currentReferenceRepository.updateCurrentReference(reference)
-
         return reader.read(reference)
-    }
-
-    suspend fun getNumChapters(book: BibleBook): Int {
-        return reader.countChapters(book)
     }
 
     suspend fun search(searchText: String): List<VerseText> = withContext(Dispatchers.Default) {

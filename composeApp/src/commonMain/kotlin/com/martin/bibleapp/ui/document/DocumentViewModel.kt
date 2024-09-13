@@ -13,15 +13,19 @@ class DocumentViewModel(val bible: Bible): ViewModel() {
     private val _documentState = MutableStateFlow<ResultIs<DocumentModel>>(ResultIs.Loading)
     val documentState = _documentState.asStateFlow()
 
+    init {
+        viewModelScope.launch {
+            bible.getCurrentReferenceFlow().collect {
+                showPassage(it)
+            }
+        }
+    }
+
     private fun showPassage(reference: Reference) {
         viewModelScope.launch {
             val page = bible.readPage(reference)
             _documentState.value = ResultIs.Success(DocumentModel(reference, "<html>$HEAD_STYLE<body>$page</body></html>"))
         }
-    }
-
-    fun selectReference(reference: Reference) {
-        showPassage(reference)
     }
 
     companion object {

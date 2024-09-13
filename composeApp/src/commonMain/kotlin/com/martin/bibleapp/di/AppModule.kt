@@ -4,6 +4,7 @@ import com.martin.bibleapp.data.reference.CurrentReferenceRepository
 import com.martin.bibleapp.data.repository.usfm.UsfmFileReader
 import com.martin.bibleapp.domain.bible.Bible
 import com.martin.bibleapp.domain.bible.BibleReader
+import com.martin.bibleapp.domain.bible.ReferenceSelectionUseCase
 import com.martin.bibleapp.ui.document.DocumentViewModel
 import com.martin.bibleapp.ui.search.SearchViewModel
 import com.martin.bibleapp.ui.selector.ChapterSelectorViewModel
@@ -18,6 +19,7 @@ val appModule = module {
     single<BibleReader> { UsfmFileReader() }
     single<CurrentReferenceRepository> { CurrentReferenceRepository(get()) }
     single<Bible> { Bible(get(), get()) }
+    single<ReferenceSelectionUseCase> { ReferenceSelectionUseCase(get(), get()) }
     viewModel { DocumentViewModel(get()) }
     viewModel { ChapterSelectorViewModel(get(), get()) }
     viewModel { SearchViewModel(get()) }

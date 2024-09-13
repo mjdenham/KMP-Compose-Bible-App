@@ -13,12 +13,13 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.martin.bibleapp.domain.reference.BibleBook
+import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.ui.util.OrientationProvider
 import com.martin.bibleapp.ui.util.OrientationProviderImpl
 import org.koin.compose.viewmodel.koinViewModel
@@ -49,12 +50,13 @@ fun ChapterSelectionScreen(
     orientation: OrientationProvider.Orientation = OrientationProviderImpl().getOrientation(),
     onSelected: (Int) -> Unit
 ) {
-    val documentState: SelectionModel by viewModel.selectorState.collectAsState()
+    val documentState: SelectionModel by viewModel.selectorState.collectAsStateWithLifecycle()
 
     documentState.numChapters?.let { chaps ->
         LazyVerticalGrid(columns = GridCells.Fixed(getColumnCount(orientation))) {
             items((1..chaps).toList()) {
                 SelectionButton(it.toString(), modifier) {
+                    viewModel.selectReference(Reference(book, it))
                     onSelected(it)
                 }
             }

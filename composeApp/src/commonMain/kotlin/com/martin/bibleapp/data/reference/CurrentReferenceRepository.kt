@@ -2,20 +2,19 @@ package com.martin.bibleapp.data.reference
 
 import com.martin.bibleapp.data.database.BibleAppDatabase
 import com.martin.bibleapp.domain.reference.Reference
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-class CurrentReferenceRepository(val bibleAppDatabase: BibleAppDatabase) {
+class CurrentReferenceRepository(bibleAppDatabase: BibleAppDatabase) {
     private val currentReferenceDao = bibleAppDatabase.currentReferenceDao()
 
     suspend fun updateCurrentReference(reference: Reference) {
         currentReferenceDao.upsert(CurrentReference(CURRENT_REFERENCE_ID, reference.book, reference.chapter, reference.verse))
     }
 
-    suspend fun getCurrentReference(): Reference {
-        val ref = currentReferenceDao.getCurrentReference(CURRENT_REFERENCE_ID)?.let { currentReference ->
-            Reference(currentReference.book, currentReference.chapter, currentReference.verse)
-        } ?: Reference.DEFAULT
-
-        return ref
+    fun getCurrentReferenceFlow(): Flow<Reference> {
+        return currentReferenceDao.getCurrentReference(CURRENT_REFERENCE_ID)
+            .map { if (it != null) Reference(it.book, it.chapter, it.verse) else Reference.DEFAULT }
     }
 
     companion object {

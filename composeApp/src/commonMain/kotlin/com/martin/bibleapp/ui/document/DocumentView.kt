@@ -2,10 +2,9 @@ package com.martin.bibleapp.ui.document
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.martin.bibleapp.domain.reference.Reference
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.martin.bibleapp.ui.util.ErrorMessage
 import com.martin.bibleapp.ui.util.LoadingIndicator
 import com.martin.bibleapp.ui.util.ResultIs
@@ -16,11 +15,9 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun Document(
-    gotoReference: Reference,
     viewModel: DocumentViewModel = koinViewModel()
 ) {
-    viewModel.selectReference(gotoReference)
-    val documentState by viewModel.documentState.collectAsState()
+    val documentState by viewModel.documentState.collectAsStateWithLifecycle()
     documentState.let { state ->
         when (state) {
             is ResultIs.Loading -> LoadingIndicator()
