@@ -3,6 +3,7 @@ package com.martin.bibleapp.data.usfm
 import com.martin.bibleapp.data.repository.usfm.UsfmFileReader
 import com.martin.bibleapp.domain.reference.BibleBook
 import com.martin.bibleapp.domain.reference.Reference
+import com.martin.bibleapp.domain.reference.VerseText
 import kotlinx.coroutines.runBlocking
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -64,6 +65,13 @@ class UsfmFileReaderTest {
     }
 
     @Test
+    fun handleCentredParagraph() {
+        val expected = "<div style='text-align:center'>THE KING OF THE JEWS. </div>"
+        val html = UsfmFileReader().toHtml("\\pc THE KING OF THE JEWS. ", reference)
+        assertEquals(expected, html)
+    }
+
+    @Test
     fun handleIndentQn() {
         val expected = "<p>Blessed is the man</p>"
         val html = UsfmFileReader().toHtml("\\q1 Blessed is the man", reference)
@@ -103,10 +111,9 @@ class UsfmFileReaderTest {
     @Test
     fun getVersesPlainText() {
         runBlocking {
-            val result = UsfmFileReader().getVersesPlainText(BibleBook.GEN)
-            result.forEach {
-                println("${it.reference}  ${it.text}")
-            }
+            val result: List<VerseText> = UsfmFileReader().getVersesPlainText(BibleBook.JOHN)
+            assertContains(result, VerseText(Reference(BibleBook.JOHN, 1, 1), "In the beginning was the Word, and the Word was with God, and the Word was God. "))
+            assertContains(result, VerseText(Reference(BibleBook.JOHN, 19, 19), "Pilate also had a notice posted on the cross. It read: JESUS OF NAZARETH, THE KING OF THE JEWS. "))
         }
     }
 }

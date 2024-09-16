@@ -59,6 +59,7 @@ class UsfmFileReader : BibleReader {
                 ref.chapter = cleanLine.toIntOrNull() ?: (ref.chapter + 1)
                 "<a id='${ref.getChapterReference()}' /><h3>Chapter $cleanLine</h3>"
             }
+            "\\pc" -> "<div style='text-align:center'>$cleanLine</div>"
             "\\qa" -> "<p>$cleanLine</p>" // acrostic e.g. ALEPH
             "\\q1" -> "<p>$cleanLine</p>"
             "\\q2" -> "<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$cleanLine</p>"
@@ -83,9 +84,11 @@ class UsfmFileReader : BibleReader {
                 ref.chapter = cleanLine.toIntOrNull() ?: (ref.chapter + 1)
                 ""
             }
+            "\\pc" -> cleanLine
             "\\qa" -> cleanLine // acrostic e.g. ALEPH
             "\\q1" -> cleanLine
             "\\q2" -> cleanLine
+            "\\qr" -> cleanLine
             else -> ""
         }
 
