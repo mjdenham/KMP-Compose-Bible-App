@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.martin.bibleapp.domain.reference.BibleBook
+import com.martin.bibleapp.ui.Test.TestScreen
 import com.martin.bibleapp.ui.document.Document
 import com.martin.bibleapp.ui.search.SearchScreen
 import com.martin.bibleapp.ui.selector.BookSelectionScreen
@@ -26,13 +27,15 @@ import org.koin.compose.KoinContext
  */
 sealed class BibleScreen {
     @Serializable
-    object BibleView: BibleScreen()
+    data object BibleView: BibleScreen()
     @Serializable
-    object BibleBookPicker: BibleScreen()
+    data object BibleBookPicker: BibleScreen()
     @Serializable
     data class BibleChapterPicker(val bookName: String): BibleScreen()
     @Serializable
-    object Search: BibleScreen()
+    data object Search: BibleScreen()
+    @Serializable
+    data object Test: BibleScreen()
 }
 
 @Composable
@@ -72,6 +75,9 @@ fun App(
                     }
                     composable<BibleScreen.Search> {
                         SearchScreen()
+                    }
+                    composable<BibleScreen.Test> {
+                        TestScreen()
                     }
                 }
             }

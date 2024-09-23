@@ -1,6 +1,7 @@
 package com.martin.bibleapp.ui.document
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,6 +44,12 @@ fun DocumentTopNavBar(
             }
         },
         actions = {
+            IconButton(onClick = { navController.navigate(BibleScreen.Test) }) {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = "Test"
+                )
+            }
             IconButton(onClick = { navController.navigate(BibleScreen.Search) }) {
                 Icon(
                     imageVector = Icons.Filled.Search,
