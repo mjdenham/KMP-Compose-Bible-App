@@ -60,6 +60,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.room.runtime)
             implementation(libs.sqlite.bundled)
+            implementation(libs.okio)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

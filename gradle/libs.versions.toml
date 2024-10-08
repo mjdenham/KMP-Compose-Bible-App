@@ -17,6 +17,7 @@ kotlin = "2.0.10"
 kotlinxSerializationJson = "1.6.3"
 lifecycleViewmodelCompose = "2.8.0"
 navigationCompose = "2.8.0-alpha08"
+okio = "3.9.1"
 room = "2.7.0-alpha07"
 ksp = "2.0.10-1.0.24"
 sqlite = "2.5.0-SNAPSHOT"
@@ -40,6 +41,7 @@ kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-runtime-android = { module = "androidx.room:room-runtime-android", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }

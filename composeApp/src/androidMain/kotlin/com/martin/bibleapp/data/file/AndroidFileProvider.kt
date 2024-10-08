@@ -5,5 +5,7 @@ import com.martin.bibleapp.domain.file.FileProvider
 
 class AndroidFileProvider(private val context: Context): FileProvider {
 
-    override fun getFilePath(fileName: String): String = context.filesDir.resolve(fileName).absolutePath
+    // try to use external storage first, if not available use internal storage
+    override fun getFilePath(fileName: String): String = context.getExternalFilesDir(null)?.absolutePath?.plus("/$fileName")
+        ?: context.filesDir.resolve(fileName).absolutePath
 }

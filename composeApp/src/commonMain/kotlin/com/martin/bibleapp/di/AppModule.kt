@@ -23,7 +23,7 @@ val appModule = module {
     viewModel { DocumentViewModel(get()) }
     viewModel { ChapterSelectorViewModel(get(), get()) }
     viewModel { SearchViewModel(get()) }
-    viewModel { TestViewModel() }
+    viewModel { TestViewModel(get()) }
 }
 
 fun initializeKoin(appDeclaration: KoinAppDeclaration = {}) {

@@ -19,8 +19,8 @@ fun TestScreen(
     val output by viewModel.output.collectAsStateWithLifecycle()
 
     Column {
-        Button(onClick = { viewModel.testWriteFile() }) {
-            Text("Write File")
+        Button(onClick = { viewModel.testReadSwordBsb() }) {
+            Text("Read Sword BSB")
         }
 
         LazyColumn {
