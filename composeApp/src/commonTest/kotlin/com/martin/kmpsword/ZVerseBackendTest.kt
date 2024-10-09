@@ -20,4 +20,12 @@ class ZVerseBackendTest {
         val result = backend.getRawText(Verse(1, 1, 1))
         assertContains(result, "In the beginning")
     }
+
+    @Test
+    fun readChapter() {
+        val result = backend.getRawText(Verse(1, 1, 31))
+        listOf("And God looked upon all that he had made and indeed it was very good".split(" ").forEach { word: String ->
+            assertContains(result, word)
+        })
+    }
 }

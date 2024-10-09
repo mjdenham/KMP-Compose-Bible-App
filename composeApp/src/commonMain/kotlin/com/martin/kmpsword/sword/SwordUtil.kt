@@ -21,9 +21,10 @@
  */
 package com.martin.kmpsword.sword
 
-import com.martin.kmpsword.sword.inflate.MessageInflater
 import okio.Buffer
 import okio.FileHandle
+import okio.Inflater
+import okio.InflaterSource
 import okio.use
 
 /**
@@ -75,35 +76,19 @@ object SwordUtil {
 
     internal fun readAndInflateRAF(raf: FileHandle, offset: Int, theSize: Int, uncompressedSize: Int): ByteArray {
         println("readAndInflateRAF offset: $offset theSize: $theSize uncompressedSize: $uncompressedSize")
-//        raf.seek(offset)
-//
-//        val offset: Long = raf.getFilePointer()
-//        var size = theSize
-//
-//        if (offset + size > raf.length()) {
-//            DataPolice.report("Need to reduce size to avoid EOFException. offset=" + offset + " size=" + size + " but raf.length=" + raf.length()) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-//            size = (raf.length() - offset).toInt()
-//        }
-//
-//        if (size < 1) {
-//            DataPolice.report("Nothing to read at offset = $offset returning empty because size=$size") //$NON-NLS-1$ //$NON-NLS-2$
-//            return ByteArray(0)
-//        }
 
-//        val read = ByteArray(theSize)
-//        raf.read(offset.toLong(), read, 0, theSize)
+        Buffer().use { rafBuffer ->
+            val bytesRead = raf.read(offset.toLong(), rafBuffer, theSize.toLong())
+            println("bytesRead: $bytesRead sink size: ${rafBuffer.size}")
 
-        val sink = Buffer()
-        val bytesRead = raf.read(offset.toLong(), sink, theSize.toLong())
-        println("bytesRead: $bytesRead sink size: ${sink.size}")
+            Buffer().use { inflated ->
+                val inflatingBuffer = InflaterSource(rafBuffer, Inflater())
+                val written = inflated.write(inflatingBuffer, uncompressedSize.toLong())
+                println("bytesInflated: $written")
 
-        // idea taken from https://github.com/square/okio/issues/570
-        // but that reports EOFException
-        val inflated = MessageInflater().use {
-            it.inflate(sink, uncompressedSize)
+                return inflated.readByteArray()
+            }
         }
-
-        return inflated.readByteArray()
     }
 
 

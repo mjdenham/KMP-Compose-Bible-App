@@ -131,6 +131,7 @@ class ZVerseBackend: AbstractBackend() {
         try {
             val testament: Int = SwordConstants.getTestament(verse)
             val index: Int = SwordConstants.getIndex(verse)
+            println("Verse index $index")
 
             // If Bible does not contain the desired testament, return nothing.
             val idxFile = idxRaf[testament]
@@ -158,7 +159,7 @@ class ZVerseBackend: AbstractBackend() {
             println("index: $index blockNum: $blockNum verseStart: $verseStart verseSize: $verseSize")
 
             // Can we get the data from the cache
-            var uncompressed: ByteArray? = null
+            val uncompressed: ByteArray?
             if (blockNum == lastBlockNum && testament == lastTestament) {
                 uncompressed = lastUncompressed
             } else {
@@ -180,17 +181,13 @@ class ZVerseBackend: AbstractBackend() {
 
                 // Read from the data file.
                 val textFile = textRaf.get(testament) ?: return ""
-                val data: ByteArray =
-                    SwordUtil.readAndInflateRAF(textFile, blockStart, blockSize, uncompressedSize)
+                uncompressed = SwordUtil.readAndInflateRAF(textFile, blockStart, blockSize, uncompressedSize)
 
                 //TODO decipher(data)
-
-
-                uncompressed = data
 //                    CompressorType.fromString(sbmd.getProperty(ConfigEntryType.COMPRESS_TYPE))
 //                        .getCompressor(data).uncompress(uncompressedSize).toByteArray()
 
-                println("uncompressed: ${uncompressed.toString()}")
+                println("uncompressed size: ${uncompressed.size}")
                 // cache the uncompressed data for next time
                 lastBlockNum = blockNum
                 lastTestament = testament
