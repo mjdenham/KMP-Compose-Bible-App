@@ -4,6 +4,7 @@ import com.martin.kmpsword.passage.Key
 import com.martin.kmpsword.passage.Verse
 import com.martin.kmpsword.sword.SwordConstants
 import com.martin.kmpsword.sword.SwordUtil
+import okio.Buffer
 import okio.FileHandle
 import okio.FileSystem
 import okio.Path
@@ -138,7 +139,7 @@ class ZVerseBackend: AbstractBackend() {
                 ?: return "" //$NON-NLS-1$
 
             // 10 because the index is 10 bytes long for each verse
-            var temp: ByteArray = SwordUtil.readRAF(
+            var temp: Buffer = SwordUtil.readFile(
                 idxFile,
                 index * IDX_ENTRY_SIZE,
                 IDX_ENTRY_SIZE,
@@ -147,43 +148,44 @@ class ZVerseBackend: AbstractBackend() {
             // If the Bible does not contain the desired verse, return nothing.
             // Some Bibles have different versification, so the requested verse
             // may not exist.
-            if (temp == null || temp.size == 0) {
+            if (temp == null || temp.size == 0L) {
                 return "" //$NON-NLS-1$
             }
 
             // The data is little endian - extract the blockNum, verseStart and
             // verseSize
-            val blockNum: Int = SwordUtil.decodeLittleEndian32(temp, 0)
-            val verseStart: Int = SwordUtil.decodeLittleEndian32(temp, 4)
-            val verseSize: Int = SwordUtil.decodeLittleEndian16(temp, 8)
+            val blockNum: Int = temp.readIntLe()
+            val verseStart: Int = temp.readIntLe()
+            val verseSize: Short = temp.readShortLe()
             println("index: $index blockNum: $blockNum verseStart: $verseStart verseSize: $verseSize")
 
             // Can we get the data from the cache
-            val uncompressed: ByteArray?
-            if (blockNum == lastBlockNum && testament == lastTestament) {
-                uncompressed = lastUncompressed
+            val uncompressed: ByteArray
+            if (blockNum == lastBlockNum && testament == lastTestament && lastUncompressed != null) {
+                uncompressed = lastUncompressed!!
             } else {
                 // Then seek using this index into the idx file
                 val compFile = compRaf[testament] ?: return ""
-                temp = SwordUtil.readRAF(
+                temp = SwordUtil.readFile(
                     compFile,
                     blockNum * COMP_ENTRY_SIZE,
                     COMP_ENTRY_SIZE,
                 )
-                if (temp == null || temp.size == 0) {
+                if (temp == null || temp.size == 0L) {
                     return "" //$NON-NLS-1$
                 }
 
-                val blockStart: Int = SwordUtil.decodeLittleEndian32(temp, 0)
-                val blockSize: Int = SwordUtil.decodeLittleEndian32(temp, 4)
-                val uncompressedSize: Int = SwordUtil.decodeLittleEndian32(temp, 8)
+                val blockStart: Int = temp.readIntLe()
+                val blockSize: Int = temp.readIntLe()
+                val uncompressedSize: Int = temp.readIntLe()
                 println("blockStart: $blockStart blockSize: $blockSize uncompressedSize: $uncompressedSize")
 
                 // Read from the data file.
                 val textFile = textRaf.get(testament) ?: return ""
-                uncompressed = SwordUtil.readAndInflateRAF(textFile, blockStart, blockSize, uncompressedSize)
+                uncompressed = SwordUtil.readAndInflateFile(textFile, blockStart, blockSize, uncompressedSize).readByteArray()
 
                 //TODO decipher(data)
+                //TODO allow various compressor types
 //                    CompressorType.fromString(sbmd.getProperty(ConfigEntryType.COMPRESS_TYPE))
 //                        .getCompressor(data).uncompress(uncompressedSize).toByteArray()
 
@@ -195,8 +197,8 @@ class ZVerseBackend: AbstractBackend() {
             }
 
             // and cut out the required section.
-            val chopped = ByteArray(verseSize)
-            uncompressed!!.copyInto(chopped, 0, verseStart, verseStart + verseSize)
+            val chopped = ByteArray(verseSize.toInt())
+            uncompressed.copyInto(chopped, 0, verseStart, verseStart + verseSize)
 
             return SwordUtil.decode(key.toString(), chopped, "UTF-8")
         } catch (e: Exception) { //java.io.IOException) {
