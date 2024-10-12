@@ -25,6 +25,7 @@ import okio.Buffer
 import okio.FileHandle
 import okio.Inflater
 import okio.InflaterSource
+import okio.buffer
 import okio.use
 
 /**
@@ -49,7 +50,7 @@ object SwordUtil {
      * @throws IOException
      * on error
      */
-    internal fun readFile(file: FileHandle, offset: Int, theSize: Int): Buffer {
+    internal fun readFile(file: FileHandle, offset: Int, theSize: Int): ByteArray {
         var size = theSize
 
         if (offset + size > file.size()) {
@@ -59,17 +60,17 @@ object SwordUtil {
 
         if (size < 1) {
 //            DataPolice.report("Nothing to read at offset = $offset returning empty because size=$size") //$NON-NLS-1$ //$NON-NLS-2$
-            return Buffer()
+            return ByteArray(0)
         }
 
-        val sink = Buffer()
-        file.source(offset.toLong()).read(sink, size.toLong())
+        val sink = ByteArray(theSize)
+        file.read(offset.toLong(), sink, 0, size)
 
         return sink
     }
 
-    internal fun readAndInflateFile(file: FileHandle, offset: Int, theSize: Int, uncompressedSize: Int): Buffer {
-        println("readAndInflateRAF offset: $offset theSize: $theSize uncompressedSize: $uncompressedSize")
+    internal fun readAndInflateFile(file: FileHandle, offset: Int, theSize: Int, uncompressedSize: Int): ByteArray {
+        println("readAndInflateFile offset: $offset theSize: $theSize uncompressedSize: $uncompressedSize")
         var size = theSize
 
         if (offset + size > file.size()) {
@@ -79,15 +80,15 @@ object SwordUtil {
 
         if (size < 1) {
 //            DataPolice.report("Nothing to read at offset = $offset returning empty because size=$size") //$NON-NLS-1$ //$NON-NLS-2$
-            return Buffer()
+            return ByteArray(0)
         }
 
         Buffer().use { inflated ->
-            val inflatingBuffer = InflaterSource(file.source(offset.toLong()), Inflater())
+            val inflatingBuffer = InflaterSource(file.source(offset.toLong()).buffer(), Inflater())
             val written = inflated.write(inflatingBuffer, uncompressedSize.toLong())
             println("bytesInflated: $written")
 
-            return inflated
+            return inflated.readByteArray()
         }
     }
 
@@ -174,29 +175,29 @@ object SwordUtil {
 //        return readRAF(raf, offset, size)
 //    }
 //
-//    /**
-//     * Decode little endian data from a byte array. This assumes that the high
-//     * order bit is not set as this is used solely for an offset in a file in
-//     * bytes. For a practical limit, 2**31 is way bigger than any document that
-//     * we can have.
-//     *
-//     * @param data
-//     * the byte[] from which to read 4 bytes
-//     * @param offset
-//     * the offset into the array
-//     * @return The decoded data
-//     */
-//    internal fun decodeLittleEndian32(data: ByteArray, offset: Int): Int {
-//        // Convert from a byte to an int, but prevent sign extension.
-//        // So -16 becomes 240
-//        val byte1 = data[0 + offset].toInt() and 0xFF
-//        val byte2 = (data[1 + offset].toInt() and 0xFF) shl 8
-//        val byte3 = (data[2 + offset].toInt() and 0xFF) shl 16
-//        val byte4 = (data[3 + offset].toInt() and 0xFF) shl 24
-//
-//        return byte4 or byte3 or byte2 or byte1
-//    }
-//
+    /**
+     * Decode little endian data from a byte array. This assumes that the high
+     * order bit is not set as this is used solely for an offset in a file in
+     * bytes. For a practical limit, 2**31 is way bigger than any document that
+     * we can have.
+     *
+     * @param data
+     * the byte[] from which to read 4 bytes
+     * @param offset
+     * the offset into the array
+     * @return The decoded data
+     */
+    internal fun decodeLittleEndian32(data: ByteArray, offset: Int): Int {
+        // Convert from a byte to an int, but prevent sign extension.
+        // So -16 becomes 240
+        val byte1 = data[0 + offset].toInt() and 0xFF
+        val byte2 = (data[1 + offset].toInt() and 0xFF) shl 8
+        val byte3 = (data[2 + offset].toInt() and 0xFF) shl 16
+        val byte4 = (data[3 + offset].toInt() and 0xFF) shl 24
+
+        return byte4 or byte3 or byte2 or byte1
+    }
+
 //    /**
 //     * Encode little endian data from a byte array. This assumes that the number
 //     * fits in a Java integer. That is, the range of an unsigned C integer is
@@ -218,24 +219,24 @@ object SwordUtil {
 //        data[3 + offset] = ((`val` shr 24) and 0xFF).toByte()
 //    }
 //
-//    /**
-//     * Decode little endian data from a byte array
-//     *
-//     * @param data
-//     * the byte[] from which to read 2 bytes
-//     * @param offset
-//     * the offset into the array
-//     * @return The decoded data
-//     */
-//    internal fun decodeLittleEndian16(data: ByteArray, offset: Int): Int {
-//        // Convert from a byte to an int, but prevent sign extension.
-//        // So -16 becomes 240
-//        val byte1 = data[0 + offset].toInt() and 0xFF
-//        val byte2 = (data[1 + offset].toInt() and 0xFF) shl 8
-//
-//        return byte2 or byte1
-//    }
-//
+    /**
+     * Decode little endian data from a byte array
+     *
+     * @param data
+     * the byte[] from which to read 2 bytes
+     * @param offset
+     * the offset into the array
+     * @return The decoded data
+     */
+    internal fun decodeLittleEndian16(data: ByteArray, offset: Int): Int {
+        // Convert from a byte to an int, but prevent sign extension.
+        // So -16 becomes 240
+        val byte1 = data[0 + offset].toInt() and 0xFF
+        val byte2 = (data[1 + offset].toInt() and 0xFF) shl 8
+
+        return byte2 or byte1
+    }
+
 //    /**
 //     * Encode a 16-bit little endian from an integer. It is assumed that the
 //     * integer's lower 16 bits are the only that are set.
