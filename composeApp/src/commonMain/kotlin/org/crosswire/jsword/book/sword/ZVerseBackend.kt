@@ -23,6 +23,7 @@ import okio.FileHandle
 import okio.FileSystem
 import okio.Path.Companion.toPath
 import okio.SYSTEM
+import org.crosswire.jsword.book.sword.state.ZVerseBackendState
 import org.crosswire.jsword.passage.Key
 import org.crosswire.jsword.passage.KeyUtil
 import org.crosswire.jsword.passage.Verse
@@ -295,9 +296,7 @@ class ZVerseBackend: AbstractBackend() {
     // temporary - end
 
 
-    fun readRawContent( /*ZVerseBackendState rafBook,*/
-                        key: Key
-    ): String {
+    fun readRawContent(fileBook: ZVerseBackendState, key: Key): String {
 
         //        BookMetaData bookMetaData = getBookMetaData();
 
@@ -312,22 +311,12 @@ class ZVerseBackend: AbstractBackend() {
         val testament: Testament = v11n.getTestament(index)
         index = v11n.getTestamentOrdinal(index)
 
-        val idxFile: FileHandle
-        val compFile: FileHandle
-        val textFile: FileHandle
-
-        val otAllButLast =
-            "/Users/martin/StudioProjects/kmp-sword/testFiles/BSB/modules/texts/ztext/bsb/ot.bz"
-        idxFile = FileSystem.SYSTEM.openReadOnly((otAllButLast + SUFFIX_INDEX).toPath())
-        textFile = FileSystem.SYSTEM.openReadOnly((otAllButLast + SUFFIX_TEXT).toPath())
-        compFile = FileSystem.SYSTEM.openReadOnly((otAllButLast + SUFFIX_COMP).toPath())
-
-        //        idxRaf = rafBook.getIdxRaf(testament);
-//        compRaf = rafBook.getCompRaf(testament);
-//        textRaf = rafBook.getTextRaf(testament);
+        val idxFile: FileHandle? = fileBook.getIdxFile(testament)
+        val compFile: FileHandle? = fileBook.getCompFile(testament)
+        val textFile: FileHandle? = fileBook.getTextFile(testament)
 
         // If Bible does not contain the desired testament, return nothing.
-        if (idxFile == null) {
+        if (idxFile == null || compFile == null || textFile == null) {
             return ""
         }
 

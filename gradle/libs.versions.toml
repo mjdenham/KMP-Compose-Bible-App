@@ -14,6 +14,7 @@ composeWebviewMultiplatform = "1.9.40-alpha01"
 junit = "4.13.2"
 koin-bom = "4.0.0-RC1"
 kotlin = "2.0.10"
+kotlinxDatetime = "0.6.1"
 kotlinxSerializationJson = "1.6.3"
 lifecycleViewmodelCompose = "2.8.0"
 navigationCompose = "2.8.0-alpha08"
@@ -38,6 +39,7 @@ koin-android = { module = "io.insert-koin:koin-android" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
