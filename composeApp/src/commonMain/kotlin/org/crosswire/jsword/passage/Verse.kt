@@ -19,6 +19,7 @@
  */
 package org.crosswire.jsword.passage
 
+import org.crosswire.common.util.ItemIterator
 import org.crosswire.jsword.versification.BibleBook
 import org.crosswire.jsword.versification.BibleNames
 import org.crosswire.jsword.versification.Versification
@@ -229,7 +230,8 @@ class Verse : VerseKey<Verse> {
         return buf
     }
 
-//    override fun clone(): Verse {
+    override fun clone(): Verse {
+        //TODO
 //        var copy: Verse? = null
 //        try {
 //            copy = super.clone() as Verse?
@@ -244,7 +246,8 @@ class Verse : VerseKey<Verse> {
 //        }
 //
 //        return copy
-//    }
+        return this
+    }
 
     override fun equals(obj: Any?): Boolean {
         // Since this can not be null
@@ -429,8 +432,8 @@ class Verse : VerseKey<Verse> {
     /* (non-Javadoc)
      * @see Iterable#iterator()
      */
-    fun iterator(): Iterator<Key>? {
-        return null //new ItemIterator<Key>(this);
+    override fun iterator(): Iterator<Key> {
+        return ItemIterator<Key>(this);
     }
 
     /* (non-Javadoc)

@@ -62,15 +62,15 @@ object KeyUtil {
             return key
         }
 
-        //        if (key instanceof VerseRange) {
-//            VerseRange range = (VerseRange) key;
-//            return range.getStart();
-//        }
-//
-//        if (key instanceof Passage) {
-//            Passage ref = (Passage) key;
-//            return ref.getVerseAt(0);
-//        }
+        if (key is VerseRange) {
+            return key.start;
+        }
+
+        if (key is Passage) {
+            key.getVerseAt(0)?.let {
+                return it;
+            }
+        }
         throw ClassCastException("Expected key to be a Verse, VerseRange or Passage")
     }
 
@@ -83,24 +83,21 @@ object KeyUtil {
      * @return The key cast to a Passage
      * @throws ClassCastException
      */
-    //    public static Passage getPassage(Key key) {
-    //        if (key == null) {
-    //            return null;
-    //        }
-    //
-    //        if (key instanceof Passage) {
-    //            return (Passage) key;
-    //        }
-    //
-    //        if (key instanceof VerseKey) {
-    //            VerseKey verseKey = (VerseKey) key;
-    //            Key ref = PassageKeyFactory.instance().createEmptyKeyList(verseKey.getVersification());
-    //            ref.addAll(verseKey);
-    //            return (Passage) ref;
-    //        }
-    //
-    //        throw new ClassCastException("Expected key to be a Verse, VerseRange or Passage");
-    //    }
+    fun getPassage(key: Key?): Passage {
+        if (key is Passage) {
+            return key
+        }
+
+//        if (key instanceof VerseKey) {
+//            VerseKey verseKey = (VerseKey) key;
+//            Key ref = PassageKeyFactory.instance().createEmptyKeyList(verseKey.getVersification());
+//            ref.addAll(verseKey);
+//            return (Passage) ref;
+//        }
+
+        throw ClassCastException("Expected key to be a Verse, VerseRange or Passage");
+    }
+
     /**
      * Get the versification for the key or the default versification.
      *

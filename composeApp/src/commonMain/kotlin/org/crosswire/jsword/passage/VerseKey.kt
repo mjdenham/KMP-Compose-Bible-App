@@ -34,7 +34,7 @@ interface VerseKey<out T> : Key {
      *
      * @return this VerseKey Versification.
      */
-    fun getVersification(): Versification?
+    fun getVersification(): Versification
 
     /**
      * Cast this VerseKey into another Versification. OSIS Sub Identifiers are ignored.

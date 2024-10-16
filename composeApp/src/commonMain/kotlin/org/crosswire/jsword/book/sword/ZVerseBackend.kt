@@ -272,30 +272,6 @@ class ZVerseBackend: AbstractBackend() {
     //        return OpenFileStateManager.instance().getZVerseBackendState(getBookMetaData(), blockType);
     //    }
 
-    // temporary - start
-
-//    /**
-//     * The array of index random access files
-//     */
-//    private val idxRaf: Array<FileHandle?> = arrayOfNulls(3)
-//
-//    /**
-//     * The array of data random access files
-//     */
-//    private val textRaf: Array<FileHandle?> = arrayOfNulls(3)
-//
-//    /**
-//     * The array of compressed random access files
-//     */
-//    private val compRaf: Array<FileHandle?> = arrayOfNulls(3)
-
-    private var lastBlockNum: Int = 0
-    private var lastTestament: Int = 0
-    private var lastUncompressed: ByteArray? = null
-
-    // temporary - end
-
-
     fun readRawContent(fileBook: ZVerseBackendState, key: Key): String {
 
         //        BookMetaData bookMetaData = getBookMetaData();
@@ -350,37 +326,38 @@ class ZVerseBackend: AbstractBackend() {
 
         // Can we get the data from the cache
         var uncompressed: ByteArray? = null
-//        if (blockNum == rafBook.getLastBlockNum() && testament == rafBook.getLastTestament()) {
-//            uncompressed = rafBook.getLastUncompressed();
-//        } else {
-        // Then seek using this index into the idx file
-        temp = SwordUtil.readFile(compFile, blockNum * COMP_ENTRY_SIZE, COMP_ENTRY_SIZE)
-        if (temp == null || temp.size == 0) {
-            return ""
-        }
+        if (blockNum == fileBook.lastBlockNum && testament == fileBook.lastTestament) {
+            uncompressed = fileBook.lastUncompressed
+        } else {
+            // Then seek using this index into the idx file
+            temp = SwordUtil.readFile(compFile, blockNum * COMP_ENTRY_SIZE, COMP_ENTRY_SIZE)
+            if (temp == null || temp.size == 0) {
+                return ""
+            }
 
-        val blockStart: Int = SwordUtil.decodeLittleEndian32(temp, 0)
-        val blockSize: Int = SwordUtil.decodeLittleEndian32(temp, 4)
-        val uncompressedSize: Int = SwordUtil.decodeLittleEndian32(temp, 8)
-        println("blockStart: $blockStart blockSize: $blockSize uncompressedSize: $uncompressedSize")
+            val blockStart: Int = SwordUtil.decodeLittleEndian32(temp, 0)
+            val blockSize: Int = SwordUtil.decodeLittleEndian32(temp, 4)
+            val uncompressedSize: Int = SwordUtil.decodeLittleEndian32(temp, 8)
+            println("blockStart: $blockStart blockSize: $blockSize uncompressedSize: $uncompressedSize")
 
-        // Read from the data file.
-        uncompressed = SwordUtil.readAndInflateFile(textFile, blockStart, blockSize, uncompressedSize)
+            // Read from the data file.
+            uncompressed =
+                SwordUtil.readAndInflateFile(textFile, blockStart, blockSize, uncompressedSize)
 
-        //            decipher(data);
+//            decipher(data);
 //        uncompressed =
 //            CompressorType.fromString(compressType).getCompressor(data).uncompress(uncompressedSize)
 //                .toByteArray()
 
-        // cache the uncompressed data for next time
-//            rafBook.setLastBlockNum(blockNum);
-//            rafBook.setLastTestament(testament);
-//            rafBook.setLastUncompressed(uncompressed);
-//        }
+            // cache the uncompressed data for next time
+            fileBook.lastBlockNum = blockNum
+            fileBook.lastTestament = testament
+            fileBook.lastUncompressed = uncompressed
+        }
 
         // and cut out the required section.
         val chopped = ByteArray(verseSize)
-        uncompressed.copyInto(chopped, 0, verseStart, verseStart + verseSize) ?: return ""
+        uncompressed?.copyInto(chopped, 0, verseStart, verseStart + verseSize) ?: return ""
 
         return SwordUtil.decode(key.getName(), chopped, charset)
     }

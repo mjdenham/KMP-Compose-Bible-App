@@ -28,7 +28,7 @@ package org.crosswire.jsword.passage
  *
  * @author Joe Walker
  */
-interface Key : Comparable<Key> /*, kotlin.Cloneable, java.io.Serializable */ {
+interface Key : Comparable<Key>, Iterable<Key> /*, kotlin.Cloneable, java.io.Serializable */ {
     /**
      * A Human readable version of the Key. For Biblical passages this uses
      * short books names, and the shortest sensible rendering, for example
@@ -198,6 +198,7 @@ interface Key : Comparable<Key> /*, kotlin.Cloneable, java.io.Serializable */ {
      * @return A complete copy of ourselves
      */
 //    override fun clone(): Key
+    fun clone(): Key
 
     /**
      * This needs to be declared here so that it is visible as a method on a

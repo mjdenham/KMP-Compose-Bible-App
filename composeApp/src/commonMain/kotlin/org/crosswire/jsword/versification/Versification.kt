@@ -300,13 +300,11 @@ open class Versification /*implements ReferenceSystem, Serializable */ {
      * @param book the desired book
      * @return The full name of the book or null if not in this versification
      */
-    fun getPreferredName(book: BibleBook?): String? {
-        book ?: return null
-
+    fun getPreferredName(book: BibleBook): String {
         if (containsBook(book)) {
             return BibleNames.instance().getPreferredName(book)
         }
-        return null
+        return ""
     }
 
     /**

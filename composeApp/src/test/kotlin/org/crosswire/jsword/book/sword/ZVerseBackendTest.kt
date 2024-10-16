@@ -2,6 +2,7 @@ package org.crosswire.jsword.book.sword
 
 import org.crosswire.jsword.book.sword.state.ZVerseBackendState
 import org.crosswire.jsword.passage.Verse
+import org.crosswire.jsword.passage.VerseRange
 import org.crosswire.jsword.versification.BibleBook
 import org.crosswire.jsword.versification.system.Versifications
 import org.junit.Test
@@ -45,6 +46,18 @@ class ZVerseBackendTest {
         val result = backend.readRawContent(backendState, Verse(v11n, BibleBook.JOHN, 1, 1))
         println(result)
         listOf("In the beginning ws the Word and the Word was with God and the Word was God".split(" ").forEach { word: String ->
+            assertContains(result, word)
+        })
+    }
+
+    @Test
+    fun readRawContent_readChapter() {
+        val v11nName = "KJV" //getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION);
+        val v11n = Versifications.instance().getVersification(v11nName)
+        val start = Verse(v11n, BibleBook.GEN, 1, 1)
+        val end = Verse(v11n, BibleBook.GEN, 1, 31)
+        val result = backend.readRawContent(backendState, VerseRange(v11n, start, end))
+        listOf("In the beginning God created the heavens and the earth".split(" ").forEach { word: String ->
             assertContains(result, word)
         })
     }

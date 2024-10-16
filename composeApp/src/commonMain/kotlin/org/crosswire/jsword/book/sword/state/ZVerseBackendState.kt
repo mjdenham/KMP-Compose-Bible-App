@@ -108,7 +108,7 @@ class ZVerseBackendState internal constructor(bookMetaData: BookMetaData, blockT
      * the lastBlockNum
      * @param lastBlockNum
      */
-    var lastBlockNum: Long = -1
+    var lastBlockNum: Int = -1
     /**
      * the lastUncompressed
      * @param lastUncompressed
