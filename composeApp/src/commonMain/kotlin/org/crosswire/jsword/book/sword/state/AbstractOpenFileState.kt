@@ -39,6 +39,8 @@ abstract class AbstractOpenFileState(
      */
     override fun close() {
 //TODO        OpenFileStateManager.instance().release(this)
+        //TODO and delete the following line
+        releaseResources()
     }
 
     /**

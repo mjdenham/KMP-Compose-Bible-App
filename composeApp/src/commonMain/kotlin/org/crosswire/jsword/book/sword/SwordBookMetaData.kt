@@ -1,9 +1,25 @@
 package org.crosswire.jsword.book.sword
 
 import org.crosswire.jsword.book.BookMetaData
+import org.crosswire.jsword.book.KeyType
 
 class SwordBookMetaData: BookMetaData {
-    override val name: String?
+    override fun getKeyType(): KeyType {
+        //TODO
+//        val bt: BookType = getBookType() ?: return null
+//        return bt.getKeyType()
+        return KeyType.VERSE
+    }
+
+    /**
+     * @return the book type
+     */
+//    fun getBookType(): BookType {
+//        return bookType
+//    }
+
+
+    override val name: String
         get() = TODO("Not yet implemented")
     override val bookCharset: String?
         get() = TODO("Not yet implemented")

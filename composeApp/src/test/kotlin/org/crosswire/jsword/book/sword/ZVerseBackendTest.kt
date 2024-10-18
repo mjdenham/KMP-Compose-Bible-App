@@ -8,6 +8,7 @@ import org.crosswire.jsword.versification.system.Versifications
 import org.junit.Test
 import kotlin.test.BeforeTest
 import kotlin.test.assertContains
+import kotlin.time.measureTime
 
 class ZVerseBackendTest {
 
@@ -51,14 +52,21 @@ class ZVerseBackendTest {
     }
 
     @Test
-    fun readRawContent_readChapter() {
+    fun readToOsis_readChapter() {
         val v11nName = "KJV" //getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION);
         val v11n = Versifications.instance().getVersification(v11nName)
         val start = Verse(v11n, BibleBook.GEN, 1, 1)
         val end = Verse(v11n, BibleBook.GEN, 1, 31)
-        val result = backend.readRawContent(backendState, VerseRange(v11n, start, end))
+        val result: List<String>
+        val time = measureTime {
+            result = backend.readToOsis(VerseRange(v11n, start, end))
+        }
+        println("Time taken: ${time.inWholeMilliseconds} ms")
         listOf("In the beginning God created the heavens and the earth".split(" ").forEach { word: String ->
-            assertContains(result, word)
+            assertContains(result.first(), word)
+        })
+        listOf("And God looked upon all that he had made and indeed it was very good".split(" ").forEach { word: String ->
+            assertContains(result.last(), word)
         })
     }
 }

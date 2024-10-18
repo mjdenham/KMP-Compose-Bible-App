@@ -88,10 +88,9 @@ object KeyUtil {
             return key
         }
 
-//        if (key instanceof VerseKey) {
-//            VerseKey verseKey = (VerseKey) key;
-//            Key ref = PassageKeyFactory.instance().createEmptyKeyList(verseKey.getVersification());
-//            ref.addAll(verseKey);
+//        if (key is VerseKey<*>) {
+//            val ref = PassageKeyFactory.instance().createEmptyKeyList(key.getVersification());
+//            ref.addAll(ref);
 //            return (Passage) ref;
 //        }
 

@@ -20,9 +20,6 @@
 package org.crosswire.jsword.book.sword
 
 import okio.FileHandle
-import okio.FileSystem
-import okio.Path.Companion.toPath
-import okio.SYSTEM
 import org.crosswire.jsword.book.sword.state.ZVerseBackendState
 import org.crosswire.jsword.passage.Key
 import org.crosswire.jsword.passage.KeyUtil
@@ -126,7 +123,7 @@ import org.crosswire.jsword.versification.system.Versifications
  * @author Joe Walker
  * @author DM SmÅith
  */
-class ZVerseBackend: AbstractBackend() {
+class ZVerseBackend: AbstractBackend<ZVerseBackendState>(SwordBookMetaData()) {
     //    /* This method assumes single keys. It is the responsibility of the caller to provide the iteration.
     //     *
     //     * FIXME: this could be refactored to push the iterations down, but no performance benefit would be gained since we have a manager that keeps the file accesses open
@@ -264,15 +261,13 @@ class ZVerseBackend: AbstractBackend() {
     //            OpenFileStateManager.instance().release(rafBook);
     //        }
     //    }
-    //
-    //    /* (non-Javadoc)
-    //     * @see org.crosswire.jsword.book.sword.StatefulFileBackedBackend#initState()
-    //     */
-    //    public ZVerseBackendState initState() throws BookException {
-    //        return OpenFileStateManager.instance().getZVerseBackendState(getBookMetaData(), blockType);
-    //    }
 
-    fun readRawContent(fileBook: ZVerseBackendState, key: Key): String {
+    override fun initState(): ZVerseBackendState {
+        return ZVerseBackendState(SwordBookMetaData(), BlockType.BLOCK_BOOK)
+        //return OpenFileStateManager.instance().getZVerseBackendState(getBookMetaData(), blockType);
+    }
+
+    override fun readRawContent(state: ZVerseBackendState, key: Key): String {
 
         //        BookMetaData bookMetaData = getBookMetaData();
 
@@ -287,9 +282,9 @@ class ZVerseBackend: AbstractBackend() {
         val testament: Testament = v11n.getTestament(index)
         index = v11n.getTestamentOrdinal(index)
 
-        val idxFile: FileHandle? = fileBook.getIdxFile(testament)
-        val compFile: FileHandle? = fileBook.getCompFile(testament)
-        val textFile: FileHandle? = fileBook.getTextFile(testament)
+        val idxFile: FileHandle? = state.getIdxFile(testament)
+        val compFile: FileHandle? = state.getCompFile(testament)
+        val textFile: FileHandle? = state.getTextFile(testament)
 
         // If Bible does not contain the desired testament, return nothing.
         if (idxFile == null || compFile == null || textFile == null) {
@@ -326,8 +321,8 @@ class ZVerseBackend: AbstractBackend() {
 
         // Can we get the data from the cache
         var uncompressed: ByteArray? = null
-        if (blockNum == fileBook.lastBlockNum && testament == fileBook.lastTestament) {
-            uncompressed = fileBook.lastUncompressed
+        if (blockNum == state.lastBlockNum && testament == state.lastTestament) {
+            uncompressed = state.lastUncompressed
         } else {
             // Then seek using this index into the idx file
             temp = SwordUtil.readFile(compFile, blockNum * COMP_ENTRY_SIZE, COMP_ENTRY_SIZE)
@@ -350,9 +345,9 @@ class ZVerseBackend: AbstractBackend() {
 //                .toByteArray()
 
             // cache the uncompressed data for next time
-            fileBook.lastBlockNum = blockNum
-            fileBook.lastTestament = testament
-            fileBook.lastUncompressed = uncompressed
+            state.lastBlockNum = blockNum
+            state.lastTestament = testament
+            state.lastUncompressed = uncompressed
         }
 
         // and cut out the required section.

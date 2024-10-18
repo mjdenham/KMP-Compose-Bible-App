@@ -61,7 +61,7 @@ interface BookMetaData : Comparable<BookMetaData?> {
      *
      * @return the organization of keys of this Book
      */
-//    val keyType: KeyType?
+    fun getKeyType(): KeyType
 
     /**
      * What category of content is this, a Bible or a reference work like a
