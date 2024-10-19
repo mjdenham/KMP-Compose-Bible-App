@@ -19,12 +19,14 @@
  */
 package org.crosswire.jsword.book.sword.state
 
+import com.martin.kmpsword.sword.SwordConstants
 import okio.FileHandle
 import okio.FileSystem
 import okio.Path.Companion.toPath
 import okio.SYSTEM
 import org.crosswire.jsword.book.BookMetaData
 import org.crosswire.jsword.book.sword.BlockType
+import org.crosswire.jsword.book.sword.SwordUtil
 import org.crosswire.jsword.versification.Testament
 
 /**
@@ -125,14 +127,15 @@ class ZVerseBackendState internal constructor(bookMetaData: BookMetaData, blockT
      * @param bookMetaData the appropriate metadata for the book
      */
     init {
-        val otAllButLast =
-            "/Users/martin/StudioProjects/kmp-sword/testFiles/BSB/modules/texts/ztext/bsb/ot.bz"
+        val path = SwordUtil.getExpandedDataPath(bookMetaData)
+        val otAllButLast = path.resolve(SwordConstants.FILE_OT + '.' + blockType.indicator + SUFFIX_PART1).toString()
+//            "/Users/martin/StudioProjects/kmp-sword/testFiles/BSB/modules/texts/ztext/bsb/ot.bz"
         otIdxFile = FileSystem.SYSTEM.openReadOnly((otAllButLast + SUFFIX_INDEX).toPath())
         otTextFile = FileSystem.SYSTEM.openReadOnly((otAllButLast + SUFFIX_TEXT).toPath())
         otCompFile = FileSystem.SYSTEM.openReadOnly((otAllButLast + SUFFIX_COMP).toPath())
 
-        val ntAllButLast =
-            "/Users/martin/StudioProjects/kmp-sword/testFiles/BSB/modules/texts/ztext/bsb/nt.bz"
+        val ntAllButLast = path.resolve(SwordConstants.FILE_NT + '.' + blockType.indicator + SUFFIX_PART1).toString()
+//            "/Users/martin/StudioProjects/kmp-sword/testFiles/BSB/modules/texts/ztext/bsb/nt.bz"
         ntIdxFile = FileSystem.SYSTEM.openReadOnly((ntAllButLast + SUFFIX_INDEX).toPath())
         ntTextFile = FileSystem.SYSTEM.openReadOnly((ntAllButLast + SUFFIX_TEXT).toPath())
         ntCompFile = FileSystem.SYSTEM.openReadOnly((ntAllButLast + SUFFIX_COMP).toPath())
@@ -192,10 +195,11 @@ class ZVerseBackendState internal constructor(bookMetaData: BookMetaData, blockT
     }
 
     companion object {
+        private const val SUFFIX_PART1 = "z"
+
         private const val SUFFIX_INDEX = "v"
         private const val SUFFIX_COMP = "s"
         private const val SUFFIX_TEXT = "z"
-//        private const val SUFFIX_PART1 = "z"
 
         /**
          * The log stream

@@ -121,9 +121,9 @@ import org.crosswire.jsword.versification.system.Versifications
  *
  *
  * @author Joe Walker
- * @author DM SmÅith
+ * @author DM Smith
  */
-class ZVerseBackend: AbstractBackend<ZVerseBackendState>(SwordBookMetaData()) {
+class ZVerseBackend(val bookMetaData: SwordBookMetaData) : AbstractBackend<ZVerseBackendState>(bookMetaData) {
     //    /* This method assumes single keys. It is the responsibility of the caller to provide the iteration.
     //     *
     //     * FIXME: this could be refactored to push the iterations down, but no performance benefit would be gained since we have a manager that keeps the file accesses open
@@ -263,7 +263,7 @@ class ZVerseBackend: AbstractBackend<ZVerseBackendState>(SwordBookMetaData()) {
     //    }
 
     override fun initState(): ZVerseBackendState {
-        return ZVerseBackendState(SwordBookMetaData(), BlockType.BLOCK_BOOK)
+        return ZVerseBackendState(bookMetaData, BlockType.BLOCK_BOOK)
         //return OpenFileStateManager.instance().getZVerseBackendState(getBookMetaData(), blockType);
     }
 

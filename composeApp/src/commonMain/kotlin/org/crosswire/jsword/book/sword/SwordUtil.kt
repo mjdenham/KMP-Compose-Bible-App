@@ -23,8 +23,11 @@ import okio.Buffer
 import okio.FileHandle
 import okio.Inflater
 import okio.InflaterSource
+import okio.Path
+import okio.Path.Companion.toPath
 import okio.buffer
 import okio.use
+import org.crosswire.jsword.book.BookMetaData
 
 /**
  * Various utilities used by different Sword classes.
@@ -395,22 +398,25 @@ object SwordUtil {
             }
         }
     }
+
+
     /**
      * Returns where the book should be located
      * @param bookMetaData meta information about the book
      * @return the URI locating the resource
-     * //     * @throws BookException thrown if an issue is encountered, e.g. missing data files.
+     * @throws BookException thrown if an issue is encountered, e.g. missing data files.
      */
-    //    public static URI getExpandedDataPath(BookMetaData bookMetaData) throws BookException {
-    //        URI loc = NetUtil.lengthenURI(bookMetaData.getLibrary(), bookMetaData.getProperty(SwordBookMetaData.KEY_DATA_PATH));
-    //
-    //        if (loc == null) {
-    //            // FIXME(DMS): missing parameter
-    //            throw new BookException(JSOtherMsg.lookupText("Missing data files for old and new testaments in {0}."));
-    //        }
-    //
-    //        return loc;
-    //    }
+    fun getExpandedDataPath(bookMetaData: BookMetaData): Path {
+//        val loc: java.net.URI = NetUtil.lengthenURI(
+//            bookMetaData.getLibrary(),
+//            bookMetaData.getProperty(SwordBookMetaData.KEY_DATA_PATH)
+//        )
+//            ?: // FIXME(DMS): missing parameter
+//            throw BookException(JSOtherMsg.lookupText("Missing data files for old and new testaments in {0}."))
+        bookMetaData.getProperty(SwordBookMetaData.KEY_DATA_PATH)?.let { modulePath ->
+            return bookMetaData.library.toPath().resolve(modulePath)
+        } ?: throw Exception("Missing data files for old and new testaments in {0}.")
+    }
     /**
      * The log stream
      */

@@ -205,8 +205,7 @@ interface BookMetaData : Comparable<BookMetaData?> {
      *
      * @return the base URI or null if there is none
      */
-//    @set:Throws(BookException::class)
-//    var library: java.net.URI?
+    var library: String
 
     /**
      * Get the base URI for relative URIs in the document.
@@ -245,7 +244,7 @@ interface BookMetaData : Comparable<BookMetaData?> {
      * the key of the property.
      * @return the value of the property
      */
-    fun getProperty(key: String?): String?
+    fun getProperty(key: String): String?
 
     /**
      * Store a transient property.
@@ -255,7 +254,7 @@ interface BookMetaData : Comparable<BookMetaData?> {
      * @param value
      * the value of the property
      */
-    fun setProperty(key: String?, value: String?)
+    fun setProperty(key: String, value: String)
 
     /**
      * Save to shared storage.
