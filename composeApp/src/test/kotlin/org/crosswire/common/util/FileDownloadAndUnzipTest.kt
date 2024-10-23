@@ -1,9 +1,9 @@
 package org.crosswire.common.util
 
-import com.martin.kmpsword.sword.SwordConstants
 import kotlinx.coroutines.test.runTest
 import okio.FileSystem
 import okio.Path.Companion.toPath
+import org.crosswire.jsword.book.sword.SwordConstants
 import org.junit.After
 import org.junit.Assert.*
 

@@ -19,13 +19,13 @@
  */
 package org.crosswire.jsword.book.sword.state
 
-import com.martin.kmpsword.sword.SwordConstants
 import okio.FileHandle
 import okio.FileSystem
 import okio.Path.Companion.toPath
 import okio.SYSTEM
 import org.crosswire.jsword.book.BookMetaData
 import org.crosswire.jsword.book.sword.BlockType
+import org.crosswire.jsword.book.sword.SwordConstants
 import org.crosswire.jsword.book.sword.SwordUtil
 import org.crosswire.jsword.versification.Testament
 

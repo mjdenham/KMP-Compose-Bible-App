@@ -13,6 +13,8 @@ class IoUtil {
         val zipFileSystem = FileSystem.SYSTEM.openZip(zipFile)
         val fileSystem = FileSystem.SYSTEM
 
+        //TODO filter using include and includeExclude, but for now just extract everything
+
         val paths = zipFileSystem.listRecursively("/".toPath())
             .filter { zipFileSystem.metadata(it).isRegularFile }
             .toList()
