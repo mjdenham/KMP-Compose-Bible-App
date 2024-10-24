@@ -1,7 +1,7 @@
 package com.martin.bibleapp.data.usfm
 
 import com.martin.bibleapp.data.repository.usfm.UsfmFileReader
-import com.martin.bibleapp.domain.reference.BibleBook
+import org.crosswire.jsword.versification.BibleBook
 import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.domain.reference.VerseText
 import kotlinx.coroutines.runBlocking

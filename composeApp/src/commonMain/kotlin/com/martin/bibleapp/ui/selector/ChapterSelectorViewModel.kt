@@ -3,7 +3,7 @@ package com.martin.bibleapp.ui.selector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.martin.bibleapp.domain.bible.ReferenceSelectionUseCase
-import com.martin.bibleapp.domain.reference.BibleBook
+import org.crosswire.jsword.versification.BibleBook
 import com.martin.bibleapp.domain.reference.Reference
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

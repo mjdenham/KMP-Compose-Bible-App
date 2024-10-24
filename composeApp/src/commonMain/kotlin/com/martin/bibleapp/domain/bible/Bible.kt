@@ -1,6 +1,6 @@
 package com.martin.bibleapp.domain.bible
 
-import com.martin.bibleapp.domain.reference.BibleBook
+import org.crosswire.jsword.versification.BibleBook
 import com.martin.bibleapp.domain.reference.CurrentReferenceRepository
 import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.domain.reference.VerseText

@@ -13,7 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.martin.bibleapp.domain.reference.BibleBook
+import org.crosswire.jsword.versification.BibleBook
 import com.martin.bibleapp.ui.Test.TestScreen
 import com.martin.bibleapp.ui.appsetup.AppSetup
 import com.martin.bibleapp.ui.document.Document

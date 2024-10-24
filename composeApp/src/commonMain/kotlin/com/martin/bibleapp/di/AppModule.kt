@@ -2,7 +2,7 @@ package com.martin.bibleapp.di
 
 import com.martin.bibleapp.data.document.DocumentInstallation
 import com.martin.bibleapp.data.reference.RoomCurrentReferenceRepository
-import com.martin.bibleapp.data.repository.usfm.UsfmFileReader
+import com.martin.bibleapp.data.repository.sword.SwordReader
 import com.martin.bibleapp.domain.bible.Bible
 import com.martin.bibleapp.domain.bible.BibleReader
 import com.martin.bibleapp.domain.bible.ReferenceSelectionUseCase
@@ -20,7 +20,8 @@ import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
 val appModule = module {
-    single<BibleReader> { UsfmFileReader() }
+//    single<BibleReader> { UsfmFileReader() }
+    single<BibleReader> { SwordReader() }
     single<CurrentReferenceRepository> { RoomCurrentReferenceRepository(get()) }
     single<Bible> { Bible(get(), get()) }
     single<ReferenceSelectionUseCase> { ReferenceSelectionUseCase(get(), get()) }

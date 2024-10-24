@@ -18,11 +18,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.martin.bibleapp.domain.reference.BibleBook
 import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.ui.util.OrientationProvider
 import com.martin.bibleapp.ui.util.OrientationProviderImpl
+import org.crosswire.jsword.versification.BibleBook
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -36,7 +35,7 @@ fun BookSelectionScreen(
         columns = GridCells.Fixed(getColumnCount(orientation)),
     ) {
         items(BibleBook.entries) {
-            SelectionButton(it.shortLabel(), modifier) {
+            SelectionButton(it.oSIS, modifier) {
                 onSelected(it)
             }
         }

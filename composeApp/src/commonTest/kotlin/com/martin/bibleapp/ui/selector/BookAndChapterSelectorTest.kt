@@ -7,7 +7,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
 import com.martin.bibleapp.data.repository.usfm.UsfmFileReader
 import com.martin.bibleapp.domain.bible.ReferenceSelectionUseCase
-import com.martin.bibleapp.domain.reference.BibleBook
+import org.crosswire.jsword.versification.BibleBook
 import com.martin.bibleapp.fakes.FakeCurrentReferenceRepository
 import com.martin.bibleapp.ui.util.OrientationProvider
 import kotlin.test.Test

@@ -2,7 +2,7 @@ package com.martin.bibleapp.data.repository.usfm
 
 import androidx.annotation.VisibleForTesting
 import com.martin.bibleapp.domain.bible.BibleReader
-import com.martin.bibleapp.domain.reference.BibleBook
+import org.crosswire.jsword.versification.BibleBook
 import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.domain.reference.VerseText
 import com.martin.bibleapp.resources.Res
@@ -35,7 +35,7 @@ class UsfmFileReader : BibleReader {
 
     @OptIn(ExperimentalResourceApi::class)
     private suspend fun readLines(book: BibleBook) =
-        Res.readBytes("files/bsb/usfm/${book.usfmCode}.usfm")
+        Res.readBytes("files/bsb/usfm/${book.oSIS}.usfm")
             .decodeToString()
             .split("\n")
             .asSequence()
