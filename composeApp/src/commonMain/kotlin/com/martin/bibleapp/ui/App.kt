@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.martin.bibleapp.domain.reference.BibleBook
 import com.martin.bibleapp.ui.Test.TestScreen
+import com.martin.bibleapp.ui.appsetup.AppSetup
 import com.martin.bibleapp.ui.document.Document
 import com.martin.bibleapp.ui.search.SearchScreen
 import com.martin.bibleapp.ui.selector.BookSelectionScreen
@@ -45,6 +49,12 @@ fun App(
 ) {
     BibleTheme {
         KoinContext {
+            val setupDone = remember { mutableStateOf(false) }
+            if (!setupDone.value) {
+                setupDone.value = true
+                AppSetup()
+            }
+
             Scaffold(
                 topBar = {
                     DocumentTopNavBar(navController)
