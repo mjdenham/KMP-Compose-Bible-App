@@ -36,7 +36,7 @@ class SwordReader: BibleReader {
 
         println("Sword text: $result")
 
-        return result.joinToString(" ")
+        return "<container>" + result.joinToString(" ")+"</container>"
     }
 
     override suspend fun countChapters(book: BibleBook): Int {

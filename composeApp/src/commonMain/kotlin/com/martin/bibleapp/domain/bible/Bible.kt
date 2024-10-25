@@ -1,5 +1,6 @@
 package com.martin.bibleapp.domain.bible
 
+import com.martin.bibleapp.domain.osisconverter.OsisToHtml
 import org.crosswire.jsword.versification.BibleBook
 import com.martin.bibleapp.domain.reference.CurrentReferenceRepository
 import com.martin.bibleapp.domain.reference.Reference
@@ -15,7 +16,11 @@ class Bible(private val reader: BibleReader, private val currentReferenceReposit
     fun getCurrentReferenceFlow(): Flow<Reference> = currentReferenceRepository.getCurrentReferenceFlow()
 
     suspend fun readPage(reference: Reference): String {
-        return reader.read(reference)
+        val osis = reader.read(reference)
+
+        val html = OsisToHtml().convertToHtml(osis)
+
+        return html
     }
 
     suspend fun search(searchText: String): List<VerseText> = withContext(Dispatchers.Default) {
