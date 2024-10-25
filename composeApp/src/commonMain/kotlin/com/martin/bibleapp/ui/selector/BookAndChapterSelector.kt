@@ -28,15 +28,16 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun BookSelectionScreen(
     modifier: Modifier = Modifier,
+    viewModel: BookSelectorViewModel = koinViewModel(),
     orientation: OrientationProvider.Orientation = OrientationProviderImpl().getOrientation(),
     onSelected: (BibleBook) -> Unit
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(getColumnCount(orientation)),
     ) {
-        items(BibleBook.entries) {
-            SelectionButton(it.oSIS, modifier) {
-                onSelected(it)
+        items(viewModel.getBooks()) { book ->
+            SelectionButton(book.oSIS, modifier) {
+                onSelected(book)
             }
         }
     }

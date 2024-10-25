@@ -13,6 +13,7 @@ import com.martin.bibleapp.ui.Test.TestViewModel
 import com.martin.bibleapp.ui.appsetup.AppSetupViewModel
 import com.martin.bibleapp.ui.document.DocumentViewModel
 import com.martin.bibleapp.ui.search.SearchViewModel
+import com.martin.bibleapp.ui.selector.BookSelectorViewModel
 import com.martin.bibleapp.ui.selector.ChapterSelectorViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.viewModel
@@ -28,6 +29,7 @@ val appModule = module {
     single<Installation> { DocumentInstallation() }
     single<InstallBsbUseCase> { InstallBsbUseCase(get()) }
     viewModel { DocumentViewModel(get()) }
+    viewModel { BookSelectorViewModel() }
     viewModel { ChapterSelectorViewModel(get(), get()) }
     viewModel { SearchViewModel(get()) }
     viewModel { AppSetupViewModel(get()) }

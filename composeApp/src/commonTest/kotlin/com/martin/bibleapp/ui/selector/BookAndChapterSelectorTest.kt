@@ -5,11 +5,11 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.runComposeUiTest
-import com.martin.bibleapp.data.repository.usfm.UsfmFileReader
+import com.martin.bibleapp.data.repository.sword.SwordReader
 import com.martin.bibleapp.domain.bible.ReferenceSelectionUseCase
-import org.crosswire.jsword.versification.BibleBook
 import com.martin.bibleapp.fakes.FakeCurrentReferenceRepository
 import com.martin.bibleapp.ui.util.OrientationProvider
+import org.crosswire.jsword.versification.BibleBook
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -21,7 +21,7 @@ class BookAndChapterSelectorTest {
     fun testBookSelection() = runComposeUiTest {
         var clickedBook: BibleBook? = null
         setContent {
-            BookSelectionScreen(Modifier, OrientationProvider.Orientation.Portrait) { book ->
+            BookSelectionScreen(Modifier, BookSelectorViewModel(), OrientationProvider.Orientation.Portrait) { book ->
                 clickedBook = book
             }
         }
@@ -39,12 +39,12 @@ class BookAndChapterSelectorTest {
         var clickedChapter: Int? = null
         setContent {
             val viewModel = ChapterSelectorViewModel(
-                BibleBook.PS,
-                ReferenceSelectionUseCase(UsfmFileReader(), FakeCurrentReferenceRepository()),
+                BibleBook.GEN,
+                ReferenceSelectionUseCase(SwordReader(), FakeCurrentReferenceRepository()),
             )
 
             ChapterSelectionScreen(
-                BibleBook.PS,
+                BibleBook.GEN,
                 Modifier,
                 viewModel,
                 OrientationProvider.Orientation.Portrait,
