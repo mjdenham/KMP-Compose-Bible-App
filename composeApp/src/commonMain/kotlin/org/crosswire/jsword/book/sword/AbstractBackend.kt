@@ -1,7 +1,6 @@
 package org.crosswire.jsword.book.sword
 
 import okio.Path
-import okio.Path.Companion.toPath
 import okio.use
 import org.crosswire.jsword.book.BookMetaData
 import org.crosswire.jsword.book.KeyType
@@ -11,11 +10,12 @@ import org.crosswire.jsword.passage.KeyUtil.getPassage
 import org.crosswire.jsword.passage.KeyUtil.getVerse
 import org.crosswire.jsword.passage.RestrictionType
 import org.crosswire.jsword.passage.Verse
+import org.crosswire.jsword.passage.KeyText
 import org.crosswire.jsword.passage.VerseRange
 
 abstract class AbstractBackend<T: OpenFileState>(val bmd: SwordBookMetaData) : StatefulFileBackedBackend<T>, Backend<T> {
 
-    fun readToOsis(key: Key): List<String> {
+    fun readToOsis(key: Key): List<KeyText> {
 
         initState().use { openFileState ->
             val content = when (this.bmd.getKeyType()) {
@@ -33,17 +33,17 @@ abstract class AbstractBackend<T: OpenFileState>(val bmd: SwordBookMetaData) : S
 //        processor: RawTextToXmlProcessor,
 //        content: List<org.jdom2.Content>,
         openFileState: T
-    ): List<String> {
-        val contentList = mutableListOf<String>()
+    ): List<KeyText> {
+        val contentList = mutableListOf<KeyText>()
         // simply lookup the key and process the relevant information
-        val iterator = key.iterator()
+        val iterator: Iterator<Key> = key.iterator()
 
         while (iterator.hasNext()) {
             val next = iterator.next()
             var rawText: String?
             try {
                 rawText = readRawContent(openFileState, next)
-                contentList.add(rawText)
+                contentList.add(KeyText(next, rawText))
 //                processor.postVerse(next, content, rawText)
             } catch (e: Exception) {
                 // failed to process key 'next'
@@ -68,8 +68,8 @@ abstract class AbstractBackend<T: OpenFileState>(val bmd: SwordBookMetaData) : S
 //        processor: RawTextToXmlProcessor,
 //        content: List<org.jdom2.Content>,
         openFileState: T
-    ): List<String> {
-        val contentList = mutableListOf<String>()
+    ): List<KeyText> {
+        val contentList = mutableListOf<KeyText>()
         var currentVerse: Verse? = null
         val rit = when (key) {
             is VerseRange -> key.iterator()
@@ -86,7 +86,7 @@ abstract class AbstractBackend<T: OpenFileState>(val bmd: SwordBookMetaData) : S
                 currentVerse = getVerse(verseInRange)
                 try {
                     val rawText = readRawContent(openFileState, currentVerse)
-                    contentList.add(rawText)
+                    contentList.add(KeyText(currentVerse, rawText))
 //                    processor.postVerse(verseInRange, content, rawText)
                 } catch (e: Exception) {
                     //some versifications have more verses than modules contain - so can't throw
@@ -107,7 +107,8 @@ abstract class AbstractBackend<T: OpenFileState>(val bmd: SwordBookMetaData) : S
 //            ?: throw BookException(Msg.MISSING_FILE)
 //
 //        return loc
-        return "/Users/martin/StudioProjects/kmp-sword/testFiles/BSB/modules/texts/ztext/bsb".toPath()
+        val dataPath = bmd.getProperty(SwordBookMetaData.KEY_DATA_PATH) ?: throw Exception("Missing data path")
+        return SwordBookPath.swordBookPath.resolve(dataPath)
     }
 
     override fun getBookMetaData(): BookMetaData = bmd

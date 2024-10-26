@@ -13,12 +13,11 @@ import org.crosswire.jsword.book.sword.SwordBookPath
 import org.crosswire.jsword.book.sword.SwordConstants
 
 class DocumentInstallation: Installation {
-    private val swordBookPath = SwordBookPath.getSwordBookPath()
     private val webResource = WebResource()
     private val ioUtil = IoUtil()
 
     override suspend fun isInstalled(moduleName: String): Boolean = withContext(Dispatchers.IO) {
-        FileSystem.SYSTEM.exists(swordBookPath.resolve("mods.d/bsb.conf")).also {
+        FileSystem.SYSTEM.exists(SwordBookPath.swordBookPath.resolve("mods.d/bsb.conf")).also {
             println("Is BSB installed: $it")
         }
     }
@@ -47,7 +46,13 @@ App setup complete
      */
     override suspend fun install(moduleName: String) = withContext(Dispatchers.IO) {
         if (webResource.download(downloadUrl, zipFilePath)) {
-            ioUtil.unpackZip(zipFilePath, swordBookPath, true, SwordConstants.DIR_CONF, SwordConstants.DIR_DATA)
+            ioUtil.unpackZip(
+                zipFilePath,
+                SwordBookPath.swordBookPath,
+                true,
+                SwordConstants.DIR_CONF,
+                SwordConstants.DIR_DATA
+            )
         }
     }
 

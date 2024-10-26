@@ -36,7 +36,7 @@ interface Key : Comparable<Key>, Iterable<Key> /*, kotlin.Cloneable, java.io.Ser
      *
      * @return a String containing a description of the Key
      */
-    fun getName(): String?
+    fun getName(): String
 
     /**
      * Translate the Key into a human readable string, with the assumption that

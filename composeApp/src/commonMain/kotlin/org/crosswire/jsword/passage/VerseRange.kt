@@ -127,16 +127,16 @@ class VerseRange : VerseKey<VerseRange?> {
     /* (non-Javadoc)
      * @see org.crosswire.jsword.passage.Key#getName()
      */
-    override fun getName(): String? {
+    override fun getName(): String {
         return getName(null)
     }
 
     /* (non-Javadoc)
      * @see org.crosswire.jsword.passage.Key#getName(org.crosswire.jsword.passage.Key)
      */
-    override fun getName(base: Key?): String? {
+    override fun getName(base: Key?): String {
         if (PassageUtil.isPersistentNaming && originalName != null) {
-            return originalName
+            return originalName!!
         }
 
         val rangeName = doGetName(base)

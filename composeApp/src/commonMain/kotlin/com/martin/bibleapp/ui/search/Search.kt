@@ -33,10 +33,10 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.martin.bibleapp.domain.reference.VerseText
 import com.martin.bibleapp.ui.util.ErrorMessage
 import com.martin.bibleapp.ui.util.LoadingIndicator
 import com.martin.bibleapp.ui.util.ResultIs
+import org.crosswire.jsword.passage.KeyText
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -98,7 +98,7 @@ fun SearchScreen(
 @Composable
 private fun SearchResults(
     modifier: Modifier,
-    results: List<VerseText>
+    results: List<KeyText>
 ) {
     LazyColumn(
         contentPadding = PaddingValues(16.dp),
@@ -117,7 +117,7 @@ private fun SearchResults(
 }
 
 @Composable
-private fun ItemCard(it: VerseText) {
+private fun ItemCard(it: KeyText) {
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -126,7 +126,7 @@ private fun ItemCard(it: VerseText) {
             modifier = Modifier.padding(10.dp),
         ) {
             Text(
-                text = it.reference.shortLabel(),
+                text = it.key.getName(),
                 style = MaterialTheme.typography.titleSmall,
             )
             Text(

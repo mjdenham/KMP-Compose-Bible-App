@@ -1,6 +1,7 @@
 package org.crosswire.jsword.book.sword
 
 import org.crosswire.jsword.book.sword.state.ZVerseBackendState
+import org.crosswire.jsword.passage.KeyText
 import org.crosswire.jsword.passage.Verse
 import org.crosswire.jsword.passage.VerseRange
 import org.crosswire.jsword.versification.BibleBook
@@ -61,16 +62,16 @@ class ZVerseBackendTest {
         val v11n = Versifications.instance().getVersification(v11nName)
         val start = Verse(v11n, BibleBook.GEN, 1, 1)
         val end = Verse(v11n, BibleBook.GEN, 1, 31)
-        val result: List<String>
+        val result: List<KeyText>
         val time = measureTime {
             result = backend.readToOsis(VerseRange(v11n, start, end))
         }
         println("Time taken: ${time.inWholeMilliseconds} ms")
         listOf("In the beginning God created the heavens and the earth".split(" ").forEach { word: String ->
-            assertContains(result.first(), word)
+            assertContains(result.first().text, word)
         })
         listOf("And God looked upon all that he had made and indeed it was very good".split(" ").forEach { word: String ->
-            assertContains(result.last(), word)
+            assertContains(result.last().text, word)
         })
     }
 }

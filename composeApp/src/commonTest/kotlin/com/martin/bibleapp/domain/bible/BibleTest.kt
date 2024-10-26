@@ -1,8 +1,10 @@
 package com.martin.bibleapp.domain.bible
 
-import com.martin.bibleapp.data.repository.usfm.UsfmFileReader
+import com.martin.bibleapp.data.repository.sword.SwordReader
 import com.martin.bibleapp.fakes.FakeCurrentReferenceRepository
 import kotlinx.coroutines.runBlocking
+import okio.Path.Companion.toPath
+import org.crosswire.jsword.book.sword.SwordBookPath
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -14,7 +16,8 @@ class BibleTest {
 
     @BeforeTest
     fun setup() {
-        bible = Bible(UsfmFileReader(), FakeCurrentReferenceRepository())
+        SwordBookPath.swordBookPath = "/Users/martin/StudioProjects/kmp-sword/testFiles/BSB/".toPath()
+        bible = Bible(SwordReader(), FakeCurrentReferenceRepository())
     }
 
     @Test

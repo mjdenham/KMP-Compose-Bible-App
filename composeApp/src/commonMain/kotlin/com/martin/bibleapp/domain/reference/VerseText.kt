@@ -1,3 +1,5 @@
 package com.martin.bibleapp.domain.reference
 
-data class VerseText(val reference: Reference, val text: String)
+import org.crosswire.jsword.passage.Verse
+
+data class VerseText(val verse: Verse, val text: String)
