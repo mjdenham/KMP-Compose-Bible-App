@@ -16,7 +16,7 @@ class BibleTest {
 
     @BeforeTest
     fun setup() {
-        SwordBookPath.swordBookPath = "/Users/martin/StudioProjects/kmp-sword/testFiles/BSB/".toPath()
+        SwordBookPath.swordBookPath = "../testFiles/BSB/".toPath()
         bible = Bible(SwordReader(), FakeCurrentReferenceRepository())
     }
 

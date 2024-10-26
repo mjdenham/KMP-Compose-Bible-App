@@ -14,7 +14,7 @@ import kotlin.time.measureTime
 class ZVerseBackendTest {
 
     private val bookMetaData = SwordBookMetaData().apply {
-        library = "/Users/martin/StudioProjects/kmp-sword/testFiles/BSB/"
+        library = "../testFiles/BSB"
         setProperty(SwordBookMetaData.KEY_DATA_PATH, "./modules/texts/ztext/bsb/")
     }
     private var backendState: ZVerseBackendState = ZVerseBackendState(bookMetaData, BlockType.BLOCK_BOOK)
