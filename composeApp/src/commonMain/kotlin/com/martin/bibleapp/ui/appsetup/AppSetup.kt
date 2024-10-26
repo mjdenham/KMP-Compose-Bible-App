@@ -7,9 +7,11 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun AppSetup(
     modifier: Modifier = Modifier,
-    appSetupViewModel: AppSetupViewModel = koinViewModel()
+    appSetupViewModel: AppSetupViewModel = koinViewModel(),
+    onCompleted: () -> Unit
 ) {
     appSetupViewModel.setupApp {
         println("App setup complete")
+        onCompleted()
     }
 }

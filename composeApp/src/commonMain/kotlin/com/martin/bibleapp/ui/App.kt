@@ -31,6 +31,8 @@ import org.koin.compose.KoinContext
  */
 sealed class BibleScreen {
     @Serializable
+    data object Setup: BibleScreen()
+    @Serializable
     data object BibleView: BibleScreen()
     @Serializable
     data object BibleBookPicker: BibleScreen()
@@ -49,12 +51,6 @@ fun App(
 ) {
     BibleTheme {
         KoinContext {
-            val setupDone = remember { mutableStateOf(false) }
-            if (!setupDone.value) {
-                setupDone.value = true
-                AppSetup()
-            }
-
             Scaffold(
                 topBar = {
                     DocumentTopNavBar(navController)
@@ -68,6 +64,11 @@ fun App(
                         .fillMaxSize()
                         .padding(innerPadding),
                 ) {
+                    composable<BibleScreen.Setup> {
+                        AppSetup {
+                            navController.navigate(BibleScreen.BibleView)
+                        }
+                    }
                     composable<BibleScreen.BibleView> {
                         Document()
                     }
