@@ -317,7 +317,7 @@ class ZVerseBackend(val bookMetaData: SwordBookMetaData) : AbstractBackend<ZVers
         } else { // datasize == 4:
             SwordUtil.decodeLittleEndian32(temp, 8)
         }
-        println("index: $index blockNum: $blockNum verseStart: $verseStart verseSize: $verseSize")
+//        println("index: $index blockNum: $blockNum verseStart: $verseStart verseSize: $verseSize")
 
         // Can we get the data from the cache
         var uncompressed: ByteArray? = null

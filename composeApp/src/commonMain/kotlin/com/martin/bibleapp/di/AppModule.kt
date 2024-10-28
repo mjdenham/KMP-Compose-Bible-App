@@ -24,7 +24,7 @@ val appModule = module {
 //    single<BibleReader> { UsfmFileReader() }
     single<BibleReader> { SwordReader() }
     single<CurrentReferenceRepository> { RoomCurrentReferenceRepository(get()) }
-    single<Bible> { Bible(get(), get()) }
+    single<Bible> { Bible(get(), get(), get()) }
     single<ReferenceSelectionUseCase> { ReferenceSelectionUseCase(get(), get()) }
     single<Installation> { DocumentInstallation() }
     single<InstallBsbUseCase> { InstallBsbUseCase(get()) }

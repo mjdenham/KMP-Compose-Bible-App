@@ -15,11 +15,13 @@ import org.crosswire.jsword.book.sword.SwordConstants
 class DocumentInstallation: Installation {
     private val webResource = WebResource()
     private val ioUtil = IoUtil()
+    private var isInstalled = false
 
     override suspend fun isInstalled(moduleName: String): Boolean = withContext(Dispatchers.IO) {
-        FileSystem.SYSTEM.exists(SwordBookPath.swordBookPath.resolve("mods.d/bsb.conf")).also {
-            println("Is BSB installed: $it")
+        if (!isInstalled) {
+            isInstalled = FileSystem.SYSTEM.exists(SwordBookPath.swordBookPath.resolve("mods.d/bsb.conf"))
         }
+        isInstalled
     }
 
     /*

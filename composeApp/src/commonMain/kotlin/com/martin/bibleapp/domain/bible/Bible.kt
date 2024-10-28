@@ -1,25 +1,29 @@
 package com.martin.bibleapp.domain.bible
 
+import com.martin.bibleapp.domain.install.Installation
 import com.martin.bibleapp.domain.osisconverter.OsisToHtml
 import com.martin.bibleapp.domain.osisconverter.OsisToText
-import org.crosswire.jsword.versification.BibleBook
 import com.martin.bibleapp.domain.reference.CurrentReferenceRepository
 import com.martin.bibleapp.domain.reference.Reference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.withContext
 import org.crosswire.jsword.passage.KeyText
 import org.crosswire.jsword.passage.Verse
 import org.crosswire.jsword.passage.VerseRange
+import org.crosswire.jsword.versification.BibleBook
 import org.crosswire.jsword.versification.system.SystemDefault.BOOKS_NT
 import org.crosswire.jsword.versification.system.SystemDefault.BOOKS_OT
 import org.crosswire.jsword.versification.system.Versifications
 
-class Bible(private val reader: BibleReader, private val currentReferenceRepository: CurrentReferenceRepository) {
+class Bible(private val reader: BibleReader, private val currentReferenceRepository: CurrentReferenceRepository, private val installation: Installation) {
 
-    fun getCurrentReferenceFlow(): Flow<Reference> = currentReferenceRepository.getCurrentReferenceFlow()
+    fun getCurrentReferenceFlow(): Flow<Reference> = currentReferenceRepository
+        .getCurrentReferenceFlow()
+        .filter { installation.isInstalled("BSB") }
 
     suspend fun readPage(reference: Reference): String {
         val v11n = Versifications.instance().getVersification(Versifications.DEFAULT_V11N)

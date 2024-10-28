@@ -3,18 +3,25 @@ package com.martin.bibleapp.ui.appsetup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.martin.bibleapp.domain.install.InstallBsbUseCase
+import com.martin.bibleapp.ui.util.ResultIs
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AppSetupViewModel(private val installBsbUseCase: InstallBsbUseCase): ViewModel() {
 
-    fun setupApp(afterSetup: () -> Unit) {
-        viewModelScope.launch {
-            installBsbUseCase.installBsbModule()
-            afterSetup()
-        }
+    private val _setupResultsState = MutableStateFlow<ResultIs<Boolean>>(ResultIs.Loading)
+    val setupResultsState = _setupResultsState.asStateFlow()
+
+    init {
+        setupApp()
     }
 
-    companion object {
-        private const val HEAD_STYLE = "<head><style>body { font-size: 16pt; line-height: 1.8; margin: 0px 20px 0px 20px } p { padding:0px; margin:0px; }</style></head>"
+    private fun setupApp() {
+        _setupResultsState.value = ResultIs.Loading
+        viewModelScope.launch {
+            installBsbUseCase.installBsbModule()
+            _setupResultsState.value = ResultIs.Success(true)
+        }
     }
 }
