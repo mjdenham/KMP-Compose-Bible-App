@@ -4,13 +4,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.martin.bibleapp.ui.Test.TestScreen
 import com.martin.bibleapp.ui.appsetup.AppSetup
 import com.martin.bibleapp.ui.document.Document
 import com.martin.bibleapp.ui.document.DocumentTopNavBar
@@ -18,6 +21,7 @@ import com.martin.bibleapp.ui.search.SearchScreen
 import com.martin.bibleapp.ui.selector.BookSelectionScreen
 import com.martin.bibleapp.ui.selector.ChapterSelectionScreen
 import com.martin.bibleapp.ui.theme.BibleTheme
+import com.martin.bibleapp.ui.topnavbar.SimpleTopNavBar
 import kotlinx.serialization.Serializable
 import org.crosswire.jsword.versification.BibleBook
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -48,9 +52,18 @@ fun App(
 ) {
     BibleTheme {
         KoinContext {
+            var documentTopNavBar by rememberSaveable { mutableStateOf(false) }
+            navController.addOnDestinationChangedListener { controller, destination, arguments ->
+                documentTopNavBar = destination.route?.contains("BibleView") ?: false
+            }
+
             Scaffold(
                 topBar = {
-                    DocumentTopNavBar(navController)
+                    if (documentTopNavBar) {
+                        DocumentTopNavBar(navController)
+                    } else {
+                        SimpleTopNavBar()
+                    }
                 },
                 modifier = Modifier.fillMaxSize()
             ) { innerPadding ->
@@ -84,9 +97,6 @@ fun App(
                     }
                     composable<BibleScreen.Search> {
                         SearchScreen()
-                    }
-                    composable<BibleScreen.Test> {
-                        TestScreen()
                     }
                 }
             }

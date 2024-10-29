@@ -9,7 +9,6 @@ import com.martin.bibleapp.domain.bible.ReferenceSelectionUseCase
 import com.martin.bibleapp.domain.install.InstallBsbUseCase
 import com.martin.bibleapp.domain.install.Installation
 import com.martin.bibleapp.domain.reference.CurrentReferenceRepository
-import com.martin.bibleapp.ui.Test.TestViewModel
 import com.martin.bibleapp.ui.appsetup.AppSetupViewModel
 import com.martin.bibleapp.ui.document.DocumentViewModel
 import com.martin.bibleapp.ui.search.SearchViewModel
@@ -33,7 +32,6 @@ val appModule = module {
     viewModel { ChapterSelectorViewModel(get(), get()) }
     viewModel { SearchViewModel(get()) }
     viewModel { AppSetupViewModel(get()) }
-    viewModel { TestViewModel(get()) }
 }
 
 fun initializeKoin(appDeclaration: KoinAppDeclaration = {}) {
