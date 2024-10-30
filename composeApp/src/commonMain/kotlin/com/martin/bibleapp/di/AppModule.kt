@@ -34,9 +34,16 @@ val appModule = module {
     viewModel { AppSetupViewModel(get()) }
 }
 
+private var koinStarted = false
+
 fun initializeKoin(appDeclaration: KoinAppDeclaration = {}) {
-    startKoin {
-        appDeclaration()
-        modules(appModule)
+    // Compose 1.7.0 seems to have a bug which causes MainViewController to be created twice, consequently initializeKoin would be called twice
+    if (!koinStarted) {
+        koinStarted = true
+
+        startKoin {
+            appDeclaration()
+            modules(appModule)
+        }
     }
 }

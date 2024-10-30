@@ -2,6 +2,7 @@ package com.martin.bibleapp.domain.bible
 
 import com.martin.bibleapp.data.repository.sword.SwordReader
 import com.martin.bibleapp.fakes.FakeCurrentReferenceRepository
+import com.martin.bibleapp.fakes.FakeInstallation
 import kotlinx.coroutines.runBlocking
 import okio.Path.Companion.toPath
 import org.crosswire.jsword.book.sword.SwordBookPath
@@ -17,7 +18,7 @@ class BibleTest {
     @BeforeTest
     fun setup() {
         SwordBookPath.swordBookPath = "../testFiles/BSB/".toPath()
-        bible = Bible(SwordReader(), FakeCurrentReferenceRepository())
+        bible = Bible(SwordReader(), FakeCurrentReferenceRepository(), FakeInstallation())
     }
 
     @Test
