@@ -23,6 +23,6 @@ class DocumentViewModel(val bible: Bible): ViewModel() {
         )
 
     companion object {
-        private const val HEAD_STYLE = "<head><style>body { font-size: 16pt; line-height: 1.8; margin: 0px 20px 0px 20px } p { padding:0px; margin:0px; text-indent: 5% }</style></head>"
+        private const val HEAD_STYLE = "<head><style>body { font-size: 16pt; line-height: 1.8; margin: 0px 20px 0px 20px } p { padding:0px; margin:0px; text-indent: 5% } span.verse-no { font-size: 0.6em; font-weight: 300 }</style></head>"
     }
 }

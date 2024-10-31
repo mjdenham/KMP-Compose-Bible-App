@@ -1,17 +1,28 @@
 package com.martin.bibleapp.domain.osisconverter
 
+import org.crosswire.jsword.passage.Key
+import org.crosswire.jsword.passage.KeyText
+import org.crosswire.jsword.passage.Verse
 import org.kobjects.ktxml.api.EventType
 import org.kobjects.ktxml.api.XmlPullParser
 import org.kobjects.ktxml.mini.MiniXmlPullParser
 
 class OsisToHtml {
-    fun convertToHtml(osisText: String): String {
+
+    fun convertToHtml(osisList: List<KeyText>): String {
+        return osisList
+            .map { convertToHtml(it.key, it.text) }
+            .joinToString("")
+    }
+
+    fun convertToHtml(key: Key, osisText: String): String {
         val parser: XmlPullParser = MiniXmlPullParser(
             osisText,
             false,
             true
         )
 
+        var verseAdded = false
         val shouldAddTextStack = ArrayDeque<Boolean>()
         val html = StringBuilder()
         while (parser.eventType != EventType.END_DOCUMENT) {
@@ -34,7 +45,12 @@ class OsisToHtml {
                 }
                 EventType.TEXT -> {
                     if (shouldAddTextStack.last()) {
-                        html.append(parser.text)
+                        val text = parser.text
+                        if (!verseAdded && text.isNotBlank()) {
+                            verseAdded = true
+                            html.append(getVerseHtml(key))
+                        }
+                        html.append(text)
                     }
                 }
                 else -> {}
@@ -44,4 +60,11 @@ class OsisToHtml {
 
         return html.toString()
     }
+
+    private fun getVerseHtml(key: Key): String =
+        if (key is Verse) {
+            "<span class='verse-no'>${key.verse}</span>&nbsp;"
+        } else {
+            ""
+        }
 }

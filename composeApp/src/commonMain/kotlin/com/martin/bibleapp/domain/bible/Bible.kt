@@ -30,9 +30,9 @@ class Bible(private val reader: BibleReader, private val currentReferenceReposit
         val start = Verse(v11n, reference.book, reference.chapter, 1)
         val end = Verse(v11n, reference.book, reference.chapter, v11n.getLastVerse(reference.book, reference.chapter))
 
-        val osis = reader.getOsis(VerseRange(v11n, start, end))
+        val osisList = reader.getOsisList(VerseRange(v11n, start, end))
 
-        val html = OsisToHtml().convertToHtml(osis)
+        val html = OsisToHtml().convertToHtml(osisList)
 
         return html
     }
