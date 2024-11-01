@@ -22,13 +22,13 @@ class OsisToHtml {
             true
         )
 
+        val writeState = WriteState()
         var verseAdded = false
-        val shouldAddTextStack = ArrayDeque<Boolean>()
         val html = StringBuilder()
         while (parser.eventType != EventType.END_DOCUMENT) {
             when (parser.eventType) {
                 EventType.START_TAG -> {
-                    if (parser.name == "div" && shouldAddTextStack.last() && parser.getAttributeValue("", "type") == "x-p") {
+                    if (parser.name == "div" && writeState.canWrite() && parser.getAttributeValue("", "type") == "x-p") {
                         if (parser.getAttributeValue("", "sID") != null) {
                             html.append("<p>")
                         } else if (parser.getAttributeValue("", "eID") != null) {
@@ -36,15 +36,13 @@ class OsisToHtml {
                         }
                     }
 
-                    shouldAddTextStack.addLast(
-                        parser.name in listOf("w", "container")
-                    )
+                    writeState.openTag(parser.name)
                 }
                 EventType.END_TAG -> {
-                    shouldAddTextStack.removeLast()
+                    writeState.closeTag()
                 }
                 EventType.TEXT -> {
-                    if (shouldAddTextStack.last()) {
+                    if (writeState.canWrite()) {
                         val text = parser.text
                         if (!verseAdded && text.isNotBlank()) {
                             verseAdded = true
