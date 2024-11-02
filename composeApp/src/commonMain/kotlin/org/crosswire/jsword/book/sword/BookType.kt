@@ -19,9 +19,9 @@
  */
 package org.crosswire.jsword.book.sword
 
+import org.crosswire.jsword.book.Book
 import org.crosswire.jsword.book.BookCategory
 import org.crosswire.jsword.book.KeyType
-import org.crosswire.jsword.book.sword.state.OpenFileState
 import org.crosswire.jsword.book.sword.state.ZVerseBackendState
 
 /**
@@ -52,14 +52,14 @@ enum class BookType(
      * Compressed Bibles
      */
     Z_TEXT("zText", BookCategory.BIBLE, KeyType.VERSE) {
-//        override fun getBook(sbmd: SwordBookMetaData?, backend: Backend<ZVerseBackendState>): Book {
-//            return SwordBook(sbmd, backend)
-//        }
-//
-//        override fun getBackend(sbmd: SwordBookMetaData): Backend<ZVerseBackendState> {
-//            val blockType = BlockType.fromString(sbmd.getProperty(SwordBookMetaData.KEY_BLOCK_TYPE))
-//            return ZVerseBackend(sbmd, blockType, 2)
-//        }
+        override fun getBook(sbmd: SwordBookMetaData): Book {
+            return SwordBook(sbmd, getBackend(sbmd))
+        }
+
+        override fun getBackend(sbmd: SwordBookMetaData): Backend<ZVerseBackendState> {
+            val blockType = BlockType.BLOCK_BOOK //BlockType.fromString(sbmd.getProperty(SwordBookMetaData.KEY_BLOCK_TYPE))
+            return ZVerseBackend(sbmd, blockType, 2)
+        }
     };
 
 //    /**
@@ -255,16 +255,16 @@ enum class BookType(
 //    fun createBook(sbmd: SwordBookMetaData?): Book {
 //        return getBook(sbmd, getBackend(sbmd))
 //    }
-//
-//    /**
-//     * Create a Book with the given backend
-//     */
-//    protected abstract fun getBook(sbmd: SwordBookMetaData?, backend: Backend<OpenFileState>): Book
-//
-//    /**
-//     * Create a the appropriate backend for this type of book
-//     */
-//    protected abstract fun <T: OpenFileState> getBackend(sbmd: SwordBookMetaData): Backend<T>
+
+    /**
+     * Create a Book with the given backend
+     */
+    abstract fun getBook(sbmd: SwordBookMetaData): Book
+
+    /**
+     * Create a the appropriate backend for this type of book
+     */
+    protected abstract fun getBackend(sbmd: SwordBookMetaData): Backend<*>?
 
     /**
      * What category is this book

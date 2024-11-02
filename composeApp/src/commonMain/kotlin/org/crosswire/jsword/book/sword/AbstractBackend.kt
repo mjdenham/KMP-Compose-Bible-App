@@ -6,16 +6,24 @@ import org.crosswire.jsword.book.BookMetaData
 import org.crosswire.jsword.book.KeyType
 import org.crosswire.jsword.book.sword.state.OpenFileState
 import org.crosswire.jsword.passage.Key
+import org.crosswire.jsword.passage.KeyText
 import org.crosswire.jsword.passage.KeyUtil.getPassage
 import org.crosswire.jsword.passage.KeyUtil.getVerse
 import org.crosswire.jsword.passage.RestrictionType
 import org.crosswire.jsword.passage.Verse
-import org.crosswire.jsword.passage.KeyText
 import org.crosswire.jsword.passage.VerseRange
 
 abstract class AbstractBackend<T: OpenFileState>(val bmd: SwordBookMetaData) : StatefulFileBackedBackend<T>, Backend<T> {
 
-    fun readToOsis(key: Key): List<KeyText> {
+    override fun getRawText(key: Key): String {
+        initState().use { openFileState ->
+            return readRawContent(openFileState, key)
+//        } catch (e: Exception) {
+//            throw Exception("Unable to obtain raw content from backend for key='$key'", e)
+        }
+    }
+
+    override fun readToOsis(key: Key): List<KeyText> {
 
         initState().use { openFileState ->
             val content = when (this.bmd.getKeyType()) {

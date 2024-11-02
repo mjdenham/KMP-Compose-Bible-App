@@ -1,12 +1,13 @@
 package com.martin.bibleapp.data.repository.sword
 
 import com.martin.bibleapp.domain.bible.BibleReader
-import org.crosswire.jsword.versification.BibleBook
+import org.crosswire.jsword.book.Book
+import org.crosswire.jsword.book.sword.BookType
 import org.crosswire.jsword.book.sword.SwordBookMetaData
 import org.crosswire.jsword.book.sword.SwordBookPath
-import org.crosswire.jsword.book.sword.ZVerseBackend
 import org.crosswire.jsword.passage.KeyText
 import org.crosswire.jsword.passage.VerseRange
+import org.crosswire.jsword.versification.BibleBook
 import org.crosswire.jsword.versification.system.Versifications
 
 class SwordReader: BibleReader {
@@ -16,16 +17,16 @@ class SwordReader: BibleReader {
         library = SwordBookPath.swordBookPath.toString()
         setProperty(SwordBookMetaData.KEY_DATA_PATH, "./modules/texts/ztext/bsb/")
     }
-    private var backend = ZVerseBackend(bookMetaData)
+    private val book: Book = BookType.Z_TEXT.getBook(bookMetaData)
 
     override suspend fun getOsis(verseRange: VerseRange): String {
-        val result: List<KeyText> = backend.readToOsis(verseRange)
+        val result: List<KeyText> = book.readToOsis(verseRange)
 
         return wrapXml(result.map { it.text }.joinToString(""))
     }
 
     override suspend fun getOsisList(verseRange: VerseRange): List<KeyText> {
-        return backend.readToOsis(verseRange)
+        return book.readToOsis(verseRange)
             .map { keyOsis ->
                 KeyText(keyOsis.key, wrapXml(keyOsis.text))
             }

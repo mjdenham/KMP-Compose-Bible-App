@@ -123,7 +123,7 @@ import org.crosswire.jsword.versification.system.Versifications
  * @author Joe Walker
  * @author DM Smith
  */
-class ZVerseBackend(val bookMetaData: SwordBookMetaData) : AbstractBackend<ZVerseBackendState>(bookMetaData) {
+class ZVerseBackend(val bookMetaData: SwordBookMetaData, val blockType: BlockType, val dataSize: Int) : AbstractBackend<ZVerseBackendState>(bookMetaData) {
     //    /* This method assumes single keys. It is the responsibility of the caller to provide the iteration.
     //     *
     //     * FIXME: this could be refactored to push the iterations down, but no performance benefit would be gained since we have a manager that keeps the file accesses open
@@ -263,7 +263,7 @@ class ZVerseBackend(val bookMetaData: SwordBookMetaData) : AbstractBackend<ZVers
     //    }
 
     override fun initState(): ZVerseBackendState {
-        return ZVerseBackendState(bookMetaData, BlockType.BLOCK_BOOK)
+        return ZVerseBackendState(bookMetaData, blockType)
         //return OpenFileStateManager.instance().getZVerseBackendState(getBookMetaData(), blockType);
     }
 
@@ -312,9 +312,9 @@ class ZVerseBackend(val bookMetaData: SwordBookMetaData) : AbstractBackend<ZVers
         // verseSize
         val blockNum: Int = SwordUtil.decodeLittleEndian32(temp, 0)
         val verseStart: Int = SwordUtil.decodeLittleEndian32(temp, 4)
-        val verseSize: Int = if (datasize == 2) {
+        val verseSize: Int = if (dataSize == 2) {
             SwordUtil.decodeLittleEndian16(temp, 8)
-        } else { // datasize == 4:
+        } else { // dataSize == 4:
             SwordUtil.decodeLittleEndian32(temp, 8)
         }
 //        println("index: $index blockNum: $blockNum verseStart: $verseStart verseSize: $verseSize")
@@ -409,9 +409,9 @@ class ZVerseBackend(val bookMetaData: SwordBookMetaData) : AbstractBackend<ZVers
     //                // The data is little endian - extract the blockNum, verseStart and verseSize
     //                blockNum = SwordUtil.decodeLittleEndian32(temp, 0);
     //                verseStart = SwordUtil.decodeLittleEndian32(temp, 4);
-    //                if (datasize == 2) {
+    //                if (dataSize == 2) {
     //                    verseSize = SwordUtil.decodeLittleEndian16(temp, 8);
-    //                } else { // datasize == 4:
+    //                } else { // dataSize == 4:
     //                    verseSize = SwordUtil.decodeLittleEndian32(temp, 8);
     //                }
     //            }
@@ -481,10 +481,6 @@ class ZVerseBackend(val bookMetaData: SwordBookMetaData) : AbstractBackend<ZVers
     //     * Whether the book is blocked by Book, Chapter or Verse.
     //     */
     //    private final BlockType blockType;
-    /**
-     * How many bytes in the size count in the index
-     */
-    protected val datasize: Int = 2
 
     /**
      * The number of bytes for each entry in the index: either 6 or 8

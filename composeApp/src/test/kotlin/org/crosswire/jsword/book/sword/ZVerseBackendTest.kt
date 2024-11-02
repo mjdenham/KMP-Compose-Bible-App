@@ -18,7 +18,7 @@ class ZVerseBackendTest {
         setProperty(SwordBookMetaData.KEY_DATA_PATH, "./modules/texts/ztext/bsb/")
     }
     private var backendState: ZVerseBackendState = ZVerseBackendState(bookMetaData, BlockType.BLOCK_BOOK)
-    private var backend = ZVerseBackend(bookMetaData)
+    private var backend = ZVerseBackend(bookMetaData, BlockType.BLOCK_BOOK, 2)
 
     @BeforeTest
     fun setup() {

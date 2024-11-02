@@ -22,6 +22,7 @@ package org.crosswire.jsword.book.sword
 import org.crosswire.jsword.book.BookMetaData
 import org.crosswire.jsword.book.sword.state.OpenFileState
 import org.crosswire.jsword.passage.Key
+import org.crosswire.jsword.passage.KeyText
 
 /**
  * Uniform representation of all Backends.
@@ -32,6 +33,9 @@ import org.crosswire.jsword.passage.Key
  * @author DM Smith
 </T> */
 interface Backend<T : OpenFileState> {
+
+    fun readToOsis(key: Key): List<KeyText>
+
     /**
      * @return Returns the Sword BookMetaData.
      */
@@ -76,7 +80,7 @@ interface Backend<T : OpenFileState> {
      * @return the text from the module
      * @throws BookException
      */
-//    fun getRawText(key: Key?): String?
+    fun getRawText(key: Key): String
 
 //    fun setAliasKey(alias: Key?, source: Key?)
 //
