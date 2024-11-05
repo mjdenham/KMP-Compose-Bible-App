@@ -2,12 +2,14 @@ package com.martin.bibleapp.ui.document
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.martin.bibleapp.ui.util.ErrorMessage
 import com.martin.bibleapp.ui.util.LoadingIndicator
 import com.martin.bibleapp.ui.util.ResultIs
+import com.multiplatform.webview.jsbridge.rememberWebViewJsBridge
 import com.multiplatform.webview.web.WebView
 import com.multiplatform.webview.web.rememberWebViewNavigator
 import com.multiplatform.webview.web.rememberWebViewStateWithHTMLData
@@ -34,9 +36,16 @@ private fun ShowHtml(html: String, reference: String) {
         baseUrl = "http://bible#$reference"
     )
     val webViewNavigator = rememberWebViewNavigator()
+
+    val jsBridge = rememberWebViewJsBridge()
+    LaunchedEffect(jsBridge) {
+        jsBridge.register(BibleJsMessageHandler())
+    }
+
     WebView(
         state = webViewState,
         navigator = webViewNavigator,
+        webViewJsBridge = jsBridge,
         modifier = Modifier.fillMaxSize()
     )
 }

@@ -33,7 +33,7 @@ class OsisToHtmlTest {
     @Test
     fun convertToHtml_should_have_verse_no() {
         val html = osisToHtml.convertToHtml(listOf(KeyText(Gen_1_1, GEN_1_OSIS)))
-        assertContains(html, ">1<")
+        assertContains(html, "<span class='verse-no' id='Gen.1.1'>1</span>")
     }
 
     @Test

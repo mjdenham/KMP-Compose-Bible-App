@@ -14,7 +14,7 @@ class DocumentViewModel(val bible: Bible): ViewModel() {
     val documentState = bible.getCurrentReferenceFlow()
         .mapLatest { reference ->
             val page = bible.readPage(reference)
-            ResultIs.Success(DocumentModel(reference, "<html>$HEAD_STYLE<body>$page</body></html>"))
+            ResultIs.Success(DocumentModel(reference, "<html><head>${DocumentHtml.STYLE}</head><body>$page ${DocumentHtml.JAVA_SCRIPT}</body></html>"))
         }
         .stateIn(
             scope = viewModelScope,
@@ -22,7 +22,4 @@ class DocumentViewModel(val bible: Bible): ViewModel() {
             initialValue = ResultIs.Loading,
         )
 
-    companion object {
-        private const val HEAD_STYLE = "<head><style>body { font-size: 16pt; line-height: 1.8; margin: 0px 20px 0px 20px } p { padding:0px; margin:0px; text-indent: 5% } span.verse-no { font-size: 0.6em; font-weight: 300 }</style></head>"
-    }
 }

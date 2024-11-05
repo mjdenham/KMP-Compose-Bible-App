@@ -61,7 +61,7 @@ class OsisToHtml {
 
     private fun getVerseHtml(key: Key): String =
         if (key is Verse) {
-            "<span class='verse-no'>${key.verse}</span>&nbsp;"
+            "<span class='verse-no' id='${key.getOsisID()}'>${key.verse}</span>&nbsp;"
         } else {
             ""
         }
