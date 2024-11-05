@@ -27,7 +27,7 @@ val appModule = module {
     single<ReferenceSelectionUseCase> { ReferenceSelectionUseCase(get(), get()) }
     single<Installation> { DocumentInstallation() }
     single<InstallBsbUseCase> { InstallBsbUseCase(get()) }
-    viewModel { DocumentViewModel(get()) }
+    viewModel { DocumentViewModel(get(), get()) }
     viewModel { BookSelectorViewModel() }
     viewModel { ChapterSelectorViewModel(get(), get()) }
     viewModel { SearchViewModel(get()) }

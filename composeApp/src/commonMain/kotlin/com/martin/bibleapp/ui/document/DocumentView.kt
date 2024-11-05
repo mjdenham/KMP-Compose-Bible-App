@@ -24,13 +24,15 @@ fun Document(
         when (state) {
             is ResultIs.Loading -> LoadingIndicator()
             is ResultIs.Error -> ErrorMessage()
-            is ResultIs.Success -> ShowHtml(state.data.htmlText, state.data.reference.referenceCode())
+            is ResultIs.Success -> ShowHtml(state.data.htmlText, state.data.reference.referenceCode()) {
+                viewModel.updateVerse(it)
+            }
         }
     }
 }
 
 @Composable
-private fun ShowHtml(html: String, reference: String) {
+private fun ShowHtml(html: String, reference: String, updateVerse: (String) -> Unit) {
     val webViewState = rememberWebViewStateWithHTMLData(
         data = html,
         baseUrl = "http://bible#$reference"
@@ -39,7 +41,7 @@ private fun ShowHtml(html: String, reference: String) {
 
     val jsBridge = rememberWebViewJsBridge()
     LaunchedEffect(jsBridge) {
-        jsBridge.register(BibleJsMessageHandler())
+        jsBridge.register(BibleJsMessageHandler(updateVerse))
     }
 
     WebView(

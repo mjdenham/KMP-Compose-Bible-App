@@ -234,8 +234,8 @@ enum class BibleBook(
          * @param osis the osis book reference, case sensitive
          * @return the corresponding BibleBook
          */
-        fun fromExactOSIS(osis: String): BibleBook? {
-            return exactMatches[osis]
+        fun fromExactOSIS(osis: String): BibleBook {
+            return exactMatches[osis] ?: throw IllegalArgumentException("Unknown book: $osis")
         }
 
         /** A quick lookup based on OSIS name for the book  */

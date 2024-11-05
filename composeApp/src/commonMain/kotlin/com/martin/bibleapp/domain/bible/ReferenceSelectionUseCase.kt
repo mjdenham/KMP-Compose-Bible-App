@@ -6,11 +6,7 @@ import com.martin.bibleapp.domain.reference.Reference
 
 class ReferenceSelectionUseCase(private val reader: BibleReader, private val currentReferenceRepository: CurrentReferenceRepository) {
 
-    suspend fun getNumChapters(book: BibleBook): Int {
-        return reader.countChapters(book)
-    }
+    suspend fun getNumChapters(book: BibleBook): Int = reader.countChapters(book)
 
-    suspend fun selectReference(reference: Reference) {
-        currentReferenceRepository.updateCurrentReference(reference)
-    }
+    suspend fun selectReference(reference: Reference) = currentReferenceRepository.updateCurrentReference(reference)
 }

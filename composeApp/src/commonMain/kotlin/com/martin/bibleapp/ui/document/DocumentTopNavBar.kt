@@ -23,11 +23,11 @@ fun DocumentTopNavBar(
     navController: NavHostController,
     viewModel: DocumentViewModel = koinViewModel()
 ) {
-    val documentState = viewModel.documentState.collectAsStateWithLifecycle()
-    val title = when (val state = documentState.value) {
+    val verseState = viewModel.verseState.collectAsStateWithLifecycle()
+    val title = when (val state = verseState.value) {
         is ResultIs.Loading -> "Loading..."
         is ResultIs.Error -> "Error"
-        is ResultIs.Success -> state.data.reference.shortLabel()
+        is ResultIs.Success -> state.data.shortLabel()
     }
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(

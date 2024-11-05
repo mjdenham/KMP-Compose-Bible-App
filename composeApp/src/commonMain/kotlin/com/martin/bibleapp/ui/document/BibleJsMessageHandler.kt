@@ -4,7 +4,7 @@ import com.multiplatform.webview.jsbridge.IJsMessageHandler
 import com.multiplatform.webview.jsbridge.JsMessage
 import com.multiplatform.webview.web.WebViewNavigator
 
-class BibleJsMessageHandler : IJsMessageHandler {
+class BibleJsMessageHandler(val updateVerse: (String) -> Unit) : IJsMessageHandler {
     override fun methodName(): String = "currentVerse"
 
     override fun handle(
@@ -12,6 +12,6 @@ class BibleJsMessageHandler : IJsMessageHandler {
         navigator: WebViewNavigator?,
         callback: (String) -> Unit,
     ) {
-        println("Greet Handler received the message, method: ${message.methodName} params: ${message.params}")
+        updateVerse(message.params)
     }
 }
