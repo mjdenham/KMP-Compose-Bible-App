@@ -41,9 +41,6 @@ abstract class AbstractPassage protected constructor(
     passageName: String? = null
 ) : Passage {
 
-    /* (non-Javadoc)
-     * @see org.crosswire.jsword.passage.VerseKey#reversify(org.crosswire.jsword.versification.Versification)
-     */
     fun reversify(newVersification: Versification): Passage {
         if (v11n == newVersification) {
             return this
@@ -51,16 +48,10 @@ abstract class AbstractPassage protected constructor(
         throw UnsupportedOperationException()
     }
 
-    /* (non-Javadoc)
-     * @see org.crosswire.jsword.passage.VerseKey#getWhole()
-     */
     override fun getWhole(): Passage {
         throw UnsupportedOperationException()
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
     override fun compareTo(obj: Key): Int {
         val thatref: Passage = obj as Passage
         if (thatref.countVerses() === 0) {
@@ -228,9 +219,6 @@ abstract class AbstractPassage protected constructor(
 
     override fun isEmpty(): Boolean = !iterator().hasNext()
 
-    /* (non-Javadoc)
-     * @see org.crosswire.jsword.passage.Passage#countVerses()
-     */
     override fun countVerses(): Int {
         var count = 0
 
@@ -243,9 +231,6 @@ abstract class AbstractPassage protected constructor(
         return count
     }
 
-    /* (non-Javadoc)
-     * @see org.crosswire.jsword.passage.Passage#hasRanges(org.crosswire.jsword.passage.RestrictionType)
-     */
     override fun hasRanges(restrict: RestrictionType): Boolean {
         var count = 0
 
@@ -261,9 +246,6 @@ abstract class AbstractPassage protected constructor(
         return false
     }
 
-    /* (non-Javadoc)
-     * @see org.crosswire.jsword.passage.Passage#countRanges(org.crosswire.jsword.passage.RestrictionType)
-     */
     override fun countRanges(restrict: RestrictionType): Int {
         var count = 0
 
@@ -276,9 +258,6 @@ abstract class AbstractPassage protected constructor(
         return count
     }
 
-    /* (non-Javadoc)
-     * @see org.crosswire.jsword.passage.Passage#booksInPassage()
-     */
     override fun booksInPassage(): Int {
         // FIXME(DMS): a passage does not have to be ordered, for example PassageTally.
         var currentBook: BibleBook? = null
@@ -295,9 +274,6 @@ abstract class AbstractPassage protected constructor(
         return bookCount
     }
 
-    /* (non-Javadoc)
-     * @see org.crosswire.jsword.passage.Passage#getVerseAt(int)
-     */
     override fun getVerseAt(offset: Int): Verse? {
         val it: Iterator<Key> = iterator()
         var retcode: Any? = null

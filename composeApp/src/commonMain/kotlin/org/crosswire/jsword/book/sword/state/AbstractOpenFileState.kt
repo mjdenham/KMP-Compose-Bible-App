@@ -22,16 +22,8 @@ package org.crosswire.jsword.book.sword.state
 import kotlinx.datetime.Clock
 import org.crosswire.jsword.book.BookMetaData
 
-/**
- *
- * @see gnu.lgpl.License The GNU Lesser General Public License for details.
- *
- * @author DM Smith
- */
 abstract class AbstractOpenFileState(
-    /**
-     * The BookMetaData for this OpenFileState. Used to locate files.
-     */
+    /** The BookMetaData for this OpenFileState. Used to locate files. */
     override val bookMetaData: BookMetaData
 ) : OpenFileState {
     /**
@@ -43,18 +35,6 @@ abstract class AbstractOpenFileState(
         releaseResources()
     }
 
-    /**
-     * Get the BookMetaData for this OpenFileState.
-     *
-     * @return the BookMetaData
-     */
-
-    /**
-     * @return latest access before releasing back to the pool
-     */
-    /**
-     * @param lastAccess last time the file state was accessed
-     */
     /**
      * The time of last access, used for LRU expiration of state.
      */

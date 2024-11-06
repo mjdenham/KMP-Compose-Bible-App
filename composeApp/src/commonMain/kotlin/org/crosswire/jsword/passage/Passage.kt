@@ -32,15 +32,10 @@ import org.crosswire.jsword.passage.NoSuchVerseException
  *  * Human readable serialization. So we can read and write to and from OLB
  * style Passage files.
  *
- *
- *
- *
  * Passage no longer extends the Collection interface to avoid J2SE 1.1/1.2
  * portability problems, and because many of the things that a Passage does rely
  * on consecutive Verses which are an alien concept to Collections. So users
  * would have to use the Passage interface anyway.
- *
- *
  *
  * Other arguments for and against.
  *
@@ -59,13 +54,8 @@ import org.crosswire.jsword.passage.NoSuchVerseException
  * if the Collection was changed. Given ranges and the like this can get very
  * time consuming and complex.
  *
- *
- *
- *
  * The upshot of all this is that I am removing the Collections interface from
  * Passage.
- *
- *
  *
  * I considered giving Passages names to allow for a CLI that could use named
  * RangedPassages, however that is perhaps better left to another class.

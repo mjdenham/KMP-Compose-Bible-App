@@ -24,11 +24,6 @@ import org.crosswire.jsword.book.BookMetaData
 
 /**
  * Marker interface for objects holding open files that should be freed up upon finishing
- *
- *
- * @see gnu.lgpl.License The GNU Lesser General Public License for details.
- *
- * @author DM Smith
  */
 interface OpenFileState : Closeable {
     val bookMetaData: BookMetaData?
@@ -36,11 +31,7 @@ interface OpenFileState : Closeable {
     fun releaseResources()
 
     /**
-     * @return latest access before releasing back to the pool
-     */
-    /**
-     * Sets the last access time
-     * @param lastAccess the time at which this instance was last accessed
+     * The time at which this instance was last accessed
      */
     var lastAccess: Long
 }

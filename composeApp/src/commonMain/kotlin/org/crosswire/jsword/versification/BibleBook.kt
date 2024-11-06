@@ -30,9 +30,7 @@ import org.crosswire.jsword.book.sword.LocaleHelper
  * @author DM Smith
  */
 enum class BibleBook(
-    /**
-     * The OSIS name for the book.
-     */
+    /** The OSIS name for the book. */
     val oSIS: String
 ) {
     // JSword introduction to the Bible

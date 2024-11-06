@@ -22,12 +22,6 @@ package org.crosswire.jsword.passage
 import org.crosswire.jsword.versification.Versification
 import org.crosswire.jsword.versification.system.Versifications
 
-/**
- * .
- *
- * @author Joe Walker
- * @author DM Smith
- */
 object KeyUtil {
     /**
      * Walk through a tree visiting the nodes and branches in the tree

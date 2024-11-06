@@ -34,10 +34,6 @@ import org.crosswire.jsword.versification.Testament
  *
  * The caller is required to close to correctly free resources and avoid File
  * pointer leaks.
- *
- * @see gnu.lgpl.License The GNU Lesser General Public License for details.
- *
- * @author DM Smith
  */
 class ZVerseBackendState internal constructor(bookMetaData: BookMetaData, blockType: BlockType) :
     AbstractOpenFileState(bookMetaData) {

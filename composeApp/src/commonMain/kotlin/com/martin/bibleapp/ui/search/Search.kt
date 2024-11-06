@@ -61,7 +61,7 @@ fun SearchScreen(
                 expanded = false
                 viewModel.search(text)
             },
-            placeholder = { Text("Hinted search text") },
+            placeholder = { Text("Search text") },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
             trailingIcon = { Icon(Icons.Default.MoreVert, contentDescription = null) },
             active = expanded,

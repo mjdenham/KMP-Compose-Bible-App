@@ -53,37 +53,4 @@ interface StatefulFileBackedBackend<T : OpenFileState> {
      * something went wrong when reading the verse
      */
     fun readRawContent(state: T, key: Key): String
-
-    /**
-     * Set the text allotted for the given verse
-     *
-     * @param state
-     * TODO
-     * @param key
-     * The key to set text to
-     * @param text
-     * The text to be set for key
-     *
-     * @throws BookException
-     * If the data can not be set.
-     * @throws IOException
-     * If the module data path could not be created.
-     */
-//    fun setRawText(state: T, key: Key?, text: String?)
-
-    /**
-     * Sets alias for a comment on a verse range I.e. setRawText() was for verse
-     * range Gen.1.1-3 then setAliasKey should be called for Gen.1.1.2 and
-     * Gen.1.1.3
-     *
-     * @param state
-     * the open file state
-     * @param alias
-     * Alias Key
-     * @param source
-     * Source Key
-     * @throws IOException
-     * Exception when anything goes wrong on writing the alias
-     */
-//    fun setAliasKey(state: T, alias: Key?, source: Key?)
 }
