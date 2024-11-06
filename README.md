@@ -1,4 +1,25 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# Overview
+
+A basic Bible for use on mobile phones and a POC for use of KMP to create a multiplatform Bible app.
+This project is a WIP instigated to create a simple Bible app for my daughters.
+
+# Sword Bible Modules
+
+The only Bible currently used is BSB as a Sword module.  To support [Sword](https://www.crosswire.org/sword/index.jsp) modules a simple Kotlin library 
+has been created to download the module, expand it and convert the OSIS to HTML.  
+
+KMP is focused on the use of Kotlin for common code and does not support Java libraries so JSword could 
+not be used.  It might have been possible to use JSword for Android and C++ Sword for iOS but the 
+decision was made to begin migrating parts of JSword to Kotlin.
+
+[JSword](https://www.crosswire.org/jsword/)'s use of InputStream, ZipInputStream, File, SAX parser and the Classloader for translations is not supported.
+In place of the above are [OKIO](https://github.com/square/okio) and XML Pull Parser ([ktxml](https://github.com/kobjects/ktxml)).
+
+A single crossplatform was enabled by use of Multiplatform Jetpack Compose and compose-webview-multiplatform.
+
+# Kotlin Multiplatform
+
+This is a Kotlin Multiplatform project targeting Android and iOS (desktop maybe be added).
 
 * `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
   It contains several subfolders:
