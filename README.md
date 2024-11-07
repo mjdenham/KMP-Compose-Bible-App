@@ -1,7 +1,7 @@
 # Overview
 
 A basic Bible for use on mobile phones and a POC for use of KMP to create a multiplatform Bible app.
-This project is a WIP instigated to create a simple Bible app for my daughters.
+This project is a WIP instigated partly as a technology investigation but also with the aim of creating a simple Bible app for my daughters.
 
 # Sword Bible Modules
 
@@ -12,10 +12,10 @@ KMP is focused on the use of Kotlin for common code and does not support Java li
 not be used.  It might have been possible to use JSword for Android and C++ Sword for iOS but the 
 decision was made to begin migrating parts of JSword to Kotlin.
 
-[JSword](https://www.crosswire.org/jsword/)'s use of InputStream, ZipInputStream, File, SAX parser and the Classloader for translations is not supported.
-In place of the above are [OKIO](https://github.com/square/okio) and XML Pull Parser ([ktxml](https://github.com/kobjects/ktxml)).
-
-A single crossplatform was enabled by use of Multiplatform Jetpack Compose and compose-webview-multiplatform.
+[JSword](https://www.crosswire.org/jsword/)'s use of InputStream, ZipInputStream, File, SAX parser, Apache Http client for downloads and the Classloader for translations is not supported.
+In place of the above are [OKIO](https://github.com/square/okio), [KTOR](https://ktor.io/) and XML Pull Parser ([ktxml](https://github.com/kobjects/ktxml)).  
+Additionally [koin](https://insert-koin.io/) is used for dependency injection. 
+A single cross-platform UI is enabled by use of Multiplatform Jetpack Compose and compose-webview-multiplatform.
 
 # Kotlin Multiplatform
 
