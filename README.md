@@ -3,7 +3,7 @@
 A basic Bible for use on mobile phones and a POC for use of KMP to create a multiplatform Bible app.
 This project is a WIP instigated partly as a technology investigation but also with the aim of creating a simple Bible app for my daughters to use.
 
-Here is a demo with an iPhone on the left and Android device on the right.
+Here is a demo with an iPhone on the left and Android device on the right.  Press play to start the demo.
 
 https://github.com/user-attachments/assets/beaf0f68-7917-4fcd-9dbc-6d4f29f9624d
 
@@ -24,7 +24,7 @@ A single cross-platform UI is enabled by use of Multiplatform Jetpack Compose an
 
 # Kotlin Multiplatform
 
-This is a Kotlin Multiplatform project targeting Android and iOS (desktop maybe be added).
+This is a [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html) project targeting Android and iOS (desktop maybe be added).
 
 * `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
   It contains several subfolders:
@@ -35,6 +35,3 @@ This is a Kotlin Multiplatform project targeting Android and iOS (desktop maybe 
 
 * `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
   you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
-
-
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
