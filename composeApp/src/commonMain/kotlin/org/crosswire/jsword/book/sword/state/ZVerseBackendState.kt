@@ -38,6 +38,9 @@ import org.crosswire.jsword.versification.Testament
 class ZVerseBackendState internal constructor(bookMetaData: BookMetaData, blockType: BlockType) :
     AbstractOpenFileState(bookMetaData) {
     override fun releaseResources() {
+        otIdxFile?.close()
+        otCompFile?.close()
+        otTextFile?.close()
         ntIdxFile?.close()
         ntCompFile?.close()
         ntTextFile?.close()

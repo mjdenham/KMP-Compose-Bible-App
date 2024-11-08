@@ -125,10 +125,9 @@ import org.crosswire.jsword.versification.system.Versifications
  */
 class ZVerseBackend(val bookMetaData: SwordBookMetaData, val blockType: BlockType, val dataSize: Int) : AbstractBackend<ZVerseBackendState>(bookMetaData) {
 
-    override fun initState(): ZVerseBackendState {
-        return ZVerseBackendState(bookMetaData, blockType)
-        //return OpenFileStateManager.instance().getZVerseBackendState(getBookMetaData(), blockType);
-    }
+    private val state: ZVerseBackendState =  ZVerseBackendState(bookMetaData, blockType)
+
+    override fun getState(): ZVerseBackendState = state
 
     override fun readRawContent(state: ZVerseBackendState, key: Key): String {
         val charset = "UTF-8" //bookMetaData.getBookCharset();
