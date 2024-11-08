@@ -1,7 +1,7 @@
 # Overview
 
 A basic Bible for use on mobile phones and a POC for use of KMP to create a multiplatform Bible app.
-This project is a WIP instigated partly as a technology investigation but also with the aim of creating a simple Bible app for my daughters.
+This project is a WIP instigated partly as a technology investigation but also with the aim of creating a simple Bible app for my daughters to use.
 
 Here is a demo with an iPhone on the left and Android device on the right.
 
@@ -13,9 +13,9 @@ https://github.com/user-attachments/assets/beaf0f68-7917-4fcd-9dbc-6d4f29f9624d
 The only Bible currently used is BSB as a Sword module.  To support [Sword](https://www.crosswire.org/sword/index.jsp) modules a simple Kotlin library 
 has been created to download the module, expand it and convert the OSIS to HTML.  
 
-KMP is focused on the use of Kotlin for common code and does not support Java libraries so JSword could 
+KMP is focused on the use of Kotlin for common code and does not natively support Java or C++ libraries so JSword could 
 not be used.  It might have been possible to use JSword for Android and C++ Sword for iOS but the 
-decision was made to begin migrating parts of JSword to Kotlin.
+decision was made to begin creating a simple Kotlin based Sword (loosely based on JSword).
 
 [JSword](https://www.crosswire.org/jsword/)'s use of InputStream, ZipInputStream, File, SAX parser, Apache Http client for downloads and the Classloader for translations is not supported.
 In place of the above are [OKIO](https://github.com/square/okio), [KTOR](https://ktor.io/) and XML Pull Parser ([ktxml](https://github.com/kobjects/ktxml)).  
