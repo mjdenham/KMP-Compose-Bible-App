@@ -3,6 +3,7 @@
 A basic Bible for use on mobile phones and a POC for use of KMP to create a multiplatform Bible app.
 This project is a WIP instigated partly as a technology investigation but also with the aim of creating a simple Bible app for my daughters.
 
+Here is a demo with an iPhone on the left and Android device on the right.
 
 https://github.com/user-attachments/assets/beaf0f68-7917-4fcd-9dbc-6d4f29f9624d
 
