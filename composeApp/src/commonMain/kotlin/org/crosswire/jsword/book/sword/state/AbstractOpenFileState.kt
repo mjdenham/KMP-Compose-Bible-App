@@ -22,17 +22,12 @@ package org.crosswire.jsword.book.sword.state
 import kotlinx.datetime.Clock
 import org.crosswire.jsword.book.BookMetaData
 
-abstract class AbstractOpenFileState(
-    /** The BookMetaData for this OpenFileState. Used to locate files. */
-    override val bookMetaData: BookMetaData
-) : OpenFileState {
+abstract class AbstractOpenFileState(override val bookMetaData: BookMetaData) : OpenFileState {
     /**
      * Allows us to decide whether to release the resources or continue using them
      */
     override fun close() {
-//TODO        OpenFileStateManager.instance().release(this)
-        //TODO and delete the following line
-        releaseResources()
+        OpenFileStateManager.release(this)
     }
 
     /**

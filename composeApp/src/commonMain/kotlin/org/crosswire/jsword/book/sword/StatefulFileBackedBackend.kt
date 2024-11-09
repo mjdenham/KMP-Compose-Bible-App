@@ -37,11 +37,9 @@ interface StatefulFileBackedBackend<T : OpenFileState> {
      * different backend
      *
      * @return the state that has been initialised
-     * @throws BookException
      */
-//    fun initState(): T
+    fun initState(): T
 
-    fun getState(): T
     /**
      *
      * @param state

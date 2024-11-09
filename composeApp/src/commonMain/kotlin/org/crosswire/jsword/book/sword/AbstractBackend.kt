@@ -16,24 +16,24 @@ import org.crosswire.jsword.passage.VerseRange
 abstract class AbstractBackend<T: OpenFileState>(val bmd: SwordBookMetaData) : StatefulFileBackedBackend<T>, Backend<T> {
 
     override fun getRawText(key: Key): String {
-//        initState().use { openFileState ->
-            return readRawContent(getState(), key)
+        initState().use { openFileState ->
+            return readRawContent(openFileState, key)
 //        } catch (e: Exception) {
 //            throw Exception("Unable to obtain raw content from backend for key='$key'", e)
-//        }
+        }
     }
 
     override fun readToOsis(key: Key): List<KeyText> {
 
-//        initState().use { openFileState ->
+        initState().use { openFileState ->
             val content = when (this.bmd.getKeyType()) {
-                KeyType.LIST -> readNormalOsis(key, getState())
+                KeyType.LIST -> readNormalOsis(key, openFileState)
 //                TREE -> readNormalOsisSingleKey(key, processor, content, openFileState)
-                KeyType.VERSE -> readPassageOsis(key, getState())
+                KeyType.VERSE -> readPassageOsis(key, openFileState)
                 else -> throw /*Book*/Exception("Book has unsupported type of key")
             }
             return content
-//        }
+        }
     }
 
     private fun readNormalOsis(

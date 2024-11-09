@@ -38,6 +38,7 @@ import org.crosswire.jsword.versification.Testament
 class ZVerseBackendState internal constructor(bookMetaData: BookMetaData, blockType: BlockType) :
     AbstractOpenFileState(bookMetaData) {
     override fun releaseResources() {
+        println("Releasing ZVerseBackendState files")
         otIdxFile?.close()
         otCompFile?.close()
         otTextFile?.close()
@@ -100,21 +101,7 @@ class ZVerseBackendState internal constructor(bookMetaData: BookMetaData, blockT
     private var otTextFile: FileHandle? = null
     private var ntTextFile: FileHandle? = null
 
-    /**
-     * the last Testament
-     * @return the lastTestament
-     */
-    var lastTestament: Testament? = null
-    /**
-     * the lastBlockNum
-     * @param lastBlockNum
-     */
-    var lastBlockNum: Int = -1
-    /**
-     * the lastUncompressed
-     * @param lastUncompressed
-     */
-    var lastUncompressed: ByteArray? = null
+    var lastLoadedBlock: LastLoadedBlock? = null
 
     /**
      * This is default package access for forcing the use of the
@@ -126,6 +113,7 @@ class ZVerseBackendState internal constructor(bookMetaData: BookMetaData, blockT
      * @param bookMetaData the appropriate metadata for the book
      */
     init {
+        println("Opening ZVerseBackendState files")
         val path = SwordUtil.getExpandedDataPath(bookMetaData)
         val otAllButLast = path.resolve(SwordConstants.FILE_OT + '.' + blockType.indicator + SUFFIX_PART1).toString()
 //            "/Users/martin/StudioProjects/kmp-sword/testFiles/BSB/modules/texts/ztext/bsb/ot.bz"

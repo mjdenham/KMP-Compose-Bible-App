@@ -20,6 +20,8 @@
 package org.crosswire.jsword.book.sword
 
 import okio.FileHandle
+import org.crosswire.jsword.book.sword.state.LastLoadedBlock
+import org.crosswire.jsword.book.sword.state.OpenFileStateManager
 import org.crosswire.jsword.book.sword.state.ZVerseBackendState
 import org.crosswire.jsword.passage.Key
 import org.crosswire.jsword.passage.KeyUtil
@@ -125,9 +127,9 @@ import org.crosswire.jsword.versification.system.Versifications
  */
 class ZVerseBackend(val bookMetaData: SwordBookMetaData, val blockType: BlockType, val dataSize: Int) : AbstractBackend<ZVerseBackendState>(bookMetaData) {
 
-    private val state: ZVerseBackendState =  ZVerseBackendState(bookMetaData, blockType)
-
-    override fun getState(): ZVerseBackendState = state
+    override fun initState(): ZVerseBackendState {
+        return OpenFileStateManager.getZVerseBackendState(getBookMetaData(), blockType)
+    }
 
     override fun readRawContent(state: ZVerseBackendState, key: Key): String {
         val charset = "UTF-8" //bookMetaData.getBookCharset();
@@ -150,10 +152,7 @@ class ZVerseBackend(val bookMetaData: SwordBookMetaData, val blockType: BlockTyp
             return ""
         }
 
-        //dumpIdxRaf(v11n, 0, compRaf);
-        //dumpCompRaf(idxRaf);
         // entrysize because the index is entrysize bytes long for each verse
-        // 10 because the index is 10 bytes long for each verse
         var temp: ByteArray = SwordUtil.readFile(
             idxFile,
             index * IDX_ENTRY_SIZE,
@@ -166,9 +165,7 @@ class ZVerseBackend(val bookMetaData: SwordBookMetaData, val blockType: BlockTyp
             return ""
         }
 
-        // The data is little endian - extract the blockNum, verseStart
-        // and
-        // verseSize
+        // The data is little endian - extract the blockNum, verseStart and verseSize
         val blockNum: Int = SwordUtil.decodeLittleEndian32(temp, 0)
         val verseStart: Int = SwordUtil.decodeLittleEndian32(temp, 4)
         val verseSize: Int = if (dataSize == 2) {
@@ -176,16 +173,16 @@ class ZVerseBackend(val bookMetaData: SwordBookMetaData, val blockType: BlockTyp
         } else { // dataSize == 4:
             SwordUtil.decodeLittleEndian32(temp, 8)
         }
-//        println("index: $index blockNum: $blockNum verseStart: $verseStart verseSize: $verseSize")
 
         // Can we get the data from the cache
-        var uncompressed: ByteArray? = null
-        if (blockNum == state.lastBlockNum && testament == state.lastTestament) {
-            uncompressed = state.lastUncompressed
+        val uncompressed: ByteArray?
+        val lastLoadedBlock = state.lastLoadedBlock
+        if (lastLoadedBlock != null && blockNum == lastLoadedBlock.blockNum && testament == lastLoadedBlock.testament) {
+            uncompressed = lastLoadedBlock.uncompressed
         } else {
             // Then seek using this index into the idx file
             temp = SwordUtil.readFile(compFile, blockNum * COMP_ENTRY_SIZE, COMP_ENTRY_SIZE)
-            if (temp == null || temp.size == 0) {
+            if (temp.isEmpty()) {
                 return ""
             }
 
@@ -195,8 +192,7 @@ class ZVerseBackend(val bookMetaData: SwordBookMetaData, val blockType: BlockTyp
             println("blockStart: $blockStart blockSize: $blockSize uncompressedSize: $uncompressedSize")
 
             // Read from the data file.
-            uncompressed =
-                SwordUtil.readAndInflateFile(textFile, blockStart, blockSize, uncompressedSize)
+            uncompressed = SwordUtil.readAndInflateFile(textFile, blockStart, blockSize, uncompressedSize)
 
 //            decipher(data);
 //        uncompressed =
@@ -204,14 +200,12 @@ class ZVerseBackend(val bookMetaData: SwordBookMetaData, val blockType: BlockTyp
 //                .toByteArray()
 
             // cache the uncompressed data for next time
-            state.lastBlockNum = blockNum
-            state.lastTestament = testament
-            state.lastUncompressed = uncompressed
+            state.lastLoadedBlock = LastLoadedBlock(testament, blockNum, uncompressed)
         }
 
         // and cut out the required section.
         val chopped = ByteArray(verseSize)
-        uncompressed?.copyInto(chopped, 0, verseStart, verseStart + verseSize) ?: return ""
+        uncompressed.copyInto(chopped, 0, verseStart, verseStart + verseSize)
 
         return SwordUtil.decode(key.getName(), chopped, charset)
     }
@@ -222,9 +216,10 @@ class ZVerseBackend(val bookMetaData: SwordBookMetaData, val blockType: BlockTyp
 //    protected val entrysize: Int
 
     companion object {
+        private const val SUFFIX_PART1: String = "z"
+
         private const val SUFFIX_COMP: String = "s"
         private const val SUFFIX_INDEX: String = "v"
-        private const val SUFFIX_PART1: String = "z"
         private const val SUFFIX_TEXT: String = "z"
 
         /**
