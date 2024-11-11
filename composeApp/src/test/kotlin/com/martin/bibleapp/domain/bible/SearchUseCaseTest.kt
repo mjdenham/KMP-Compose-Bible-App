@@ -1,8 +1,6 @@
 package com.martin.bibleapp.domain.bible
 
 import com.martin.bibleapp.data.repository.sword.SwordReader
-import com.martin.bibleapp.fakes.FakeCurrentReferenceRepository
-import com.martin.bibleapp.fakes.FakeInstallation
 import kotlinx.coroutines.runBlocking
 import okio.Path.Companion.toPath
 import org.crosswire.jsword.book.sword.SwordBookPath
@@ -11,20 +9,20 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class BibleTest {
+class SearchUseCaseTest {
 
-    private lateinit var bible: Bible
+    private lateinit var searchUseCase: SearchUseCase
 
     @BeforeTest
     fun setup() {
         SwordBookPath.swordBookPath = "../testFiles/BSB/".toPath()
-        bible = Bible(SwordReader(), FakeCurrentReferenceRepository(), FakeInstallation())
+        searchUseCase = SearchUseCase(SwordReader())
     }
 
     @Test
     fun shouldFindAbrahamInGenesis() {
         runBlocking {
-            val result = bible.search("Abraham")
+            val result = searchUseCase.search("Abraham")
             assertTrue(result.size > 30)
         }
     }
@@ -32,7 +30,7 @@ class BibleTest {
     @Test
     fun shouldFindAllWords() {
         runBlocking {
-            val result = bible.search("Abraham Sarah")
+            val result = searchUseCase.search("Abraham Sarah")
             assertEquals(19, result.size)
         }
     }

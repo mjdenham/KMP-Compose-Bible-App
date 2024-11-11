@@ -2,7 +2,8 @@ package com.martin.bibleapp.ui.document
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.martin.bibleapp.domain.bible.Bible
+import com.martin.bibleapp.domain.bible.CurrentReferenceUseCase
+import com.martin.bibleapp.domain.bible.ReadPageUseCase
 import com.martin.bibleapp.domain.bible.ReferenceSelectionUseCase
 import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.ui.util.ResultIs
@@ -15,13 +16,17 @@ import kotlinx.coroutines.launch
 import org.crosswire.jsword.passage.OsisParser
 import org.crosswire.jsword.versification.system.Versifications
 
-class DocumentViewModel(val bible: Bible, val referenceSelectionUseCase: ReferenceSelectionUseCase): ViewModel() {
+class DocumentViewModel(
+    currentReferenceUseCase: CurrentReferenceUseCase,
+    private val readPageUseCase: ReadPageUseCase,
+    private val referenceSelectionUseCase: ReferenceSelectionUseCase): ViewModel()
+{
     @OptIn(ExperimentalCoroutinesApi::class)
-    val documentState = bible.getCurrentReferenceFlow()
+    val documentState = currentReferenceUseCase.getCurrentReferenceFlow()
         .filter { it.book != lastLoadedReference?.book || it.chapter != lastLoadedReference?.chapter }
         .mapLatest { reference ->
             lastLoadedReference = reference
-            val page = bible.readPage(reference)
+            val page = readPageUseCase.readPage(reference)
             ResultIs.Success(DocumentModel(reference, "<html><head>${DocumentHtml.STYLE}</head><body>$page ${DocumentHtml.JAVA_SCRIPT}</body></html>"))
         }
         .stateIn(
@@ -33,7 +38,7 @@ class DocumentViewModel(val bible: Bible, val referenceSelectionUseCase: Referen
     private var lastLoadedReference: Reference? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val verseState = bible.getCurrentReferenceFlow()
+    val verseState = currentReferenceUseCase.getCurrentReferenceFlow()
         .mapLatest { reference ->
             ResultIs.Success(reference)
         }

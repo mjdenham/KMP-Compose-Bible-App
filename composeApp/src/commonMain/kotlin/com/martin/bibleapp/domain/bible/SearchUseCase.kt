@@ -1,15 +1,9 @@
 package com.martin.bibleapp.domain.bible
 
-import com.martin.bibleapp.domain.install.Installation
-import com.martin.bibleapp.domain.osisconverter.OsisToHtml
 import com.martin.bibleapp.domain.osisconverter.OsisToText
-import com.martin.bibleapp.domain.reference.CurrentReferenceRepository
-import com.martin.bibleapp.domain.reference.Reference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.withContext
 import org.crosswire.jsword.passage.KeyText
 import org.crosswire.jsword.passage.Verse
@@ -19,24 +13,7 @@ import org.crosswire.jsword.versification.system.SystemDefault.BOOKS_NT
 import org.crosswire.jsword.versification.system.SystemDefault.BOOKS_OT
 import org.crosswire.jsword.versification.system.Versifications
 
-class Bible(private val reader: BibleReader, private val currentReferenceRepository: CurrentReferenceRepository, private val installation: Installation) {
-
-    fun getCurrentReferenceFlow(): Flow<Reference> = currentReferenceRepository
-        .getCurrentReferenceFlow()
-        .filter { installation.isInstalled("BSB") }
-
-    suspend fun readPage(reference: Reference): String {
-        val v11n = Versifications.instance().getVersification(Versifications.DEFAULT_V11N)
-        val start = Verse(v11n, reference.book, reference.chapter, 1)
-        val end = Verse(v11n, reference.book, reference.chapter, v11n.getLastVerse(reference.book, reference.chapter))
-
-        val osisList = reader.getOsisList(VerseRange(v11n, start, end))
-
-        val html = OsisToHtml().convertToHtml(osisList)
-
-        return html
-    }
-
+class SearchUseCase(private val reader: BibleReader) {
     suspend fun search(searchText: String): List<KeyText> = withContext(Dispatchers.Default) {
         val searchWords = searchText.split(" ").map { "\\b$it\\b".toRegex(RegexOption.IGNORE_CASE) }
 
@@ -53,7 +30,8 @@ class Bible(private val reader: BibleReader, private val currentReferenceReposit
                     .map { keyOsis -> KeyText(
                         keyOsis.key,
                         osisToText.convertToText(keyOsis.text)
-                    )}
+                    )
+                    }
                     .filter { keyOsis ->
                         searchWords.all {
                             keyOsis.text.contains(it)
@@ -65,5 +43,6 @@ class Bible(private val reader: BibleReader, private val currentReferenceReposit
             .flatten()
     }
 
-    fun getBibleBooks(): List<BibleBook> = (BOOKS_OT + BOOKS_NT).toList()
+
+    private fun getBibleBooks(): List<BibleBook> = (BOOKS_OT + BOOKS_NT).toList()
 }

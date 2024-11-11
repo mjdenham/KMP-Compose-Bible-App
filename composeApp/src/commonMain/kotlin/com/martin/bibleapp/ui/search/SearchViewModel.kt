@@ -2,7 +2,7 @@ package com.martin.bibleapp.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.martin.bibleapp.domain.bible.Bible
+import com.martin.bibleapp.domain.bible.SearchUseCase
 import com.martin.bibleapp.ui.util.ResultIs
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.crosswire.jsword.passage.KeyText
 
-class SearchViewModel(val bible: Bible): ViewModel() {
+class SearchViewModel(private val searchUseCase: SearchUseCase): ViewModel() {
     private val _suggestions = MutableStateFlow<List<String>>(emptyList())
     val suggestions = _suggestions.asStateFlow()
 
@@ -20,7 +20,7 @@ class SearchViewModel(val bible: Bible): ViewModel() {
     fun search(searchText: String) {
         _searchResultsState.value = ResultIs.Loading
         viewModelScope.launch {
-            val searchResults = bible.search(searchText)
+            val searchResults = searchUseCase.search(searchText)
             _searchResultsState.update {
                 ResultIs.Success(searchResults)
             }

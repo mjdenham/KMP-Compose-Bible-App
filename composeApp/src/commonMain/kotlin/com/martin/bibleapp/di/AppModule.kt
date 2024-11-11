@@ -3,9 +3,11 @@ package com.martin.bibleapp.di
 import com.martin.bibleapp.data.document.DocumentInstallation
 import com.martin.bibleapp.data.reference.RoomCurrentReferenceRepository
 import com.martin.bibleapp.data.repository.sword.SwordReader
-import com.martin.bibleapp.domain.bible.Bible
+import com.martin.bibleapp.domain.bible.CurrentReferenceUseCase
 import com.martin.bibleapp.domain.bible.BibleReader
+import com.martin.bibleapp.domain.bible.ReadPageUseCase
 import com.martin.bibleapp.domain.bible.ReferenceSelectionUseCase
+import com.martin.bibleapp.domain.bible.SearchUseCase
 import com.martin.bibleapp.domain.install.InstallBsbUseCase
 import com.martin.bibleapp.domain.install.Installation
 import com.martin.bibleapp.domain.reference.CurrentReferenceRepository
@@ -20,14 +22,17 @@ import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
 val appModule = module {
-//    single<BibleReader> { UsfmFileReader() }
     single<BibleReader> { SwordReader() }
     single<CurrentReferenceRepository> { RoomCurrentReferenceRepository(get()) }
-    single<Bible> { Bible(get(), get(), get()) }
+    single<CurrentReferenceUseCase> { CurrentReferenceUseCase(get(), get()) }
     single<ReferenceSelectionUseCase> { ReferenceSelectionUseCase(get(), get()) }
     single<Installation> { DocumentInstallation() }
     single<InstallBsbUseCase> { InstallBsbUseCase(get()) }
-    viewModel { DocumentViewModel(get(), get()) }
+    single<ReadPageUseCase> { ReadPageUseCase(get()) }
+    single<SearchUseCase> { SearchUseCase(get()) }
+    single<CurrentReferenceUseCase> { CurrentReferenceUseCase(get(), get()) }
+
+    viewModel { DocumentViewModel(get(), get(), get()) }
     viewModel { BookSelectorViewModel() }
     viewModel { ChapterSelectorViewModel(get(), get()) }
     viewModel { SearchViewModel(get()) }
