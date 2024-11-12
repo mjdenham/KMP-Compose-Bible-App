@@ -3,8 +3,8 @@ package com.martin.bibleapp.di
 import com.martin.bibleapp.data.document.DocumentInstallation
 import com.martin.bibleapp.data.reference.RoomCurrentReferenceRepository
 import com.martin.bibleapp.data.repository.sword.SwordReader
-import com.martin.bibleapp.domain.bible.CurrentReferenceUseCase
 import com.martin.bibleapp.domain.bible.BibleReader
+import com.martin.bibleapp.domain.bible.CurrentReferenceUseCase
 import com.martin.bibleapp.domain.bible.ReadPageUseCase
 import com.martin.bibleapp.domain.bible.ReferenceSelectionUseCase
 import com.martin.bibleapp.domain.bible.SearchUseCase
@@ -17,26 +17,29 @@ import com.martin.bibleapp.ui.search.SearchViewModel
 import com.martin.bibleapp.ui.selector.BookSelectorViewModel
 import com.martin.bibleapp.ui.selector.ChapterSelectorViewModel
 import org.koin.core.context.startKoin
-import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
 val appModule = module {
-    single<BibleReader> { SwordReader() }
-    single<CurrentReferenceRepository> { RoomCurrentReferenceRepository(get()) }
-    single<CurrentReferenceUseCase> { CurrentReferenceUseCase(get(), get()) }
-    single<ReferenceSelectionUseCase> { ReferenceSelectionUseCase(get(), get()) }
-    single<Installation> { DocumentInstallation() }
-    single<InstallBsbUseCase> { InstallBsbUseCase(get()) }
-    single<ReadPageUseCase> { ReadPageUseCase(get()) }
-    single<SearchUseCase> { SearchUseCase(get()) }
-    single<CurrentReferenceUseCase> { CurrentReferenceUseCase(get(), get()) }
+    singleOf(::SwordReader) { bind<BibleReader>() }
+    singleOf(::RoomCurrentReferenceRepository) { bind<CurrentReferenceRepository>() }
+    singleOf(::DocumentInstallation) { bind<Installation>() }
 
-    viewModel { DocumentViewModel(get(), get(), get()) }
-    viewModel { BookSelectorViewModel() }
-    viewModel { ChapterSelectorViewModel(get(), get()) }
-    viewModel { SearchViewModel(get()) }
-    viewModel { AppSetupViewModel(get()) }
+    singleOf(::CurrentReferenceUseCase)
+    singleOf(::ReferenceSelectionUseCase)
+    singleOf(::InstallBsbUseCase)
+    singleOf(::ReadPageUseCase)
+    singleOf(::SearchUseCase)
+    singleOf(::CurrentReferenceUseCase)
+
+    viewModelOf(::DocumentViewModel)
+    viewModelOf(::BookSelectorViewModel)
+    viewModelOf(::ChapterSelectorViewModel)
+    viewModelOf(::SearchViewModel)
+    viewModelOf(::AppSetupViewModel)
 }
 
 private var koinStarted = false
