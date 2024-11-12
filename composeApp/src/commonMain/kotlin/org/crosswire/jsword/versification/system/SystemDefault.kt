@@ -20,7 +20,6 @@
 package org.crosswire.jsword.versification.system
 
 import org.crosswire.jsword.versification.BibleBook
-import org.crosswire.jsword.versification.Versification
 
 /**
  * The SystemDefault versification (v11n) is that of the Protestant KJV.
@@ -41,7 +40,7 @@ object SystemDefault {
 
     // Default NT list is the most common
     /* protected */
-    val BOOKS_NT: Array<BibleBook> = arrayOf<BibleBook>(
+    val BOOKS_NT: List<BibleBook> = listOf(
         BibleBook.MATT,
         BibleBook.MARK,
         BibleBook.LUKE,
@@ -72,7 +71,7 @@ object SystemDefault {
     )
 
     /* protected */
-    val BOOKS_OT: Array<BibleBook> = arrayOf<BibleBook>(
+    val BOOKS_OT: List<BibleBook> = listOf(
         BibleBook.GEN,
         BibleBook.EXOD,
         BibleBook.LEV,

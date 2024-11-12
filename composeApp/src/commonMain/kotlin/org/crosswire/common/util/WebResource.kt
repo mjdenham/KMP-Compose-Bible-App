@@ -17,19 +17,15 @@ class WebResource() {
     private val client = HttpClient()
 
     suspend fun download(url: String, filePath: Path): Boolean {
-        println("ZZZZZ Downloading $url to $filePath")
+        println("Downloading $url to $filePath")
         var ok = false
         var totalBytes = 0
         filePath.createParentDirectories()
 
-        println("ZZZZZ Downloading 1")
         FileSystem.SYSTEM.sink(filePath).buffer().use { sink ->
-            println("ZZZZZ Downloading 2")
             client.prepareGet(url).execute { httpResponse ->
-                println("ZZZZZ Downloading 3")
                 val channel: ByteReadChannel = httpResponse.body()
                 while (!channel.isClosedForRead) {
-                    println("ZZZZZ Downloading 4")
                     val packet = channel.readRemaining(DEFAULT_HTTP_BUFFER_SIZE.toLong())
                     while (!packet.exhausted()) {
                         val bytes = packet.readByteArray()
@@ -40,7 +36,7 @@ class WebResource() {
                 }
             }
         }
-        println("ZZZZZ Downloaded ${totalBytes/1024} KB")
+        println("Downloaded ${totalBytes/1024} KB")
 
         return ok
     }

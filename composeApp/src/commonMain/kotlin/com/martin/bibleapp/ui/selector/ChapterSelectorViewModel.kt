@@ -20,7 +20,7 @@ class ChapterSelectorViewModel(
         }
     }
 
-    private val _selectorState = MutableStateFlow<SelectionModel>(SelectionModel())
+    private val _selectorState = MutableStateFlow(SelectionModel())
     val selectorState: StateFlow<SelectionModel> = _selectorState.asStateFlow()
 
     init {

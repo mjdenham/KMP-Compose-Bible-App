@@ -35,11 +35,9 @@ class SystemKJV : Versification(V11N_NAME, BOOKS_OT, BOOKS_NT, LAST_VERSE_OT, LA
     companion object {
         val V11N_NAME: String = "KJV"
 
-        /* protected */
-        val BOOKS_OT: Array<BibleBook> = SystemDefault.BOOKS_OT
+        val BOOKS_OT: List<BibleBook> = SystemDefault.BOOKS_OT
 
-        /* protected */
-        val BOOKS_NT: Array<BibleBook> = SystemDefault.BOOKS_NT
+        val BOOKS_NT: List<BibleBook> = SystemDefault.BOOKS_NT
 
         /** Constant for the max verse number in each chapter  */ /* protected */
         val LAST_VERSE_OT: Array<IntArray> = arrayOf(

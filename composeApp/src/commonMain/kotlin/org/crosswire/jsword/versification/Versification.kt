@@ -54,8 +54,8 @@ open class Versification /*implements ReferenceSystem, Serializable */ {
      */
     constructor(
         name: String?,
-        booksOT: Array<BibleBook>,
-        booksNT: Array<BibleBook>,
+        booksOT: List<BibleBook>,
+        booksNT: List<BibleBook>,
         lastVerseOT: Array<IntArray>,
         lastVerseNT: Array<IntArray>
     ) {

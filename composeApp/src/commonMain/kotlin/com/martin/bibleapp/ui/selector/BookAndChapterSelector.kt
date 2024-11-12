@@ -2,6 +2,7 @@
 
 package com.martin.bibleapp.ui.selector
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -32,12 +33,25 @@ fun BookSelectionScreen(
     orientation: OrientationProvider.Orientation = OrientationProviderImpl().getOrientation(),
     onSelected: (BibleBook) -> Unit
 ) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(getColumnCount(orientation)),
-    ) {
-        items(viewModel.getBooks()) { book ->
-            SelectionButton(book.osis, modifier) {
-                onSelected(book)
+    val documentState by viewModel.sectionBooksState.collectAsState()
+
+    Column {
+        documentState.forEach { section ->
+            Text(
+                text = section.sectionName,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = modifier.padding(8.dp)
+            )
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(getColumnCount(orientation)),
+            ) {
+                items(section.books) { book ->
+                    SelectionButton(book.osis, modifier) {
+                        onSelected(book)
+                    }
+                }
             }
         }
     }
