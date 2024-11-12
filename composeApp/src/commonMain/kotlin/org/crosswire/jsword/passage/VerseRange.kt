@@ -168,9 +168,9 @@ class VerseRange : VerseKey<VerseRange?> {
         if (startBook != endBook) {
             val buf: StringBuilder = StringBuilder()
             if (v11n.isStartOfBook(start)) {
-                buf.append(startBook.oSIS)
+                buf.append(startBook.osis)
             } else if (v11n.isStartOfChapter(start)) {
-                buf.append(startBook.oSIS)
+                buf.append(startBook.osis)
                 buf.append(Verse.VERSE_OSIS_DELIM)
                 buf.append(startChapter)
             } else {
@@ -180,9 +180,9 @@ class VerseRange : VerseKey<VerseRange?> {
             buf.append(RANGE_PREF_DELIM)
 
             if (v11n.isEndOfBook(end)) {
-                buf.append(endBook.oSIS)
+                buf.append(endBook.osis)
             } else if (v11n.isEndOfChapter(end)) {
-                buf.append(endBook.oSIS)
+                buf.append(endBook.osis)
                 buf.append(Verse.VERSE_OSIS_DELIM)
                 buf.append(endChapter)
             } else {
@@ -199,14 +199,14 @@ class VerseRange : VerseKey<VerseRange?> {
             // base since we start at the start of a book, and should have
             // been
             // recently normalized()
-            return startBook.oSIS
+            return startBook.osis
         }
 
         // If this is 2 separate chapters in the same book
         if (startChapter != endChapter) {
             val buf = StringBuilder()
             if (v11n.isStartOfChapter(start)) {
-                buf.append(startBook.oSIS)
+                buf.append(startBook.osis)
                 buf.append(Verse.VERSE_OSIS_DELIM)
                 buf.append(startChapter)
             } else {
@@ -216,7 +216,7 @@ class VerseRange : VerseKey<VerseRange?> {
             buf.append(RANGE_PREF_DELIM)
 
             if (v11n.isEndOfChapter(end)) {
-                buf.append(endBook.oSIS)
+                buf.append(endBook.osis)
                 buf.append(Verse.VERSE_OSIS_DELIM)
                 buf.append(endChapter)
             } else {
@@ -230,7 +230,7 @@ class VerseRange : VerseKey<VerseRange?> {
         if (isWholeChapter) {
             // Just report the name of the book and the chapter
             val buf = StringBuilder()
-            buf.append(startBook.oSIS)
+            buf.append(startBook.osis)
             buf.append(Verse.VERSE_OSIS_DELIM)
             buf.append(startChapter)
             return buf.toString()
@@ -259,13 +259,13 @@ class VerseRange : VerseKey<VerseRange?> {
             // Just report the name of the book, we don't need to worry
             // about the base since we start at the start of a book, and
             // should have been recently normalized()
-            return start.book.oSIS
+            return start.book.osis
         }
 
         // If this range is exactly a whole chapter
         if (isWholeChapter) {
             // Just report the name of the book and the chapter
-            return start.book.oSIS + Verse.VERSE_OSIS_DELIM + start.chapter
+            return start.book.osis + Verse.VERSE_OSIS_DELIM + start.chapter
         }
 
         val startOrdinal = start.ordinal

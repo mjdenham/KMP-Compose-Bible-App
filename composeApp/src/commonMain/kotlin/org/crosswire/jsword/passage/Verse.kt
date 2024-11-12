@@ -222,7 +222,7 @@ class Verse : VerseKey<Verse> {
      */
     private fun getVerseIdentifier(): StringBuilder {
         val buf = StringBuilder()
-        buf.append(book.oSIS)
+        buf.append(book.osis)
         buf.append(VERSE_OSIS_DELIM)
         buf.append(chapter)
         buf.append(VERSE_OSIS_DELIM)

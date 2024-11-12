@@ -36,7 +36,7 @@ fun BookSelectionScreen(
         columns = GridCells.Fixed(getColumnCount(orientation)),
     ) {
         items(viewModel.getBooks()) { book ->
-            SelectionButton(book.oSIS, modifier) {
+            SelectionButton(book.osis, modifier) {
                 onSelected(book)
             }
         }

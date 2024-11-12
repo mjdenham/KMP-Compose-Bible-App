@@ -31,7 +31,7 @@ import org.crosswire.jsword.book.sword.LocaleHelper
  */
 enum class BibleBook(
     /** The OSIS name for the book. */
-    val oSIS: String
+    val osis: String
 ) {
     // JSword introduction to the Bible
     INTRO_BIBLE("Intro.Bible"),
@@ -198,7 +198,7 @@ enum class BibleBook(
      * @return the OSIS name
      */
     override fun toString(): String {
-        return oSIS
+        return osis
     }
 
     /**
@@ -244,8 +244,8 @@ enum class BibleBook(
 
         init {
             for (book in entries) {
-                osisMap[BookName.normalize(book.oSIS, LocaleHelper.ENGLISH_LOCALE)] = book
-                exactMatches[book.oSIS] = book
+                osisMap[BookName.normalize(book.osis, LocaleHelper.ENGLISH_LOCALE)] = book
+                exactMatches[book.osis] = book
             }
         }
     }

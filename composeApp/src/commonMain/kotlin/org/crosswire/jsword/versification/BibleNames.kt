@@ -22,7 +22,6 @@ package org.crosswire.jsword.versification
 import androidx.compose.ui.text.intl.Locale
 import org.crosswire.jsword.book.sword.LocaleHelper.ENGLISH_LOCALE
 import org.crosswire.jsword.javautil.ResourceBundle
-import org.crosswire.jsword.versification.BibleNames
 import org.jetbrains.compose.resources.MissingResourceException
 import kotlin.jvm.Transient
 
@@ -418,7 +417,7 @@ class BibleNames private constructor() {
             shortMap: MutableMap<String, BookName>,
             altMap: Map<*, *>?
         ) {
-            val osisName = book.oSIS
+            val osisName = book.osis
 
             val fullBook = getString(resources, osisName + Companion.FULL_KEY)
 
