@@ -1,10 +1,12 @@
 package com.martin.bibleapp.ui.document
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.martin.bibleapp.ui.util.ErrorMessage
 import com.martin.bibleapp.ui.util.LoadingIndicator
@@ -24,12 +26,19 @@ fun Document(
         when (state) {
             is ResultIs.Loading -> LoadingIndicator()
             is ResultIs.Error -> ErrorMessage()
-            is ResultIs.Success -> ShowHtml(state.data.htmlText, state.data.reference.referenceCode()) {
-                viewModel.updateVerse(it)
+            is ResultIs.Success -> {
+                val html = viewModel.updateTextColour(state.data.htmlText, getTextColour())
+                ShowHtml(html, state.data.reference.referenceCode()) {
+                    viewModel.updateVerse(it)
+                }
             }
         }
     }
 }
+
+@OptIn(ExperimentalStdlibApi::class)
+@Composable
+private fun getTextColour() = "#"+MaterialTheme.colorScheme.primary.toArgb().toHexString(HexFormat.Default).takeLast(6)
 
 @Composable
 private fun ShowHtml(html: String, reference: String, updateVerse: (String) -> Unit) {

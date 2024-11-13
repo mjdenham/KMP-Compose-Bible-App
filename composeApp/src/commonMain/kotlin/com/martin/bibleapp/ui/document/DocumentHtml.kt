@@ -1,9 +1,11 @@
 package com.martin.bibleapp.ui.document
 
 object DocumentHtml {
+    private const val TEXT_COLOUR_PLACEHOLDER = "TEXT_COLOUR"
+
     val STYLE = """
         <style>
-            body { font-size: 16pt; line-height: 1.8; margin: 0px 20px 0px 20px }
+            body { font-size: 16pt; line-height: 1.8; margin: 0px 20px 0px 20px; color: $TEXT_COLOUR_PLACEHOLDER }
             p { padding:0px; margin:0px; text-indent: 5% }
             span.verse-no { vertical-align: super; font-size: 0.6em; font-weight: 300 }
         </style>
@@ -54,4 +56,6 @@ object DocumentHtml {
 
         </script>          
 """.trimIndent()
+
+    fun updateTextColour(html: String, colour: String): String = html.replace(TEXT_COLOUR_PLACEHOLDER, colour)
 }

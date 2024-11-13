@@ -56,6 +56,9 @@ class DocumentViewModel(
         }
     }
 
+    fun updateTextColour(html: String, textColour: String): String =
+        DocumentHtml.updateTextColour(html, textColour)
+
     companion object {
         val DEFAULT_VERSIFICATION = Versifications.instance().getVersification("KJV")
     }
