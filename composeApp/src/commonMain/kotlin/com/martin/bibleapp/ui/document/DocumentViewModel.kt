@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.martin.bibleapp.domain.bible.CurrentReferenceUseCase
 import com.martin.bibleapp.domain.bible.ReadPageUseCase
 import com.martin.bibleapp.domain.bible.ReferenceSelectionUseCase
-import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.ui.util.ResultIs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,6 +13,7 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.crosswire.jsword.passage.OsisParser
+import org.crosswire.jsword.passage.Verse
 import org.crosswire.jsword.versification.system.Versifications
 
 class DocumentViewModel(
@@ -23,11 +23,11 @@ class DocumentViewModel(
 {
     @OptIn(ExperimentalCoroutinesApi::class)
     val documentState = currentReferenceUseCase.getCurrentReferenceFlow()
-        .filter { it.book != lastLoadedReference?.book || it.chapter != lastLoadedReference?.chapter }
-        .mapLatest { reference ->
-            lastLoadedReference = reference
-            val page = readPageUseCase.readPage(reference)
-            ResultIs.Success(DocumentModel(reference, "<html><head>${DocumentHtml.STYLE}</head><body>$page ${DocumentHtml.JAVA_SCRIPT}</body></html>"))
+        .filter { it.book != lastLoadedVerse?.book || it.chapter != lastLoadedVerse?.chapter }
+        .mapLatest { verse ->
+            lastLoadedVerse = verse
+            val page = readPageUseCase.readPage(verse)
+            ResultIs.Success(DocumentModel(verse, "<html><head>${DocumentHtml.STYLE}</head><body>$page ${DocumentHtml.JAVA_SCRIPT}</body></html>"))
         }
         .stateIn(
             scope = viewModelScope,
@@ -35,12 +35,12 @@ class DocumentViewModel(
             initialValue = ResultIs.Loading,
         )
 
-    private var lastLoadedReference: Reference? = null
+    private var lastLoadedVerse: Verse? = null
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val verseState = currentReferenceUseCase.getCurrentReferenceFlow()
-        .mapLatest { reference ->
-            ResultIs.Success(reference)
+        .mapLatest { verse ->
+            ResultIs.Success(verse)
         }
         .stateIn(
             scope = viewModelScope,
@@ -50,9 +50,10 @@ class DocumentViewModel(
 
     fun updateVerse(newVerseOsisId: String) {
         viewModelScope.launch {
-            val verse = OsisParser().parseOsisID(DEFAULT_VERSIFICATION, newVerseOsisId)
-            val reference = Reference(verse!!.book, verse.chapter, verse.verse)
-            referenceSelectionUseCase.selectReference(reference)
+            OsisParser().parseOsisID(DEFAULT_VERSIFICATION, newVerseOsisId)?.let { verse ->
+                val reference = Verse(DEFAULT_VERSIFICATION, verse.book, verse.chapter, verse.verse)
+                referenceSelectionUseCase.selectReference(reference)
+            }
         }
     }
 

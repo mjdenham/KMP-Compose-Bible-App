@@ -28,7 +28,7 @@ fun Document(
             is ResultIs.Error -> ErrorMessage()
             is ResultIs.Success -> {
                 val html = viewModel.updateTextColour(state.data.htmlText, getTextColour())
-                ShowHtml(html, state.data.reference.referenceCode()) {
+                ShowHtml(html, state.data.verse.getOsisID()) {
                     viewModel.updateVerse(it)
                 }
             }

@@ -27,7 +27,7 @@ fun DocumentTopNavBar(
     val title = when (val state = verseState.value) {
         is ResultIs.Loading -> "Loading..."
         is ResultIs.Error -> "Error"
-        is ResultIs.Success -> state.data.shortLabel()
+        is ResultIs.Success -> state.data.getName()
     }
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(

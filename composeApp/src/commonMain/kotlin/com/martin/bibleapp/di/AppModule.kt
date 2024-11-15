@@ -1,7 +1,7 @@
 package com.martin.bibleapp.di
 
 import com.martin.bibleapp.data.document.DocumentInstallation
-import com.martin.bibleapp.data.reference.RoomCurrentReferenceRepository
+import com.martin.bibleapp.data.reference.RoomCurrentVerseRepository
 import com.martin.bibleapp.data.repository.sword.SwordReader
 import com.martin.bibleapp.domain.bible.BibleReader
 import com.martin.bibleapp.domain.bible.CurrentReferenceUseCase
@@ -25,7 +25,7 @@ import org.koin.dsl.module
 
 val appModule = module {
     singleOf(::SwordReader) { bind<BibleReader>() }
-    singleOf(::RoomCurrentReferenceRepository) { bind<CurrentReferenceRepository>() }
+    singleOf(::RoomCurrentVerseRepository) { bind<CurrentReferenceRepository>() }
     singleOf(::DocumentInstallation) { bind<Installation>() }
 
     singleOf(::CurrentReferenceUseCase)

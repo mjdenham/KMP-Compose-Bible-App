@@ -1,5 +1,5 @@
 package com.martin.bibleapp.ui.document
 
-import com.martin.bibleapp.domain.reference.Reference
+import org.crosswire.jsword.passage.Verse
 
-data class DocumentModel(val reference: Reference, val htmlText: String)
+data class DocumentModel(val verse: Verse, val htmlText: String)

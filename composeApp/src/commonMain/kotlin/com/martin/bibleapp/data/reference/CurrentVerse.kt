@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import org.crosswire.jsword.versification.BibleBook
 
 @Entity
-data class CurrentReference(
+data class CurrentVerse(
     @PrimaryKey
     val id: Int,
     val book: BibleBook,

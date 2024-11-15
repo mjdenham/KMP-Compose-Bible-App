@@ -2,10 +2,10 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ba280d981cbcb93f2131bab246a32670",
+    "identityHash": "836203390e6a0c157756aba5c6d3cb14",
     "entities": [
       {
-        "tableName": "CurrentReference",
+        "tableName": "CurrentVerse",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `book` TEXT NOT NULL, `chapter` INTEGER NOT NULL, `verse` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
@@ -43,7 +43,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ba280d981cbcb93f2131bab246a32670')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '836203390e6a0c157756aba5c6d3cb14')"
     ]
   }
 }

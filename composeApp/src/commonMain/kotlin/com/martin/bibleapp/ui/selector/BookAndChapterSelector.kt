@@ -19,10 +19,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.martin.bibleapp.domain.reference.Reference
 import com.martin.bibleapp.ui.util.OrientationProvider
 import com.martin.bibleapp.ui.util.OrientationProviderImpl
+import org.crosswire.jsword.passage.Verse
 import org.crosswire.jsword.versification.BibleBook
+import org.crosswire.jsword.versification.system.Versifications
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -72,7 +73,7 @@ fun ChapterSelectionScreen(
         LazyVerticalGrid(columns = GridCells.Fixed(getColumnCount(orientation))) {
             items((1..chaps).toList()) {
                 SelectionButton(it.toString(), modifier) {
-                    viewModel.selectReference(Reference(book, it))
+                    viewModel.selectReference(Verse(DEFAULT_VERSIFICATION, book, it, 1))
                     onSelected(it)
                 }
             }
@@ -112,3 +113,4 @@ private fun getColumnCount(orientation: OrientationProvider.Orientation): Int =
 
 private const val ColumnsLandscape = 13
 private const val ColumnsPortrait = 6
+private val DEFAULT_VERSIFICATION = Versifications.instance().getVersification("KJV")
