@@ -28,7 +28,7 @@ object DocumentHtml {
         function getCurrentVerse(offset) {
             console.log("get Current verse below: " + offset);
             return getVerseOffsets().find(function (el) {
-                return el.offset > offset;
+                return el.offset >= offset;
             })?.osisId;           
         }
         
@@ -42,7 +42,7 @@ object DocumentHtml {
 
             var verseNodeList = document.querySelectorAll('span.verse-no');
             let tempOffsets = [];
-            for(let i=0; i < verseNodeList.length; i++) {
+            for (let i=0; i < verseNodeList.length; i++) {
               let node = verseNodeList[i];
               const record = {
                  osisId: node.id,
