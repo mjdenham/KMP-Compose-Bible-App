@@ -60,7 +60,7 @@ enum class BookType(
             val blockType = BlockType.BLOCK_BOOK //BlockType.fromString(sbmd.getProperty(SwordBookMetaData.KEY_BLOCK_TYPE))
             return ZVerseBackend(sbmd, blockType, 2)
         }
-    };
+    },
 
 //    /**
 //     * Compressed Bibles
@@ -102,21 +102,20 @@ enum class BookType(
 //        }
 //    },
 //
-//    /**
-//     * Compressed Commentaries
-//     */
-//    Z_COM("zCom", BookCategory.COMMENTARY, KeyType.VERSE) {
-//        override fun getBook(sbmd: SwordBookMetaData?, backend: Backend?): Book {
-//            return SwordBook(sbmd, backend)
-//        }
-//
-//        @Throws(BookException::class)
-//        protected override fun getBackend(sbmd: SwordBookMetaData): Backend {
-//            val blockType = BlockType.fromString(sbmd.getProperty(SwordBookMetaData.KEY_BLOCK_TYPE))
-//            return ZVerseBackend(sbmd, blockType, 2)
-//        }
-//    },
-//
+    /**
+     * Compressed Commentaries
+     */
+    Z_COM("zCom", BookCategory.COMMENTARY, KeyType.VERSE) {
+        override fun getBook(sbmd: SwordBookMetaData): Book {
+            return SwordBook(sbmd, getBackend(sbmd))
+        }
+
+        override fun getBackend(sbmd: SwordBookMetaData): Backend<ZVerseBackendState> {
+            val blockType = BlockType.BLOCK_BOOK //BlockType.fromString(sbmd.getProperty(SwordBookMetaData.KEY_BLOCK_TYPE))
+            return ZVerseBackend(sbmd, blockType, 2)
+        }
+    };
+
 //    /**
 //     * Compressed Commentaries
 //     */
