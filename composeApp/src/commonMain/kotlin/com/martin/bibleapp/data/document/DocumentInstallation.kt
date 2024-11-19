@@ -5,7 +5,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
 import okio.FileSystem
-import okio.Path.Companion.toPath
 import okio.SYSTEM
 import org.crosswire.common.util.IoUtil
 import org.crosswire.common.util.WebResource
@@ -15,13 +14,13 @@ import org.crosswire.jsword.book.sword.SwordConstants
 class DocumentInstallation: Installation {
     private val webResource = WebResource()
     private val ioUtil = IoUtil()
-    private var isInstalled = false
+    private var isInstalled = mutableMapOf<String, Boolean>()
 
     override suspend fun isInstalled(moduleName: String): Boolean = withContext(Dispatchers.IO) {
-        if (!isInstalled) {
-            isInstalled = FileSystem.SYSTEM.exists(SwordBookPath.swordBookPath.resolve("mods.d/bsb.conf"))
+        if (isInstalled[moduleName] != true) {
+            isInstalled[moduleName] = FileSystem.SYSTEM.exists(SwordBookPath.swordBookPath.resolve("mods.d/${moduleName.lowercase()}.conf"))
         }
-        isInstalled
+        isInstalled[moduleName] ?: false
     }
 
     /*
@@ -47,9 +46,11 @@ Unzipped: modules/texts/ztext/bsb/ot.bzz to /Users/martin/Library/Developer/Core
 App setup complete
      */
     override suspend fun install(moduleName: String) = withContext(Dispatchers.IO) {
-        if (webResource.download(downloadUrl, zipFilePath)) {
+        val url = getDownloadUrl(moduleName)
+        val zipFile = getZipFile(moduleName)
+        if (webResource.download(url, zipFile)) {
             ioUtil.unpackZip(
-                zipFilePath,
+                zipFile,
                 SwordBookPath.swordBookPath,
                 true,
                 SwordConstants.DIR_CONF,
@@ -58,8 +59,12 @@ App setup complete
         }
     }
 
+    private fun getDownloadUrl(moduleName: String) = downloadUrl.replace(moduleNameKey, moduleName)
+    private fun getZipFile(moduleName: String) = tempDownloadPath.resolve("$moduleName.zip")
+
     companion object {
-        const val downloadUrl = "https://www.crosswire.org/ftpmirror/pub/sword/packages/rawzip/BSB.zip"
-        val zipFilePath = FileSystem.SYSTEM_TEMPORARY_DIRECTORY.resolve("downloaded.zip".toPath())
+        const val moduleNameKey = "{NAME}"
+        const val downloadUrl = "https://www.crosswire.org/ftpmirror/pub/sword/packages/rawzip/$moduleNameKey.zip"
+        val tempDownloadPath = FileSystem.SYSTEM_TEMPORARY_DIRECTORY
     }
 }

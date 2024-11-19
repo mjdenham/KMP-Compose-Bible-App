@@ -8,7 +8,7 @@ import com.martin.bibleapp.domain.bible.CurrentReferenceUseCase
 import com.martin.bibleapp.domain.bible.ReadPageUseCase
 import com.martin.bibleapp.domain.bible.ReferenceSelectionUseCase
 import com.martin.bibleapp.domain.bible.SearchUseCase
-import com.martin.bibleapp.domain.install.InstallBsbUseCase
+import com.martin.bibleapp.domain.install.InstallDocumentsUseCase
 import com.martin.bibleapp.domain.install.Installation
 import com.martin.bibleapp.domain.reference.CurrentReferenceRepository
 import com.martin.bibleapp.ui.appsetup.AppSetupViewModel
@@ -30,7 +30,7 @@ val appModule = module {
 
     singleOf(::CurrentReferenceUseCase)
     singleOf(::ReferenceSelectionUseCase)
-    singleOf(::InstallBsbUseCase)
+    singleOf(::InstallDocumentsUseCase)
     singleOf(::ReadPageUseCase)
     singleOf(::SearchUseCase)
     singleOf(::CurrentReferenceUseCase)
