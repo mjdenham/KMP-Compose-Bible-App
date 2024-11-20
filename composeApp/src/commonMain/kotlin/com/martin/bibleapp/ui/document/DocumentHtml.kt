@@ -21,7 +21,7 @@ object DocumentHtml {
             window.kmpJsBridge.callNative(
                 "currentVerse",
                 currentVerse,
-                null
+                ""
             );
         }
 
