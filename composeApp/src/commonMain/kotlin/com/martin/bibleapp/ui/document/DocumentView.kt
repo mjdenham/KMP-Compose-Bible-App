@@ -60,28 +60,26 @@ private fun showBible(
     val tabState = state.data.tabStateList[currentPage]
     val html = viewModel.updateTextColour(tabState.html, getTextColour())
     if (currentPage == 0) {
-        ShowHtmlBSB(html, tabState.verse.getOsisID()) {
+        ShowHtml(html, tabState.verse.getOsisID()) {
             viewModel.updateVerse(it)
         }
     } else {
-        ShowHtmlCommentary(html, tabState.verse.getOsisID())
+        ShowHtml(html, tabState.verse.getOsisID())
     }
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
-private fun getTextColour() = "#"+MaterialTheme.colorScheme.primary.toArgb().toHexString(HexFormat.Default).takeLast(6)
-
-@Composable
-private fun ShowHtmlBSB(html: String, reference: String, updateVerse: (String) -> Unit) {
+private fun ShowHtml(html: String, reference: String, updateVerse: ((String) -> Unit)? = null) {
     val webViewState = rememberWebViewStateWithHTMLData(
         data = html,
         baseUrl = "http://bible#$reference"
     )
     val webViewNavigator = rememberWebViewNavigator()
 
-    val jsBridge = rememberWebViewJsBridge().apply {
-        register(BibleJsMessageHandler(updateVerse))
+    val jsBridge = updateVerse?.let {
+        rememberWebViewJsBridge().apply {
+            register(BibleJsMessageHandler(updateVerse))
+        }
     }
 
     WebView(
@@ -98,23 +96,6 @@ private fun ShowHtmlBSB(html: String, reference: String, updateVerse: (String) -
     )
 }
 
+@OptIn(ExperimentalStdlibApi::class)
 @Composable
-private fun ShowHtmlCommentary(html: String, reference: String) {
-    val webViewState = rememberWebViewStateWithHTMLData(
-        data = html,
-        baseUrl = "http://bible#$reference"
-    )
-    val webViewNavigator = rememberWebViewNavigator()
-
-    WebView(
-        state = webViewState,
-        navigator = webViewNavigator,
-        modifier = Modifier.fillMaxSize(),
-        onCreated = { webView ->
-            println("ZZZZZZ onCreated page: 1")
-        },
-        onDispose = { webView ->
-            println("ZZZZZZ onDispose webView 1")
-        }
-    )
-}
+private fun getTextColour() = "#"+MaterialTheme.colorScheme.primary.toArgb().toHexString(HexFormat.Default).takeLast(6)
