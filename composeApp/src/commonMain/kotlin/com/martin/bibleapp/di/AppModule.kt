@@ -13,6 +13,7 @@ import com.martin.bibleapp.domain.install.Installation
 import com.martin.bibleapp.domain.reference.CurrentReferenceRepository
 import com.martin.bibleapp.ui.appsetup.AppSetupViewModel
 import com.martin.bibleapp.ui.document.DocumentViewModel
+import com.martin.bibleapp.ui.topnavbar.DocumentTopNavBarViewModel
 import com.martin.bibleapp.ui.search.SearchViewModel
 import com.martin.bibleapp.ui.selector.BookSelectorViewModel
 import com.martin.bibleapp.ui.selector.ChapterSelectorViewModel
@@ -36,6 +37,7 @@ val appModule = module {
     singleOf(::CurrentReferenceUseCase)
 
     viewModelOf(::DocumentViewModel)
+    viewModelOf(::DocumentTopNavBarViewModel)
     viewModelOf(::BookSelectorViewModel)
     viewModelOf(::ChapterSelectorViewModel)
     viewModelOf(::SearchViewModel)

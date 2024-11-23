@@ -16,7 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.martin.bibleapp.ui.appsetup.AppSetup
 import com.martin.bibleapp.ui.document.Document
-import com.martin.bibleapp.ui.document.DocumentTopNavBar
+import com.martin.bibleapp.ui.topnavbar.DocumentTopNavBar
 import com.martin.bibleapp.ui.search.SearchScreen
 import com.martin.bibleapp.ui.selector.BookSelectionScreen
 import com.martin.bibleapp.ui.selector.ChapterSelectionScreen

@@ -8,5 +8,5 @@ class ReferenceSelectionUseCase(private val reader: BibleReader, private val cur
 
     suspend fun getNumChapters(book: BibleBook): Int = reader.countChapters(book)
 
-    suspend fun selectReference(verse: Verse) = currentReferenceRepository.updateCurrentVerse(verse)
+    suspend fun selectVerse(verse: Verse) = currentReferenceRepository.updateCurrentVerse(verse)
 }

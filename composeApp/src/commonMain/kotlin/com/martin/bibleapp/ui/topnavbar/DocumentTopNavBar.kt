@@ -1,4 +1,4 @@
-package com.martin.bibleapp.ui.document
+package com.martin.bibleapp.ui.topnavbar
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -21,7 +21,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun DocumentTopNavBar(
     navController: NavHostController,
-    viewModel: DocumentViewModel = koinViewModel()
+    viewModel: DocumentTopNavBarViewModel = koinViewModel()
 ) {
     val verseState = viewModel.verseState.collectAsStateWithLifecycle()
     val title = when (val state = verseState.value) {

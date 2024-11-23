@@ -3,7 +3,12 @@ package com.martin.bibleapp.ui.document
 object DocumentHtml {
     private const val TEXT_COLOUR_PLACEHOLDER = "TEXT_COLOUR"
 
-    val STYLE = """
+    fun formatHtmlPage(addJs: Boolean, html: String): String {
+        val js = if (addJs) JAVA_SCRIPT else ""
+        return "<html><head>$STYLE</head><body>$html $js</body></html>"
+    }
+
+    private val STYLE = """
         <style>
             body { font-size: 16pt; line-height: 1.8; margin: 0px 20px 0px 20px; color: $TEXT_COLOUR_PLACEHOLDER }
             p { padding:0px; margin:0px; text-indent: 5% }
@@ -11,12 +16,13 @@ object DocumentHtml {
         </style>
         """.trimIndent()
 
-    val JAVA_SCRIPT = """
+    private val JAVA_SCRIPT = """
         <script language="javascript">
         window.onscroll = function() { onScrollHandler() };
         
         function onScrollHandler() {
-            let currentVerse = getCurrentVerse(Math.floor( document.body.scrollTop ));;
+            let currentVerse = getCurrentVerse(Math.floor( document.body.scrollTop ));
+            console.log("Current verse found: " + currentVerse)
             
             window.kmpJsBridge.callNative(
                 "currentVerse",
@@ -26,7 +32,6 @@ object DocumentHtml {
         }
 
         function getCurrentVerse(offset) {
-            console.log("get Current verse below: " + offset);
             return getVerseOffsets().find(function (el) {
                 return el.offset >= offset;
             })?.osisId;           

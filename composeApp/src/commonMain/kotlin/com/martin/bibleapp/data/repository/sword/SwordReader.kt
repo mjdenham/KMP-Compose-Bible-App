@@ -13,23 +13,27 @@ import org.crosswire.jsword.versification.system.Versifications
 class SwordReader: BibleReader {
 
     private val v11nName = Versifications.DEFAULT_V11N //getBookMetaData().getProperty(BookMetaData.KEY_VERSIFICATION);
-    private val bookMetaData = SwordBookMetaData().apply {
+
+    private val bsbBookMetaData = SwordBookMetaData().apply {
         library = SwordBookPath.swordBookPath.toString()
         setProperty(SwordBookMetaData.KEY_DATA_PATH, "./modules/texts/ztext/bsb/")
     }
-    private val book: Book = BookType.Z_TEXT.getBook(bookMetaData)
+    private val bsbBook: Book = BookType.Z_TEXT.getBook(bsbBookMetaData)
 
-    override suspend fun getOsis(verseRange: VerseRange): String {
-        val result: List<KeyText> = book.readToOsis(verseRange)
-
-        return wrapXml(result.map { it.text }.joinToString(""))
+    private val kingCommentsBookMetaData = SwordBookMetaData().apply {
+        library = SwordBookPath.swordBookPath.toString()
+        setProperty(SwordBookMetaData.KEY_DATA_PATH, "./modules/comments/zcom/kingcomments/")
     }
+    private val kingCommentsBook: Book = BookType.Z_TEXT.getBook(kingCommentsBookMetaData)
+    private val bookByDocumentName = mapOf<String, Book>("BSB" to bsbBook, "KingComments" to kingCommentsBook)
 
-    override suspend fun getOsisList(verseRange: VerseRange): List<KeyText> {
-        return book.readToOsis(verseRange)
-            .map { keyOsis ->
-                KeyText(keyOsis.key, wrapXml(keyOsis.text))
-            }
+    override suspend fun getOsisList(documentName: String, verseRange: VerseRange): List<KeyText> {
+        return bookByDocumentName[documentName]?.let { book ->
+            book.readToOsis(verseRange)
+                .map { keyOsis ->
+                    KeyText(keyOsis.key, wrapXml(keyOsis.text))
+                }
+        } ?: throw Exception("No book for document name $documentName")
     }
 
     override suspend fun countChapters(book: BibleBook): Int {

@@ -16,7 +16,7 @@ class ChapterSelectorViewModel(
 ): ViewModel() {
     fun selectReference(verse: Verse) {
         viewModelScope.launch {
-            referenceSelectionUseCase.selectReference(verse)
+            referenceSelectionUseCase.selectVerse(verse)
         }
     }
 

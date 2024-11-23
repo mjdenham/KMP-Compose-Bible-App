@@ -26,7 +26,7 @@ class SearchUseCase(private val reader: BibleReader) {
                 val lastChapter = v11n.getLastChapter(bibleBook)
                 val end = Verse(v11n, bibleBook, lastChapter, v11n.getLastVerse(bibleBook, lastChapter))
 
-                reader.getOsisList(VerseRange(v11n, start, end))
+                reader.getOsisList("BSB", VerseRange(v11n, start, end))
                     .map { keyOsis -> KeyText(
                         keyOsis.key,
                         osisToText.convertToText(keyOsis.text)

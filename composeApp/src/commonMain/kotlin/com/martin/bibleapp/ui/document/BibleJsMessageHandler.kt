@@ -12,6 +12,7 @@ class BibleJsMessageHandler(val updateVerse: (String) -> Unit) : IJsMessageHandl
         navigator: WebViewNavigator?,
         callback: (String) -> Unit,
     ) {
+        println("ZZZZZ currentVerse called with ${message.params}")
         updateVerse(message.params)
     }
 }
