@@ -1,13 +1,10 @@
 package com.martin.bibleapp.ui.document
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,15 +19,11 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun Document(
+    page: Int,
     viewModel: DocumentViewModel = koinViewModel()
 ) {
-    val pagerState = rememberPagerState(pageCount = { 2 })
-    LaunchedEffect(pagerState) {
-        // Collect from the a snapshotFlow reading the currentPage
-        snapshotFlow { pagerState.currentPage }.collect { page ->
-            // Do something with each page change, for example:
-            viewModel.pageSelected(page)
-        }
+    LaunchedEffect(page) {
+        viewModel.pageSelected(page)
     }
 
     val documentState by viewModel.documentState.collectAsStateWithLifecycle()
@@ -39,24 +32,18 @@ fun Document(
             is ResultIs.Loading -> LoadingIndicator()
             is ResultIs.Error -> ErrorMessage()
             is ResultIs.Success -> {
-                HorizontalPager(
-                    state = pagerState,
-                    beyondViewportPageCount = 1,
-                ) { page ->
-                    showBible(viewModel, state, page)
-                }
+                showDocument(viewModel, state, page)
             }
         }
     }
 }
 
 @Composable
-private fun showBible(
+private fun showDocument(
     viewModel: DocumentViewModel,
     state: ResultIs.Success<DocumentModel>,
     currentPage: Int
 ) {
-    println("ZZZZZ showBible called for page $currentPage")
     val tabState = state.data.tabStateList[currentPage]
     val html = viewModel.updateTextColour(tabState.html, getTextColour())
     if (currentPage == 0) {
@@ -87,12 +74,6 @@ private fun ShowHtml(html: String, reference: String, updateVerse: ((String) -> 
         navigator = webViewNavigator,
         webViewJsBridge = jsBridge,
         modifier = Modifier.fillMaxSize(),
-        onCreated = { webView ->
-            println("ZZZZZZ onCreated page: 0")
-        },
-        onDispose = { webView ->
-            println("ZZZZZZ onDispose webView 0")
-        }
     )
 }
 

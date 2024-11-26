@@ -15,12 +15,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.martin.bibleapp.ui.appsetup.AppSetup
+import com.martin.bibleapp.ui.bottomnavbar.BottomNavBar
 import com.martin.bibleapp.ui.document.Document
-import com.martin.bibleapp.ui.topnavbar.DocumentTopNavBar
 import com.martin.bibleapp.ui.search.SearchScreen
 import com.martin.bibleapp.ui.selector.BookSelectionScreen
 import com.martin.bibleapp.ui.selector.ChapterSelectionScreen
 import com.martin.bibleapp.ui.theme.BibleTheme
+import com.martin.bibleapp.ui.topnavbar.DocumentTopNavBar
 import com.martin.bibleapp.ui.topnavbar.SimpleTopNavBar
 import kotlinx.serialization.Serializable
 import org.crosswire.jsword.versification.BibleBook
@@ -34,7 +35,7 @@ sealed class BibleScreen {
     @Serializable
     data object Setup: BibleScreen()
     @Serializable
-    data object BibleView: BibleScreen()
+    data class BibleView(val page: Int): BibleScreen()
     @Serializable
     data object BibleBookPicker: BibleScreen()
     @Serializable
@@ -65,6 +66,9 @@ fun App(
                         SimpleTopNavBar()
                     }
                 },
+                bottomBar = {
+                    BottomNavBar(navController)
+                },
                 modifier = Modifier.fillMaxSize()
             ) { innerPadding ->
                 NavHost(
@@ -77,11 +81,12 @@ fun App(
                     composable<BibleScreen.Setup> {
                         AppSetup {
                             navController.popBackStack()
-                            navController.navigate(BibleScreen.BibleView)
+                            navController.navigate(BibleScreen.BibleView(0))
                         }
                     }
                     composable<BibleScreen.BibleView> {
-                        Document()
+                        val page = it.toRoute<BibleScreen.BibleView>().page
+                        Document(page)
                     }
                     composable<BibleScreen.BibleBookPicker> {
                         BookSelectionScreen(onSelected = { book ->
@@ -92,7 +97,7 @@ fun App(
                         val bookName = it.toRoute<BibleScreen.BibleChapterPicker>().bookName
                         val book = BibleBook.valueOf(bookName)
                         ChapterSelectionScreen(book) { selectedChapter ->
-                            navController.popBackStack(BibleScreen.BibleView, false)
+                            navController.popBackStack(BibleScreen.BibleBookPicker, true)
                         }
                     }
                     composable<BibleScreen.Search> {
@@ -103,3 +108,4 @@ fun App(
         }
     }
 }
+

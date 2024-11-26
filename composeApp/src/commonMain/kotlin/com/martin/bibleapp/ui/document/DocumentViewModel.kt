@@ -48,7 +48,6 @@ class DocumentViewModel(
     }
 
     fun updateVerse(newVerseOsisId: String) {
-        println("ZZZZZ updateVerse called with $newVerseOsisId")
         viewModelScope.launch {
             OsisParser().parseOsisID(DEFAULT_VERSIFICATION, newVerseOsisId)?.let { verse ->
                 referenceSelectionUseCase.selectVerse(verse)
@@ -60,7 +59,6 @@ class DocumentViewModel(
         DocumentHtml.updateTextColour(html, textColour)
 
     fun pageSelected(page: Int) {
-        println("ZZZZZZZ pageSelected called with $page")
         if (!initialised) return
         TabDocuments.tabs[page]?.let { doc ->
             loadVerseText(page, doc, currentVerse)
@@ -68,7 +66,6 @@ class DocumentViewModel(
     }
 
     private fun loadVerseText(page: Int, document: TabDocuments.Document, verse: Verse?) {
-        println("ZZZZZZZ loading verse $verse for document ${document.name}")
         if (verse == null) return
 
         val v11n = verse.getVersification()
@@ -82,7 +79,6 @@ class DocumentViewModel(
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            println("ZZZZZZZ REALLY loading verse $verse for document ${document.name}")
             _documentState.value = ResultIs.Loading
 
             val html = readPageUseCase.readPage(document, verse)
@@ -91,7 +87,6 @@ class DocumentViewModel(
             latestState[page] = latestState[page].copy(verse = verse, html = htmlPage)
 
             withContext(Dispatchers.Main) {
-                println("ZZZZZZZ updating UI for document ${document.name}")
                 // need to make a copy of latestState or Compose does not know a change occurred
                 _documentState.value = ResultIs.Success(DocumentModel(latestState.toList()))
             }
