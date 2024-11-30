@@ -10,9 +10,10 @@ class WriteState {
         return writableStack.isNotEmpty() && writableStack.last()
     }
 
-    fun openTag(name: String) {
+    fun openTag(name: String, canonical: String?) {
+        val writeTagContents = name in listOf("w", "container", "list", "item") || canonical.toBoolean()
         writableStack.addLast(
-            name in listOf("w", "container", "list", "item")
+            writeTagContents
         )
     }
 

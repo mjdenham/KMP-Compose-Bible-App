@@ -34,9 +34,17 @@ class OsisToHtml {
                         } else if (parser.getAttributeValue("", "eID") != null) {
                             html.append("</p>")
                         }
+                    } else if (parser.name == "l" && writeState.canWrite()) {
+                        val  level = parser.getAttributeValue("", "level") ?: "1"
+                        val indentPx = level.toInt() * 25
+                        if (parser.getAttributeValue("", "sID") != null) {
+                            html.append("<div style='margin-left: ${indentPx}px;'>")
+                        } else if (parser.getAttributeValue("", "eID") != null) {
+                            html.append("</div>")
+                        }
                     }
 
-                    writeState.openTag(parser.name)
+                    writeState.openTag(parser.name, parser.getAttributeValue("", "canonical"))
                 }
                 EventType.END_TAG -> {
                     writeState.closeTag()
