@@ -44,7 +44,7 @@ private fun showDocument(
     state: ResultIs.Success<DocumentModel>,
     currentPage: Int
 ) {
-    val tabState = state.data.tabStateList[currentPage]
+    val tabState = state.data.tabConfigList[currentPage]
     val html = viewModel.updateTextColour(tabState.html, getTextColour())
     if (currentPage == 0) {
         ShowHtml(html, tabState.verse.getOsisID()) {

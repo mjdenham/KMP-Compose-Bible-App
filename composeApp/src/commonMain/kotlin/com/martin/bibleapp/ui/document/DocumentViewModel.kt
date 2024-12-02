@@ -23,12 +23,13 @@ class DocumentViewModel(
     private val readPageUseCase: ReadPageUseCase,
     private val referenceSelectionUseCase: ReferenceSelectionUseCase): ViewModel()
 {
-    val verseFlow = currentReferenceUseCase.getCurrentReferenceFlow()
-
     private val _documentState = MutableStateFlow<ResultIs<DocumentModel>>(ResultIs.Loading)
     val documentState = _documentState.asStateFlow()
 
-    private val latestState = mutableListOf(TabState(TabDocuments.Document.BSB, Verse.DEFAULT, "", DEFAULT_VERSE_RANGE), TabState(TabDocuments.Document.KING_COMMENTS, Verse.DEFAULT, "", DEFAULT_VERSE_RANGE))
+    private val latestTabsConfig = mutableListOf(
+        TabConfig(TabDocuments.Document.BSB, Verse.DEFAULT, "", DEFAULT_VERSE_RANGE),
+        TabConfig(TabDocuments.Document.KING_COMMENTS, Verse.DEFAULT, "", DEFAULT_VERSE_RANGE)
+    )
     private var currentPageNo = 0
     private var currentVerse: Verse = Verse.DEFAULT
 
@@ -37,8 +38,8 @@ class DocumentViewModel(
     init {
         _documentState.value = ResultIs.Loading
         viewModelScope.launch {
-            verseFlow.collect { verse ->
-                val tabState = latestState[currentPageNo]
+            currentReferenceUseCase.getCurrentReferenceFlow().collect { verse ->
+                val tabState = latestTabsConfig[currentPageNo]
                 if (!initialised || !tabState.pageVerseRange.contains(verse)) {
                     currentVerse = verse
                     loadVerseText(0, TabDocuments.Document.BSB, verse)
@@ -71,7 +72,7 @@ class DocumentViewModel(
     private fun loadVerseText(page: Int, document: TabDocuments.Document, verse: Verse?) {
         if (verse == null) return
 
-        val tabState = latestState[page]
+        val tabState = latestTabsConfig[page]
         val prevDocumentVerseRange = tabState.pageVerseRange
         if (prevDocumentVerseRange.contains(verse) && tabState.html.isNotEmpty()) return
 
@@ -82,11 +83,11 @@ class DocumentViewModel(
             val html = readPageUseCase.readPage(document, verseRangeToRead)
 
             val htmlPage = DocumentHtml.formatHtmlPage(document.changeVerseOnScroll, html)
-            latestState[page] = latestState[page].copy(verse = verse, html = htmlPage, pageVerseRange = verseRangeToRead)
+            latestTabsConfig[page] = latestTabsConfig[page].copy(verse = verse, html = htmlPage, pageVerseRange = verseRangeToRead)
 
             withContext(Dispatchers.Main) {
                 // need to make a copy of latestState or Compose does not know a change occurred
-                _documentState.value = ResultIs.Success(DocumentModel(latestState.toList()))
+                _documentState.value = ResultIs.Success(DocumentModel(latestTabsConfig.toList()))
             }
         }
     }
