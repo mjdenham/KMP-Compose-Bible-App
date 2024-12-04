@@ -17,15 +17,16 @@ object DocumentHtml {
         """.trimIndent()
 
     private val JAVA_SCRIPT = """
+        <div id="bottomOfBibleText" style="height: 100px"/>
+        
         <script language="javascript">
         window.onscroll = function() { onScrollHandler() };
         
         function onScrollHandler() {
             let currentVerse = getCurrentVerse(Math.floor( document.body.scrollTop ));
-            console.log("Current verse found: " + currentVerse)
             
             window.kmpJsBridge.callNative(
-                "currentVerse",
+                "${CurrentVerseJsMessageHandler.CURRENT_VERSE_BRIDGE_METHOD}",
                 currentVerse,
                 ""
             );
@@ -58,6 +59,31 @@ object DocumentHtml {
             verseOffsets = tempOffsets;
             return verseOffsets
         }
+        
+        // Infinite scrolling
+        //
+        const options = {
+          root: null,
+          rootMargin: "100px",
+          threshold: 0,
+        };
+        
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    window.kmpJsBridge.callNative(
+                        "${InfiniteScrollJsMessageHandler.INFINITE_SCROLL_BRIDGE_METHOD}",
+                        "bottom",
+                        function (data) {
+                            entry.target.insertAdjacentHTML('beforebegin', data);
+                            verseOffsets = null; 
+                        }
+                    );
+                }
+            })
+        })
+
+        observer.observe(document.getElementById('bottomOfBibleText'))
 
         </script>          
 """.trimIndent()

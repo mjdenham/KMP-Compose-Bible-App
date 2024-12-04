@@ -47,16 +47,14 @@ private fun showDocument(
     val tabState = state.data.tabConfigList[currentPage]
     val html = viewModel.updateTextColour(tabState.html, getTextColour())
     if (currentPage == 0) {
-        ShowHtml(html, tabState.verse.getOsisID()) {
-            viewModel.updateVerse(it)
-        }
+        ShowHtml(html, tabState.verse.getOsisID(), viewModel::updateVerse, { callback -> viewModel.getNextPage(currentPage, callback) })
     } else {
         ShowHtml(html, tabState.verse.getOsisID())
     }
 }
 
 @Composable
-private fun ShowHtml(html: String, reference: String, updateVerse: ((String) -> Unit)? = null) {
+private fun ShowHtml(html: String, reference: String, updateVerse: ((String) -> Unit)? = null, getNextPage: (((String) -> Unit) -> Unit)? = null) {
     val webViewState = rememberWebViewStateWithHTMLData(
         data = html,
         baseUrl = "http://bible#$reference"
@@ -65,7 +63,8 @@ private fun ShowHtml(html: String, reference: String, updateVerse: ((String) -> 
 
     val jsBridge = updateVerse?.let {
         rememberWebViewJsBridge().apply {
-            register(BibleJsMessageHandler(updateVerse))
+            register(CurrentVerseJsMessageHandler(updateVerse))
+            register(InfiniteScrollJsMessageHandler(getNextPage!!))
         }
     }
 

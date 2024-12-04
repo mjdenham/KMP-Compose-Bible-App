@@ -27,4 +27,19 @@ class ReadPageUseCase(private val reader: BibleReader) {
             VerseRange(v11n, verse, verse)
         }
     }
+
+    fun calculateNextPageVerseRange(document: Any, prevDocumentVerseRange: VerseRange): VerseRange? {
+        val v11n = prevDocumentVerseRange.getVersification()
+        val verse = prevDocumentVerseRange.end
+        if (v11n.getLastChapter(verse.book) <= verse.chapter) {
+            return null
+        }
+
+        val nextChapter = verse.chapter + 1
+        return VerseRange(
+                v11n,
+                Verse(v11n, verse.book, nextChapter, 1),
+                Verse(v11n, verse.book, nextChapter, v11n.getLastVerse(verse.book, nextChapter))
+        )
+    }
 }

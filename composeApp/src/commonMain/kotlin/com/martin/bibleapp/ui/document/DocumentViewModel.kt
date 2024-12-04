@@ -58,6 +58,26 @@ class DocumentViewModel(
         }
     }
 
+    fun getNextPage(page: Int, callback: (String) -> Unit) {
+        viewModelScope.launch {
+            val tabState = latestTabsConfig[page]
+            val document = tabState.document
+            val prevDocumentVerseRange = tabState.pageVerseRange
+
+            val verseRangeToRead = readPageUseCase.calculateNextPageVerseRange(document, prevDocumentVerseRange)
+            if (verseRangeToRead == null) {
+                callback("")
+                return@launch
+            }
+
+            val html = readPageUseCase.readPage(document, verseRangeToRead)
+
+            latestTabsConfig[page] = latestTabsConfig[page].copy(html = tabState.html + html, pageVerseRange = VerseRange(tabState.pageVerseRange, verseRangeToRead))
+
+            callback(html)
+        }
+    }
+
     fun updateTextColour(html: String, textColour: String): String =
         DocumentHtml.updateTextColour(html, textColour)
 
