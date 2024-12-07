@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.atomicfu)
     // TODO add plugin back in when this is supported again
     //alias(libs.plugins.room)
 }

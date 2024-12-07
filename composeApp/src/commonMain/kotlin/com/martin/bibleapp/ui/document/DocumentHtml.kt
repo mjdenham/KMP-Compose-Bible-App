@@ -17,12 +17,12 @@ object DocumentHtml {
         """.trimIndent()
 
     private val BEFORE_TEXT = """
-        <div id="topOfBibleText" style="height: 100px"/>
+        <div id="topOfBibleText" style="height: 100px">TOP</div>
         <div id="container">
         """
 
     private val AFTER_TEXT = """
-        <div id="bottomOfBibleText" style="height: 100px"/>
+        <div id="bottomOfBibleText" style="height: 100px">BOTTOM</div>
         </div>
         """
 
@@ -70,32 +70,32 @@ object DocumentHtml {
         
         // Infinite scrolling
         //
-        const options = {
-          root: null,
-          rootMargin: "100px",
-          threshold: 0,
-        };
+
+        // Delaying topload during drag is required for iOS to maintain existing position
+        var topLoadPending = false;
+        var touchOccurring = false
+        window.addEventListener('touchstart', function(e) {
+           touchOccurring = true;
+        });
         
+        window.addEventListener('touchend', function(e) {
+           if (topLoadPending) {
+               topLoadPending = false;
+               loadMoreAtTop();
+           }
+           touchOccurring = false;
+        }); 
+       
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     if (entry.target.id === 'topOfBibleText') {
-                        window.kmpJsBridge.callNative(
-                            "${InfiniteScrollJsMessageHandler.INFINITE_SCROLL_BRIDGE_METHOD}",
-                            "${InfiniteScrollJsMessageHandler.PREVIOUS_PAGE}",
-                            function (data) {
-                                var priorHeight = document.body.scrollHeight;
-                                var currentPos = window.pageYOffset;
-                                
-                                var container = document.getElementById('container');
-                                container.innerHTML = data + container.innerHTML;
-                                 
-                                var changeInHeight = document.body.scrollHeight - priorHeight;
-                                var adjustedPosition =  currentPos + changeInHeight;
-                                window.scrollTo(0, adjustedPosition);
-                                verseOffsets = null;
-                            }
-                        );
+                        console.log("ZZZZZ Loading at top");
+                        if (touchOccurring) {
+                            topLoadPending = true;
+                            return;
+                        }
+                        loadMoreAtTop() 
                     } else if (entry.target.id === 'bottomOfBibleText') {
                         window.kmpJsBridge.callNative(
                             "${InfiniteScrollJsMessageHandler.INFINITE_SCROLL_BRIDGE_METHOD}",
@@ -103,16 +103,43 @@ object DocumentHtml {
                             function (data) {
                                 entry.target.insertAdjacentHTML('beforebegin', data);
                                 verseOffsets = null; 
+                                registerLoadMoreObservers();
                             }
                         );
                     }
                 }
             })
         })
+        
+        function loadMoreAtTop() {
+            window.kmpJsBridge.callNative(
+                "${InfiniteScrollJsMessageHandler.INFINITE_SCROLL_BRIDGE_METHOD}",
+                "${InfiniteScrollJsMessageHandler.PREVIOUS_PAGE}",
+                function (data) {
+                    var priorHeight = document.body.scrollHeight;
+                    var currentPos = window.pageYOffset;
 
-        observer.observe(document.getElementById('topOfBibleText'))
-        observer.observe(document.getElementById('bottomOfBibleText'))
+                    var container = document.getElementById('container');
+                    container.innerHTML = data + container.innerHTML;
+                     
+                    var changeInHeight = document.body.scrollHeight - priorHeight;
+                    var adjustedCurrentPos = currentPos + changeInHeight;
+                    window.scrollTo(0, adjustedCurrentPos);
+                    verseOffsets = null;
+                    registerLoadMoreObservers();
+                }
+            );
+        }
 
+        const INTERSECTION_OBSERVER_OPTIONS = { root: null, rootMargin: "1px", threshold: 0 };
+        function registerLoadMoreObservers() {
+            console.log("Registering load more observers");
+            observer.disconnect()
+            observer.observe(document.getElementById('topOfBibleText'), INTERSECTION_OBSERVER_OPTIONS)
+            observer.observe(document.getElementById('bottomOfBibleText'), INTERSECTION_OBSERVER_OPTIONS)
+        }
+        
+        registerLoadMoreObservers();
         </script>          
 """.trimIndent()
 
