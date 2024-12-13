@@ -26,7 +26,7 @@ class InfiniteScrollJsMessageHandler(
         val newCallerCount = callers.getAndIncrement()
         println("Infinite scroll handler called Caller count: ${newCallerCount}")
         if (newCallerCount > 0) {
-            println("ZZZZZ Infinite scroll handler called AGAIN")
+            println("Infinite scroll handler called AGAIN")
             callers.decrementAndGet()
             return
         }

@@ -17,12 +17,12 @@ object DocumentHtml {
         """.trimIndent()
 
     private val BEFORE_TEXT = """
-        <div id="topOfBibleText" style="height: 100px">TOP</div>
+        <div id="topOfBibleText" style="height: 100px"></div>
         <div id="container">
         """
 
     private val AFTER_TEXT = """
-        <div id="bottomOfBibleText" style="height: 100px">BOTTOM</div>
+        <div id="bottomOfBibleText" style="height: 100px"></div>
         </div>
         """
 
@@ -90,7 +90,7 @@ object DocumentHtml {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     if (entry.target.id === 'topOfBibleText') {
-                        console.log("ZZZZZ Loading at top");
+                        console.log("Loading at top");
                         if (touchOccurring) {
                             topLoadPending = true;
                             return;
